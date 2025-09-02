@@ -1,0 +1,33 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}!KiMame¡特定商取引法に基づく表記{% endblock %}
+
+{% block content %}
+<section class="bg-black/90 text-[#9e7b3b] py-20 px-6">
+  <div class="max-w-4xl mx-auto backdrop-blur-md rounded-3xl shadow-xl p-10"
+       style="background-image: url('{% static 'core/images/texture_Pblack.jpg' %}'); background-repeat: repeat; background-size: auto;">
+    <h1 class="text-3xl font-bold mb-8 text-left">特定商取引法に基づく表記</h1>
+
+    {% if policy %}
+      <div class="space-y-6">
+        <p><strong>販売業者：</strong> {{ policy.company_name }}</p>
+        <p><strong>運営責任者：</strong> {{ policy.manager }}</p>
+        <p><strong>所在地：</strong> {{ policy.address }}</p>
+        <p><strong>電話番号：</strong> {{ policy.phone }}</p>
+        <p><strong>メールアドレス：</strong> {{ policy.email }}</p>
+        <p><strong>商品代金以外の必要料金：</strong> {{ policy.shipping_fee }}</p>
+        <p><strong>支払方法：</strong> {{ policy.payment_method }}</p>
+        <p><strong>引渡し時期について：</strong> {{ policy.delivery_time }}</p>
+        <p><strong>送料について：</strong> {{ policy.delivery_cost }}</p>
+        <p><strong>返品・交換・キャンセルについて：</strong><br>
+           {{ policy.return_policy|linebreaks }}
+        </p>
+      </div>
+    {% else %}
+      <p class="text-center">特定商取引法に基づく表記は現在準備中です。</p>
+    {% endif %}
+    <p class="mt-10 border-t border-[#9e7b3b] pt-6 text-sm">最終更新日：{{ policy.updated_at|date:"Y年m月d日" }}</p>
+  </div>
+</section>
+{% endblock %}

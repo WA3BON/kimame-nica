@@ -1,0 +1,43 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}!KiMame¡プライバシーポリシー{% endblock %}
+
+{% block content %}
+<section class="bg-black/90 text-[#9e7b3b] py-20 px-6">
+  <div class="max-w-4xl w-full mx-auto backdrop-blur-md rounded-3xl shadow-xl p-10"
+       style="background-image: url('{% static 'core/images/texture_Pblack.jpg' %}'); background-repeat: repeat; background-size: auto;">
+    <h1 class="text-3xl font-bold text-center mb-8">プライバシーポリシー</h1>
+
+    <p class="mb-4 whitespace-pre-line">
+      {{ order_policy.company_name }}（以下、当社といいます）は、お客様のプライバシー・個人情報および、
+      当社と取引関係のある皆様から提供を受けた個人番号（マイナンバー）を含む特定個人情報について
+      最大限の注意を払い、以下の通りプライバシーポリシーを定め、責任を持って保護し、適切に対応してまいります。
+    </p>
+
+    <ol class="space-y-8">
+      {% for policy in policies %}
+        <li>
+          <p class="font-semibold mb-2">{{ policy.no }}. {{ policy.title }}</p>
+          <p class="mb-4 whitespace-pre-line">{{ policy.description }}</p>
+        </li>
+      {% empty %}
+        <p>現在、プライバシーポリシーの情報はありません。</p>
+      {% endfor %}
+    </ol>
+
+    {% if order_policy %}
+    <h2 class="text-xl font-semibold pt-6 mb-2">お問い合わせ窓口</h2>
+      <p>責任者: {{ order_policy.manager }}</p>
+      <p>メールアドレス: <a href="mailto:{{ order_policy.email }}" class="text-[#9e7b3b]/80">{{ order_policy.email }}</a></p>
+      <p>住所: {{ order_policy.address }}</p>
+    {% endif %}
+
+    <div class="mt-10 border-t border-[#9e7b3b] pt-6 text-sm">
+      {% if last_policy %}
+      <p>最終更新日: {{ last_policy.updated_at|date:"Y年m月d日" }}</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

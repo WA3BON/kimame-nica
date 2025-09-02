@@ -1,0 +1,31 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}!KiMame¡利用規約{% endblock %}
+
+{% block content %}
+<section class="bg-black/90 text-[#9e7b3b] py-20 px-6">
+  <div class="max-w-4xl mx-auto backdrop-blur-md rounded-3xl shadow-xl p-10"
+       style="background-image: url('{% static 'core/images/texture_Pblack.jpg' %}'); background-repeat: repeat; background-size: auto;">
+    <h1 class="text-3xl font-bold text-center mb-8">利用規約</h1>
+    <p class="mb-4 whitespace-pre-line">
+      {{ order_policy.company_name }}（以下「当社」といいます。）は、当社が運営するインターネットショッピングサイト（以下「本サイト」といいます。）及びソーシャルネットワークサービス（以下「SNS」といいます。）等の外部サービスを通じて提供するサービスや各種コンテンツ（以下「本サービス」または「本コンテンツ」といいます。）の利用について、以下のとおり「利用規約」（以下「本規約」といいます。）を定めます。また、本規約とは別に、個別の規約が存在する場合、個別規約は、本規約と一体となって一つの規約を構成します。本サイトを利用するためには、当社との契約内容として予めこれらの全ての規約に同意していただく必要があります。なお、本規約と個別規約が相反する場合は、個別規約が優先するものとし、その他の部分については、本規約と個別規約が同時に適用されるものとします。
+    </p>
+
+    <ol class="space-y-8">
+      {% for term in terms %}
+        <li>
+          <p class="font-semibold mb-2">{{ term.no }}. {{ term.title }}</p>
+          <p class="mb-4 whitespace-pre-line">{{ term.content }}</p>
+        </li>
+      {% empty %}
+        <p>現在、利用規約の情報はありません。</p>
+      {% endfor %}
+    </ol>
+
+    <div class="mt-10 border-t border-[#9e7b3b] pt-6 text-sm">
+      <p>最終更新日: {{ last_term.updated_at|date:"Y年m月d日" }}</p>
+    </div>
+  </div>
+</section>
+{% endblock %}
