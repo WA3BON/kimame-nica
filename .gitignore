@@ -7,8 +7,6 @@ db_seed.json
 /__pycache__/
 *.pyc
 
-/staticfiles
-
 venv/
 
 /theme
