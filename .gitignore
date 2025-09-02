@@ -8,7 +8,3 @@ db_seed.json
 *.pyc
 
 venv/
-
-/theme
-
-dumpdata_utf8.py
