@@ -14,7 +14,7 @@ env = environ.Env(
     DEBUG=(bool, False),
 )
 # 環境変数 ENV_STATE を dev / prod で切替
-ENV_STATE = 'dev'
+ENV_STATE = 'prod'
 ENV_FILE = BASE_DIR / ('.env.dev' if ENV_STATE == 'dev' else '.env.prod')
 
 # ローカル開発時のみ .env を読む（Render 本番はダッシュボードの環境変数から入る）
@@ -86,20 +86,13 @@ CLOUDINARY_STORAGE = {
 
 #  Cloudinary に保存
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
-
-# 通常のパス設定
 MEDIA_URL = '/media/'
-STATIC_URL = '/static/'
-
-# STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles' 
-
-# whitenoise
-#STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # MEDIA_ROOT = BASE_DIR / 'media'
 
-
+# whitenoise
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 ROOT_URLCONF = 'config.urls'
 
