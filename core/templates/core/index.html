@@ -73,7 +73,11 @@
 
     <div class="flex flex-col relative justify-center items-center">
       <div class="w-[70%] md:w-[50%] h-auto">
+        {% if company_info.map %}
         <img src="{{ company_info.map.url }}" alt="中米マップ" class="w-full h-full object-contain">
+        {% else %}
+        <p>マップ画像が登録されていません</p>
+        {% endif %}
       </div>
 
       {% for product in products|slice:":4" %}

@@ -1,4 +1,5 @@
 from django.db import models
+from cloudinary.models import CloudinaryField
 
 class CompanyInfo(models.Model):
     name = models.CharField(max_length=100)
@@ -6,21 +7,29 @@ class CompanyInfo(models.Model):
     address = models.CharField(max_length=200)
     phone = models.CharField(max_length=50)
     email = models.EmailField()
-    logo = models.ImageField(upload_to='company/', blank=True, null=True)
-    favicon = models.ImageField(upload_to='company/', blank=True, null=True)
-    title = models.ImageField(upload_to='company/', blank=True, null=True)
-    map = models.ImageField(upload_to='products/', blank=True, null=True)
+    logo = CloudinaryField('logo', folder='company/', blank=True, null=True)
+    favicon = CloudinaryField('favicon', folder='company/', blank=True, null=True)
+    title = CloudinaryField('title', folder='company/', blank=True, null=True)
+    map = CloudinaryField('map', folder='company/', blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "会社概要"
+        verbose_name_plural = "会社概要"
 
     def __str__(self):
         return self.name
-    
+
 class ShippingStep(models.Model):
     no = models.PositiveIntegerField(default=1)
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='shipping/', blank=True, null=True)
+    image = CloudinaryField('image', folder='shipping/', blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "送付"
+        verbose_name_plural = "送付"
 
     def __str__(self):
         return self.title
@@ -30,6 +39,10 @@ class PrivacyPolicy(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "プライバシーポリシー"
+        verbose_name_plural = "プライバシーポリシー"
 
     def __str__(self):
         return self.title
