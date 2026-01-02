@@ -1,12 +1,41 @@
-.env*
+# ======================
+# Environment variables
+# ======================
+.env
+.env.*
 
+# ======================
+# Django / Python
+# ======================
 db.sqlite3
 db_seed.json
 
 *.py[cod]
-/__pycache__/
+__pycache__/
 *.pyc
 
+# ======================
+# Virtual Environment
+# ======================
 venv/
+.env_venv/
 
+# ======================
+# Media / Static (local only)
+# ======================
 /media/
+/staticfiles/
+
+# ======================
+# Secrets / Google API
+# ======================
+secrets/
+client_secret.json
+get_token.py
+
+# ======================
+# OS / Editor
+# ======================
+.DS_Store
+Thumbs.db
+.vscode/

@@ -11,34 +11,39 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ---- env 読み込み ----
 env = environ.Env(
-    DEBUG=(bool, False),
+    DEBUG=(bool, False)  # デフォルト False
 )
-# 環境変数 ENV_STATE を dev / prod で切替
-ENV_STATE = 'prod'
-ENV_FILE = BASE_DIR / ('.env.dev' if ENV_STATE == 'dev' else '.env.prod')
+environ.Env.read_env(BASE_DIR / ".env")
 
-# ローカル開発時のみ .env を読む（Render 本番はダッシュボードの環境変数から入る）
-if ENV_FILE.exists():
-    environ.Env.read_env(str(ENV_FILE))
-
-DEBUG = env('DEBUG', default=False)
-SECRET_KEY = env('SECRET_KEY')  # 本番は必ずダッシュボードに設定
+DEBUG=False
+SECRET_KEY = env('SECRET_KEY')  
 ALLOWED_HOSTS = env("ALLOWED_HOSTS", default="127.0.0.1,localhost").split(",")
 print("ALLOWED_HOSTS:", ALLOWED_HOSTS)
 CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[])
+
+# googleクレデンシャル
+SERVICE_ACCOUNT_FILE = BASE_DIR / "client_secret.json"
+
+# 管理者メール
+ADMIN_EMAIL = env("ADMIN_EMAIL")
+
+# Gmail API
+GMAIL_SENDER = env("GMAIL_SENDER")
+GMAIL_CLIENT_ID = env("GMAIL_CLIENT_ID")
+GMAIL_CLIENT_SECRET = env("GMAIL_CLIENT_SECRET")
+GMAIL_REFRESH_TOKEN = env("GMAIL_REFRESH_TOKEN")
+
+# Google Sheets
+CONTACT_SHEET_ID = env("CONTACT_SHEET_ID")
+
 # DB
 DATABASES = {
-    'default': env.db('DATABASE_URL')
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
-# メール設定
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = env('EMAIL_HOST')
-EMAIL_PORT = env('EMAIL_PORT')
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
 # Application definition
 INSTALLED_APPS = [
@@ -63,7 +68,7 @@ NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    # 'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -77,6 +82,13 @@ SECURE_SSL_REDIRECT = env.bool('SECURE_SSL_REDIRECT', default=False)
 SESSION_COOKIE_SECURE = env.bool('SESSION_COOKIE_SECURE', default=False)
 CSRF_COOKIE_SECURE = env.bool('CSRF_COOKIE_SECURE', default=False)
 
+
+
+#  media: Cloudinary に保存
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+MEDIA_URL = '/media/'
+# MEDIA_ROOT = BASE_DIR / 'media'
+
 # Cloudinary 接続情報
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME'),
@@ -84,12 +96,7 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': env('CLOUDINARY_API_SECRET'),
 }
 
-#  Cloudinary に保存
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-MEDIA_URL = '/media/'
-# MEDIA_ROOT = BASE_DIR / 'media'
-
-# whitenoise
+# static: whitenoiseで収集
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
