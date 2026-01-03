@@ -15,7 +15,7 @@ env = environ.Env(
 )
 environ.Env.read_env(BASE_DIR / ".env")
 
-DEBUG=False
+DEBUG=True
 SECRET_KEY = env('SECRET_KEY')  
 ALLOWED_HOSTS = env("ALLOWED_HOSTS", default="127.0.0.1,localhost").split(",")
 print("ALLOWED_HOSTS:", ALLOWED_HOSTS)
@@ -62,9 +62,10 @@ INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage',
 ]
-
-TAILWIND_APP_NAME = 'theme'
-NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
+if DEBUG:
+    TAILWIND_APP_NAME = 'theme'
+    if os.name == "nt":
+        NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
