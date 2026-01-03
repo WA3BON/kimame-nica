@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ---- env 読み込み ----
 env = environ.Env(
-    DEBUG=(bool, False)  # デフォルト False
+    DEBUG=(bool, False) 
 )
 environ.Env.read_env(BASE_DIR / ".env")
 

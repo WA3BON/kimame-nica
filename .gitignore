@@ -24,7 +24,6 @@ venv/
 # Media / Static (local only)
 # ======================
 /media/
-/staticfiles/
 
 # ======================
 # Secrets / Google API
