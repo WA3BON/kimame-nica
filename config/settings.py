@@ -62,10 +62,15 @@ INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage',
 ]
+
 if DEBUG:
     TAILWIND_APP_NAME = 'theme'
     if os.name == "nt":
         NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
+else:
+    # 本番 Docker では Tailwind 無効化
+    TAILWIND_APP_NAME = None
+    NPM_BIN_PATH = None
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
