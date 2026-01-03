@@ -11,6 +11,8 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . .
 
+RUN python -m django --version
+RUN python manage.py check
 RUN python manage.py collectstatic --noinput
 
 CMD ["gunicorn", "config.wsgi:application", "--bind", ":8080"]
