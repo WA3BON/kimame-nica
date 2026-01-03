@@ -15,7 +15,7 @@ env = environ.Env(
 )
 environ.Env.read_env(BASE_DIR / ".env")
 
-DEBUG=True
+DEBUG=False
 SECRET_KEY = env('SECRET_KEY')  
 ALLOWED_HOSTS = env("ALLOWED_HOSTS", default="127.0.0.1,localhost").split(",")
 print("ALLOWED_HOSTS:", ALLOWED_HOSTS)
