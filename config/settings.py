@@ -21,9 +21,6 @@ ALLOWED_HOSTS = env("ALLOWED_HOSTS", default="127.0.0.1,localhost").split(",")
 print("ALLOWED_HOSTS:", ALLOWED_HOSTS)
 CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[])
 
-# googleクレデンシャル
-SERVICE_ACCOUNT_FILE = BASE_DIR / "client_secret.json"
-
 # 管理者メール
 ADMIN_EMAIL = env("ADMIN_EMAIL")
 
