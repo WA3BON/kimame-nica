@@ -1,6 +1,5 @@
 
 import os
-import environ
 from pathlib import Path
 import cloudinary
 import cloudinary.uploader
@@ -9,29 +8,55 @@ import cloudinary.api
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ---- env 読み込み ----
-env = environ.Env(
-    DEBUG=(bool, False) 
-)
-environ.Env.read_env(BASE_DIR / ".env")
 
-DEBUG=False
-SECRET_KEY = env('SECRET_KEY')  
-ALLOWED_HOSTS = env("ALLOWED_HOSTS", default="127.0.0.1,localhost").split(",")
+# .env ファイルを読む
+env_path = BASE_DIR / ".env"
+if env_path.exists():
+    with open(env_path) as f:
+        for line in f:
+            line = line.strip()
+            # 空行・コメント行は無視
+            if not line or line.startswith("#"):
+                continue
+            # = が無い行も無視
+            if "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            os.environ.setdefault(key, value)
+
+# ---- 環境変数（標準） ----
+SECRET_KEY = os.environ["SECRET_KEY"] 
+DEBUG = os.environ.get("DEBUG", "False") == "True"
+
+if DEBUG:
+    # デバッグ環境では固定
+    ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+else:
+    # 本番環境では環境変数から取得、カンマ区切りをリストに変換
+    ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
+
 print("ALLOWED_HOSTS:", ALLOWED_HOSTS)
-CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[])
 
-# 管理者メール
-ADMIN_EMAIL = env("ADMIN_EMAIL")
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
+    if origin.strip()
+]
+print("CSRF_TRUSTED_ORIGINS:", CSRF_TRUSTED_ORIGINS)
 
-# Gmail API
-GMAIL_SENDER = env("GMAIL_SENDER")
-GMAIL_CLIENT_ID = env("GMAIL_CLIENT_ID")
-GMAIL_CLIENT_SECRET = env("GMAIL_CLIENT_SECRET")
-GMAIL_REFRESH_TOKEN = env("GMAIL_REFRESH_TOKEN")
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
-# Google Sheets
-CONTACT_SHEET_ID = env("CONTACT_SHEET_ID")
+# ---- 管理者メール ----
+ADMIN_EMAIL = os.environ["ADMIN_EMAIL"]
+
+# ---- Gmail API ----
+GMAIL_SENDER = os.environ["GMAIL_SENDER"]
+GMAIL_CLIENT_ID = os.environ["GMAIL_CLIENT_ID"]
+GMAIL_CLIENT_SECRET = os.environ["GMAIL_CLIENT_SECRET"]
+GMAIL_REFRESH_TOKEN = os.environ["GMAIL_REFRESH_TOKEN"]
+
 
 # DB
 DATABASES = {
@@ -81,10 +106,6 @@ MIDDLEWARE = [
     'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
 
-SECURE_SSL_REDIRECT = env.bool('SECURE_SSL_REDIRECT', default=False)
-SESSION_COOKIE_SECURE = env.bool('SESSION_COOKIE_SECURE', default=False)
-CSRF_COOKIE_SECURE = env.bool('CSRF_COOKIE_SECURE', default=False)
-
 
 
 #  media: Cloudinary に保存
@@ -94,9 +115,9 @@ MEDIA_URL = '/media/'
 
 # Cloudinary 接続情報
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': env('CLOUDINARY_API_KEY'),
-    'API_SECRET': env('CLOUDINARY_API_SECRET'),
+    'CLOUD_NAME': os.environ["CLOUDINARY_CLOUD_NAME"],
+    'API_KEY': os.environ["CLOUDINARY_API_KEY"],
+    'API_SECRET': os.environ["CLOUDINARY_API_SECRET"],
 }
 
 # static: whitenoiseで収集
