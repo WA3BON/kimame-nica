@@ -9,6 +9,9 @@ class CompanyInfo(models.Model):
     email = models.EmailField()
     logo = CloudinaryField('logo', folder='company/', blank=True, null=True)
     favicon = CloudinaryField('favicon', folder='company/', blank=True, null=True)
+    ogp_image = CloudinaryField('ogp_image', folder='company/ogp/', blank=True, null=True)
+    ogp_title = models.CharField(max_length=200, blank=True)
+    ogp_description = models.TextField(blank=True)
     title = CloudinaryField('title', folder='company/', blank=True, null=True)
     map = CloudinaryField('map', folder='company/', blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -64,7 +67,7 @@ class OrderPolicy(models.Model):
     company_name = models.CharField("販売業者", max_length=200, default='KiMame')
     manager = models.CharField("運営責任者", max_length=100, default='未設定')
     address = models.CharField("所在地", max_length=300, default='Nicaragua')
-    phone = models.CharField("電話番号", max_length=50, default='未設定')
+    phone = models.CharField("電話番号", max_length=50, blank=True, default='未設定')
     email = models.EmailField("メールアドレス", default='未設定')
 
     shipping_fee = models.CharField("商品代金以外の必要料金", max_length=300, blank=True, default='未設定')
@@ -81,3 +84,17 @@ class OrderPolicy(models.Model):
 
     def __str__(self):
         return f"{self.company_name} - {self.manager}"
+    
+class AppPolicy(models.Model):
+    no = models.PositiveIntegerField(default=1)
+    title = models.CharField(max_length=200)
+    content = models.TextField(blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "アプリ規約"
+        verbose_name_plural = "アプリ規約"
+        ordering = ["no"]
+
+    def __str__(self):
+        return self.title

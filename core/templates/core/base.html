@@ -3,18 +3,30 @@
 <html lang="ja" class="scroll-smooth">
 <head>
   {% tailwind_css %}
-  
-  <title>{% block title %}KiMameサイト{% endblock %}</title>
+
+  <title>{% block title %}{{ company_info.ogp_title}}{% endblock %}</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  {# CSS js #}
   <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.3/dist/css/splide.min.css">
-  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'core/images/favicon.png' %}">
-  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'core/images/favicon.png' %}">
-  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'core/images/favicon.png' %}">
-  <link rel="manifest" href="{% static 'core/images/site.webmanifest' %}">
+
+  {# favicon #}
+  {% if company_info.favicon %}
+    <link rel="icon" href="{{ company_info.favicon.url }}">
+    <link rel="apple-touch-icon" href="{{ company_info.favicon.url }}">
+  {% endif %}
+
+  {# OGP #}
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ company_info.ogp_title|default:company_info.name }}">
+  <meta property="og:description" content="{{ company_info.ogp_description|default:company_info.description }}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  {% if company_info.ogp_image %}
+    <meta property="og:image" content="{{ company_info.ogp_image.url }}">
+  {% endif %}
 </head>
 <body class="relative bg-black text-[#9e7b3b]">
 
@@ -31,7 +43,7 @@
       <img  src="{{ company_info.title.url }}" alt="{{ company_info.name }}" class="h-10 w-auto">
     </a>
 
-    <!-- メニュー（md以上） -->
+    <!-- PC menu -->
     <nav class="hidden md:flex space-x-6 font-bold items-center text-[#9e7b3b]">
       <a href="{% url 'core:index' %}" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">ホーム</a>
       <a href="{% url 'core:index' %}#products" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">商品一覧</a>
@@ -39,24 +51,23 @@
       <a href="{% url 'core:contact' %}" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">お問合せ</a>
       <a href="{% url 'core:estimate' %}" class="px-6 py-2 bg-[#9e7b3b] text-black rounded-xl border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">お見積り</a>
     </nav>
-    <!-- ハンバーガーアイコン -->
-    <button @click="open = true" class="md:hidden text-[#9e7b3b]">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-           viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h16"/>
-      </svg>
+    
+    <!-- Hamburger -->
+     <button @click="open = !open" class="relative z-50 w-8 h-8 flex items-center justify-center md:hidden" aria-label="Menu">
+      <span class="absolute w-6 h-0.5 bg-[#9e7b3b] transition-all duration-300" :class="open ? 'rotate-45' : '-translate-y-2'"></span>
+      <span class="absolute w-6 h-0.5 bg-[#9e7b3b] transition-all duration-300" :class="open ? 'opacity-0' : ''"></span>
+      <span class="absolute w-6 h-0.5 bg-[#9e7b3b] transition-all duration-300" :class="open ? '-rotate-45' : 'translate-y-2'"></span>
     </button>
   </div>
 
-  <!-- スマホ用オーバーレイメニュー -->
+  <!-- Mobile menu -->
   <div
     x-show="open"
     x-transition
-    class="fixed inset-0 bg-black bg-opacity-10 z-50 flex flex-col items-center justify-center space-y-8 text-[#9e7b3b] text-xl"
+    class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center space-y-8 text-[#9e7b3b] text-xl"
   >
-    <!-- 閉じるボタン -->
-    <button @click="open = false" class="absolute top-5 right-5 text-[#9e7b3b] text-3xl">
+    <!-- close btn -->
+    <button @click="open = false" class="absolute top-1 right-8 text-[#9e7b3b] text-5xl">
       &times;
     </button>
 
@@ -85,8 +96,9 @@
     <nav class="flex flex-col md:flex-row md:space-x-10 space-y-2 md:space-y-0 text-center justify-center text-sm">
       <a href="{% url 'core:index' %}#company" class="hover:text-black/80">会社概要</a>
       <a href="{% url 'core:order_policy' %}" class="hover:text-black/80">特定商取引法に基づく表記</a>
-      <a href="{% url 'core:privacy_policy' %}" class="hover:text-black/80">個人情報の取り扱いについて</a>
+      <a href="{% url 'core:privacy_policy' %}" class="hover:text-black/80">プライバシーポリシー</a>
       <a href="{% url 'core:terms_of_service' %}" class="hover:text-black/80">利用規約</a>
+      <a href="{% url 'core:app_policy' %}" class="hover:text-black/80">アプリケーション規約</a>
       <a href="{% url 'core:contact' %}" class="hover:text-black/80">お問い合わせ</a>
     </nav>
 

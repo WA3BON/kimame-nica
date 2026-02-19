@@ -14,7 +14,9 @@
         <p><strong>販売業者：</strong> {{ policy.company_name }}</p>
         <p><strong>運営責任者：</strong> {{ policy.manager }}</p>
         <p><strong>所在地：</strong> {{ policy.address }}</p>
+        {% if policy.phone %}
         <p><strong>電話番号：</strong> {{ policy.phone }}</p>
+        {% endif %}
         <p><strong>メールアドレス：</strong> {{ policy.email }}</p>
         <p><strong>商品代金以外の必要料金：</strong> {{ policy.shipping_fee }}</p>
         <p><strong>支払方法：</strong> {{ policy.payment_method }}</p>

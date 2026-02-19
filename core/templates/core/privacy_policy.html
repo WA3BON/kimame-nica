@@ -10,12 +10,9 @@
     <h1 class="text-3xl font-bold text-center mb-8">プライバシーポリシー</h1>
 
     <p class="mb-4 whitespace-pre-line">
-      {{ order_policy.company_name }}（以下、当社といいます）は、お客様のプライバシー・個人情報および、
-      当社と取引関係のある皆様から提供を受けた個人番号（マイナンバー）を含む特定個人情報について
-      最大限の注意を払い、以下の通りプライバシーポリシーを定め、責任を持って保護し、適切に対応してまいります。
+      {{ order_policy.company_name }}（（以下、「当社」といいます。）は、当社が提供する商品販売サービスにおいて取得するお客様の個人情報について、個人情報の保護に関する法律その他関係法令を遵守し、適切に取り扱い、保護するため、以下のとおりプライバシーポリシー（以下、「本ポリシー」といいます。）を定めます。
     </p>
-
-    <ol class="space-y-8">
+      <ol class="space-y-8">
       {% for policy in policies %}
         <li>
           <p class="font-semibold mb-2">{{ policy.no }}. {{ policy.title }}</p>

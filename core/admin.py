@@ -1,11 +1,16 @@
 from traceback import format_tb
 from django.contrib import admin
-from .models import CompanyInfo, ShippingStep, PrivacyPolicy, OrderPolicy, TermsOfService
+from .models import CompanyInfo, ShippingStep, PrivacyPolicy, OrderPolicy, TermsOfService, AppPolicy
 
 @admin.register(CompanyInfo)
 class CompanyInfoAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'phone', 'updated_at', 'logo')
+    list_display = ('name', 'email', 'phone', 'updated_at', 'logo', 'favicon', 'ogp_image',)
     readonly_fields = ('updated_at',)
+
+    def has_add_permission(self, request):
+        if CompanyInfo.objects.exists():
+            return False
+        return True
 
 @admin.register(ShippingStep)
 class ShippingStepAdmin(admin.ModelAdmin):
@@ -28,3 +33,7 @@ class TermsOfServiceAdmin(admin.ModelAdmin):
     list_display = ('no', 'title', 'updated_at') 
     ordering = ('no',)  
 
+@admin.register(AppPolicy)
+class OAuthAppPolicyAdmin(admin.ModelAdmin):
+    list_display = ("no", "title", "updated_at")
+    ordering = ("no",)

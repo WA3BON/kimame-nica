@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}!KiMame¡アプリケーション規約{% endblock %}
+
+{% block content %}
+<section class="bg-black/90 text-[#9e7b3b] py-20 px-6">
+  <div class="max-w-4xl w-full mx-auto backdrop-blur-md rounded-3xl shadow-xl p-10"
+       style="background-image: url('{% static 'core/images/texture_Pblack.jpg' %}'); background-repeat: repeat; background-size: auto;">
+
+    <h1 class="text-3xl font-bold text-center mb-8">アプリケーション規約</h1>
+
+    <ol class="space-y-8">
+      {% for policy in policies %}
+        <li>
+          <p class="font-semibold mb-2">{{ policy.no }}. {{ policy.title }}</p>
+          <p class="mb-4 whitespace-pre-line">{{ policy.content }}</p>
+        </li>
+      {% empty %}
+        <p>現在、アプリ説明の情報はありません。</p>
+      {% endfor %}
+    </ol>
+
+    <div class="mt-10 border-t border-[#9e7b3b] pt-6 text-sm">
+      {% if last_policy %}
+      <p>最終更新日: {{ last_policy.updated_at|date:"Y年m月d日" }}</p>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+{% endblock %}

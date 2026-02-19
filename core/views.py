@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.conf import settings
 
 from .models import (
-    CompanyInfo,
+    AppPolicy,
     ShippingStep,
     PrivacyPolicy,
     OrderPolicy,
@@ -22,7 +22,7 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["shipping_steps"] = ShippingStep.objects.all()
+        context["shipping_steps"] = ShippingStep.objects.all().order_by("no")
         context["products"] = Product.objects.all()
         return context
 
@@ -87,8 +87,6 @@ class EstimateView(FormView):
         お届け先都道府県: {prefecture}
         
         メッセージ:{message}"""
-
-
 
         send_mail_with_gmail(
             to_email=settings.ADMIN_EMAIL,
@@ -163,4 +161,18 @@ class OrderPolicyView(TemplateView):
         context = super().get_context_data(**kwargs)
         # 最新の1件を取得（存在しない場合は None）
         context["policy"] = OrderPolicy.objects.last()
+        return context
+
+class AppPolicyView(ListView):
+    model = AppPolicy
+    template_name = "core/app_policy.html"
+    context_object_name = "policies"
+    ordering = ["no"]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # 注文ポリシー情報（責任者・メール）を渡す
+        context["order_policy"] = OrderPolicy.objects.last()
+        # 最終更新日用
+        context["last_policy"] = self.get_queryset().last()
         return context

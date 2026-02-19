@@ -12,9 +12,6 @@ urlpatterns = [
     path("__reload__/", include("django_browser_reload.urls")),
     path('', include('core.urls', namespace='core')),
     path('shop/', include('shop.urls', namespace='shop')), 
-    path("favicon.ico", RedirectView.as_view(
-        url=settings.STATIC_URL + "core/images/favicon.png"
-    )),
     path("robots.txt", RedirectView.as_view(
         url=settings.STATIC_URL + "core/robots.txt"
     )),
