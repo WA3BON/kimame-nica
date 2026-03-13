@@ -1,0 +1,48 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}!KiMame¡お問い合わせフォーム{% endblock %}
+
+{% block content %}
+<section class="bg-black/90 flex flex-col items-center justify-center py-20 px-6 text-[#9e7b3b]">
+  
+  {% if messages %}
+  <div class="max-w-2xl w-full mx-auto mb-6">
+    {% for message in messages %}
+    <div class="bg-[#9e7b3b] text-black p-4 rounded-lg shadow mb-2">
+      {{ message }}
+    </div>
+  {% endfor %}
+  </div>
+  {% endif %}
+  
+  <div class="backdrop-blur-md rounded-3xl shadow-xl max-w-2xl w-full p-10"
+       style="background-image: url('{% static 'core/images/texture_Pblack.jpg' %}'); background-repeat: repeat; background-size: auto;"
+       x-data="contactForm()">
+    <h2 class="text-3xl font-bold text-center mb-6">お問い合わせ</h2>
+    <p class="text-center mb-8">KiMameへのご質問は、こちらからどうぞ。</p>
+    <form action="{% url 'core:contact' %}" method="post">
+      {% csrf_token %}
+      <div>
+        <label for="id_name" class="block py-4 mb-1 font-semibold">お名前</label>
+        {{ form.name }}
+      </div>
+      <div>
+        <label for="id_email" class="block py-4 mb-1 font-semibold">メールアドレス</label>
+        {{ form.email }}
+      </div>
+      <div>
+        <label for="id_message" class="block py-4 mb-1 font-semibold">お問い合わせ内容</label>
+        {{ form.message }}
+      </div>
+      <div class="text-center py-10">
+        <button type="submit"
+          class="px-6 py-2 bg-[#9e7b3b] text-black rounded-xl font-semibold text-center border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
+          送信
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+
+{% endblock %}

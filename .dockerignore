@@ -1,0 +1,45 @@
+# ======================
+# Environment variables
+# ======================
+.env
+.env.samples
+
+# ======================
+# Django / Python
+# ======================
+db.sqlite3
+
+*.py[cod]
+__pycache__/
+*.pyc
+
+# ======================
+# Virtual Environment
+# ======================
+venv/
+.env_venv/
+
+# ======================
+# media / static
+# ======================
+media/
+theme/static_src/node_modules
+staticfiles/
+
+# ======================
+# Secrets
+# ======================
+secrets/
+client_secret.json
+
+# ======================
+# OS / Editor
+# ======================
+.DS_Store
+Thumbs.db
+.vscode/
+
+# ======================
+# git
+# ======================
+.git
