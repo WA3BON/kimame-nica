@@ -78,5 +78,5 @@ jobs:
           # A prior manual deploy set some of these as plain env vars; "replace"
           # (--set-*) fully swaps in the declarative list above instead of merging,
           # avoiding "already set with a different type" conflicts against secrets.
-          env_vars_update_strategy: replace
-          secrets_update_strategy: replace
+          env_vars_update_strategy: overwrite
+          secrets_update_strategy: overwrite
