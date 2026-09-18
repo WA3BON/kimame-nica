@@ -75,3 +75,8 @@ jobs:
             CSRF_TRUSTED_ORIGINS=${{ vars.CSRF_TRUSTED_ORIGINS }}
             ADMIN_EMAIL=${{ vars.ADMIN_EMAIL }}
             GMAIL_SENDER=${{ vars.GMAIL_SENDER }}
+          # A prior manual deploy set some of these as plain env vars; "replace"
+          # (--set-*) fully swaps in the declarative list above instead of merging,
+          # avoiding "already set with a different type" conflicts against secrets.
+          env_vars_update_strategy: replace
+          secrets_update_strategy: replace
