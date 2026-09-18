@@ -1,0 +1,116 @@
+{% extends 'core/base.html' %}
+
+{% block title %}!KiMame¡注文詳細{% endblock %}
+
+{% block content %}
+<section class="bg-black/90 py-20 px-6 text-[#9e7b3b] min-h-screen" x-data="{ editing: false }">
+ <div class="max-w-2xl mx-auto">
+ <a href="{% url 'shop:order_history' %}" class="inline-block mb-6 hover:underline">&larr; 注文履歴へ戻る</a>
+
+ {% if messages %}
+ <div class="mb-6">
+ {% for message in messages %}
+ <div class="bg-[#9e7b3b] text-black p-4 rounded-lg shadow mb-2">{{ message }}</div>
+ {% endfor %}
+ </div>
+ {% endif %}
+
+ <div class="border-2 border-[#9e7b3b] rounded-2xl p-8">
+ <h2 class="text-2xl font-bold mb-2">注文 #{{ order.pk }}</h2>
+ <p class="mb-2">状態: {{ order.get_status_display }} / {{ order.created_at|date:"Y年n月j日 H:i" }}</p>
+ {% if order.status == 'pending' %}
+ <a href="{% url 'shop:order_pay' order.pk %}"
+ class="inline-block mb-6 px-6 py-2 bg-[#9e7b3b] text-black rounded-xl font-semibold border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
+ 支払いへ進む
+ </a>
+ {% else %}
+ <div class="mb-6"></div>
+ {% endif %}
+
+ <table class="w-full text-left mb-6">
+ <thead>
+ <tr class="border-b border-[#9e7b3b] text-sm">
+ <th class="py-2">商品</th>
+ <th class="py-2">単価</th>
+ <th class="py-2">数量</th>
+ <th class="py-2">小計</th>
+ </tr>
+ </thead>
+ <tbody>
+ {% for item in order.items.all %}
+ <tr class="border-b border-[#9e7b3b]/30">
+ <td class="py-2">{{ item.product_name }}({{ item.weight_kg }}kg)</td>
+ <td class="py-2">{{ item.unit_price }} 円</td>
+ <td class="py-2">{{ item.quantity }}</td>
+ <td class="py-2 font-bold">{{ item.line_total }} 円</td>
+ </tr>
+ {% endfor %}
+ </tbody>
+ </table>
+
+ <p class="text-right text-2xl font-bold mb-8">合計: {{ order.total }} 円</p>
+
+ <div class="flex justify-between items-center mb-2">
+ <h3 class="text-lg font-bold">お届け先</h3>
+ {% if order.status != 'fulfilled' %}
+ <button @click="editing = !editing" class="text-sm underline hover:opacity-80" x-text="editing ? 'キャンセル' : '編集する'"></button>
+ {% endif %}
+ </div>
+
+ <div x-show="!editing">
+ <p>{{ order.shipping_name }} 様</p>
+ <p>〒{{ order.shipping_postal_code }} {{ order.shipping_prefecture }}{{ order.shipping_city }}{{ order.shipping_address_line1 }} {{ order.shipping_address_line2 }}</p>
+ <p>電話: {{ order.shipping_phone }}</p>
+ {% if order.status == 'fulfilled' %}
+ <p class="text-sm mt-2 opacity-70">発送済みのため、お名前・お届け先は変更できません。</p>
+ {% endif %}
+ </div>
+
+ {% if order.status != 'fulfilled' %}
+ <form x-show="editing" x-cloak method="post" action="{% url 'shop:order_shipping_update' order.pk %}" class="space-y-3 mt-3">
+ {% csrf_token %}
+ <div>
+ <label class="block text-sm mb-1">お名前</label>
+ <input type="text" name="full_name" value="{{ order.shipping_name }}" required
+ class="w-full bg-black border border-[#9e7b3b] rounded-lg px-3 py-2">
+ </div>
+ <div>
+ <label class="block text-sm mb-1">郵便番号</label>
+ <input type="text" name="postal_code" value="{{ order.shipping_postal_code }}" required
+ class="w-full bg-black border border-[#9e7b3b] rounded-lg px-3 py-2">
+ </div>
+ <div>
+ <label class="block text-sm mb-1">都道府県</label>
+ <input type="text" name="prefecture" value="{{ order.shipping_prefecture }}" required
+ class="w-full bg-black border border-[#9e7b3b] rounded-lg px-3 py-2">
+ </div>
+ <div>
+ <label class="block text-sm mb-1">市区町村</label>
+ <input type="text" name="city" value="{{ order.shipping_city }}" required
+ class="w-full bg-black border border-[#9e7b3b] rounded-lg px-3 py-2">
+ </div>
+ <div>
+ <label class="block text-sm mb-1">番地</label>
+ <input type="text" name="address_line1" value="{{ order.shipping_address_line1 }}" required
+ class="w-full bg-black border border-[#9e7b3b] rounded-lg px-3 py-2">
+ </div>
+ <div>
+ <label class="block text-sm mb-1">建物名など</label>
+ <input type="text" name="address_line2" value="{{ order.shipping_address_line2 }}"
+ class="w-full bg-black border border-[#9e7b3b] rounded-lg px-3 py-2">
+ </div>
+ <div>
+ <label class="block text-sm mb-1">電話番号</label>
+ <input type="text" name="phone" value="{{ order.shipping_phone }}" required
+ class="w-full bg-black border border-[#9e7b3b] rounded-lg px-3 py-2">
+ </div>
+ <button type="submit"
+ class="px-6 py-2 bg-[#9e7b3b] text-black rounded-xl font-semibold border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
+ 保存する
+ </button>
+ </form>
+ {% endif %}
+ </div>
+ </div>
+</section>
+{% endblock %}

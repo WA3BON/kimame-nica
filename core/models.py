@@ -1,5 +1,33 @@
+from django.conf import settings
 from django.db import models
 from cloudinary.models import CloudinaryField
+
+
+class Inquiry(models.Model):
+    class Kind(models.TextChoices):
+        CONTACT = 'contact', 'お問い合わせ'
+        ESTIMATE = 'estimate', 'お見積り'
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='inquiries'
+    )
+    kind = models.CharField(max_length=20, choices=Kind.choices)
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    product = models.CharField(max_length=100, blank=True)
+    quantity = models.PositiveIntegerField(null=True, blank=True)
+    prefecture = models.CharField(max_length=10, blank=True)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "お問い合わせ"
+        verbose_name_plural = "お問い合わせ"
+
+    def __str__(self):
+        return f"{self.get_kind_display()} - {self.name} ({self.created_at:%Y-%m-%d})"
+
 
 class CompanyInfo(models.Model):
     name = models.CharField(max_length=100)

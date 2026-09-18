@@ -19,4 +19,4 @@ RUN python manage.py tailwind build
 # static
 RUN python manage.py collectstatic
 
-CMD ["gunicorn","config.wsgi:application","--bind","0.0.0.0:8080"]
+CMD ["sh", "-c", "python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8080"]

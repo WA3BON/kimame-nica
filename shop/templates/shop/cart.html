@@ -1,0 +1,95 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}!KiMame¡カート{% endblock %}
+
+{% block content %}
+<section class="bg-black/90 py-20 px-6 text-[#9e7b3b] min-h-screen">
+ <div class="max-w-3xl mx-auto">
+ {% if messages %}
+ <div class="mb-6">
+ {% for message in messages %}
+ <div class="bg-[#9e7b3b] text-black p-4 rounded-lg shadow mb-2">{{ message }}</div>
+ {% endfor %}
+ </div>
+ {% endif %}
+
+ <div class="text-center mb-10">
+ <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 opacity-70">Cart</p>
+ <div class="flex items-center justify-center gap-3">
+ <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70" alt="">
+ <h2 class="shimmer-title text-3xl font-bold">カート</h2>
+ <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70 -scale-x-100" alt="">
+ </div>
+ </div>
+
+ {% if cart_items %}
+ <div class="border-2 border-[#9e7b3b] rounded-2xl overflow-hidden">
+ <table class="w-full text-left">
+ <thead>
+ <tr class="border-b border-[#9e7b3b] text-sm">
+ <th class="p-4">商品</th>
+ <th class="p-4">単価</th>
+ <th class="p-4">数量</th>
+ <th class="p-4">小計</th>
+ <th class="p-4"></th>
+ </tr>
+ </thead>
+ <tbody>
+ {% for entry in cart_items %}
+ <tr class="border-b border-[#9e7b3b]/30">
+ <td class="p-4">
+ <a href="{% url 'shop:product_detail' entry.product.pk %}" class="font-semibold hover:underline">
+ {{ entry.product.name }}
+ </a>
+ <span class="text-sm">({{ entry.variant.label }})</span>
+ </td>
+ <td class="p-4">{{ entry.variant.price }} 円</td>
+ <td class="p-4">
+ <form action="{% url 'shop:cart_update' entry.variant.pk %}" method="post" class="flex items-center gap-2">
+ {% csrf_token %}
+ <input type="number" name="quantity" value="{{ entry.quantity }}" min="1"
+ class="w-16 bg-black border border-[#9e7b3b] rounded-lg px-2 py-1">
+ <button type="submit" class="text-xs underline">更新</button>
+ </form>
+ </td>
+ <td class="p-4 font-bold">{{ entry.line_total }} 円</td>
+ <td class="p-4">
+ <form action="{% url 'shop:cart_remove' entry.variant.pk %}" method="post">
+ {% csrf_token %}
+ <button type="submit" class="text-red-400 hover:underline text-sm">削除</button>
+ </form>
+ </td>
+ </tr>
+ {% endfor %}
+ </tbody>
+ </table>
+ </div>
+
+ <div class="text-right mt-6">
+ <p class="text-2xl font-bold">合計: {{ cart_total }} 円</p>
+ </div>
+
+ <div class="text-center mt-10">
+ {% if user.is_authenticated %}
+ <a href="{% url 'shop:checkout' %}"
+ class="inline-block px-8 py-3 bg-[#9e7b3b] text-black rounded-xl font-semibold border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
+ レジに進む
+ </a>
+ {% else %}
+ <p class="mb-4">購入手続きにはログインが必要です。</p>
+ <a href="{% url 'account_login' %}?next={% url 'shop:checkout' %}"
+ class="inline-block px-8 py-3 bg-[#9e7b3b] text-black rounded-xl font-semibold border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
+ ログインして購入手続きへ
+ </a>
+ {% endif %}
+ </div>
+ {% else %}
+ <p class="text-center">カートに商品がありません。</p>
+ <div class="text-center mt-6">
+ <a href="{% url 'shop:product_list' %}" class="underline">商品一覧を見る</a>
+ </div>
+ {% endif %}
+ </div>
+</section>
+{% endblock %}

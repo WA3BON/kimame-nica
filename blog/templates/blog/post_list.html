@@ -1,0 +1,101 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}!KiMame¡ブログ{% endblock %}
+
+{% block content %}
+<section class="bg-black/90 py-20 px-6 text-[#9e7b3b] min-h-screen">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-8">
+      <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 opacity-70">Blog</p>
+      <div class="flex items-center justify-center gap-3">
+        <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70" alt="">
+        <h2 class="shimmer-title text-3xl font-bold">ブログ</h2>
+        <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70 -scale-x-100" alt="">
+      </div>
+      <p class="max-w-xl mx-auto mt-4 text-sm leading-relaxed opacity-80">
+        産地の風景、コーヒーとカカオにまつわる豆知識、KiMameからのお知らせなど。<br>
+        現地の空気を感じてもらえるような記事を、少しずつお届けしていきます。
+      </p>
+    </div>
+
+    <form method="get" class="flex flex-wrap gap-3 justify-center items-center mb-6">
+      {% if selected_tag %}<input type="hidden" name="tag" value="{{ selected_tag }}">{% endif %}
+      <div class="relative w-full max-w-md">
+        <input type="text" name="q" value="{{ query }}" placeholder="記事を検索"
+          class="w-full bg-black border border-[#9e7b3b] rounded-full pl-5 pr-12 py-2 focus:outline-none focus:ring-1 focus:ring-[#9e7b3b]">
+        <button type="submit" aria-label="検索"
+          class="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#9e7b3b] text-black flex items-center justify-center hover:bg-black hover:text-[#9e7b3b] border border-transparent hover:border-[#9e7b3b] transition">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+            <circle cx="11" cy="11" r="7"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+      {% if query or selected_tag %}
+      <a href="{% url 'blog:post_list' %}" class="text-sm underline opacity-80 hover:opacity-100">条件をクリア</a>
+      {% endif %}
+    </form>
+
+    {% if tags %}
+    <div class="flex flex-wrap gap-2 justify-center mb-12">
+      <a href="{% url 'blog:post_list' %}{% if query %}?q={{ query }}{% endif %}"
+        class="px-4 py-1 rounded-full text-sm border transition {% if not selected_tag %}bg-[#9e7b3b] text-black border-transparent{% else %}border-[#9e7b3b] hover:bg-[#9e7b3b] hover:text-black{% endif %}">
+        すべて
+      </a>
+      {% for tag in tags %}
+      <a href="?tag={{ tag.slug }}{% if query %}&q={{ query }}{% endif %}"
+        class="px-4 py-1 rounded-full text-sm border transition {% if selected_tag == tag.slug %}bg-[#9e7b3b] text-black border-transparent{% else %}border-[#9e7b3b] hover:bg-[#9e7b3b] hover:text-black{% endif %}">
+        #{{ tag.name }}
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if posts %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for post in posts %}
+      <a href="{% url 'blog:post_detail' post.slug %}"
+        class="shine-card flex flex-col bg-black border border-[#9e7b3b] rounded-lg overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300">
+        {% if post.thumbnail %}
+        <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}" class="w-full h-40 object-cover">
+        {% endif %}
+        <div class="p-4 flex flex-col flex-1">
+          <p class="text-xs mb-2 opacity-70">{{ post.published_at|date:"Y年n月j日" }}{% if post.author %} ／ {{ post.author.username }}{% endif %}</p>
+          <p class="text-lg font-bold mb-2">{{ post.title }}</p>
+          {% if post.excerpt %}
+          <p class="text-sm line-clamp-3 opacity-90">{{ post.excerpt }}</p>
+          {% endif %}
+          {% if post.tags.all %}
+          <div class="flex flex-wrap gap-1.5 mt-3">
+            {% for tag in post.tags.all %}
+            <span class="text-[11px] px-2 py-0.5 rounded-full border border-[#9e7b3b]/70 opacity-80">#{{ tag.name }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+          <p class="text-xs mt-auto pt-4 font-semibold">続きを読む &rarr;</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+    <div class="flex justify-center gap-4 mt-12">
+      {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}{% if selected_tag %}&tag={{ selected_tag }}{% endif %}{% if query %}&q={{ query }}{% endif %}" class="underline">前へ</a>
+      {% endif %}
+      <span>{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}{% if selected_tag %}&tag={{ selected_tag }}{% endif %}{% if query %}&q={{ query }}{% endif %}" class="underline">次へ</a>
+      {% endif %}
+    </div>
+    {% endif %}
+    {% else %}
+    <p class="text-center opacity-80">
+      {% if query or selected_tag %}条件に一致する記事が見つかりませんでした。{% else %}まだ記事がありません。{% endif %}
+    </p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

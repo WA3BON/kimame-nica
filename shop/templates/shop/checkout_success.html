@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% block title %}!KiMame¡ご注文ありがとうございます{% endblock %}
+
+{% block content %}
+<section class="bg-black/90 flex flex-col items-center justify-center py-32 px-6 text-[#9e7b3b] text-center min-h-[60vh]">
+ <h2 class="text-3xl font-bold mb-6">ご注文ありがとうございます</h2>
+ <p class="mb-10">決済が完了次第、確認メールをお送りします。</p>
+ <a href="{% url 'shop:order_history' %}"
+ class="px-6 py-2 bg-[#9e7b3b] text-black rounded-xl font-semibold border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
+ 注文履歴を見る
+ </a>
+</section>
+{% endblock %}

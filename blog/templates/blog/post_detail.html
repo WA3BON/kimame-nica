@@ -1,0 +1,29 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}!KiMame¡{{ post.title }}{% endblock %}
+
+{% block content %}
+<section class="bg-black/90 py-20 px-6 text-[#9e7b3b] min-h-screen">
+  <div class="max-w-3xl mx-auto">
+    <a href="{% url 'blog:post_list' %}" class="inline-block mb-6 hover:underline">&larr; ブログ一覧へ戻る</a>
+
+    <article class="bg-black border border-[#9e7b3b] rounded-2xl p-8">
+      {% if post.thumbnail %}
+      <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}" class="w-full h-64 object-cover rounded-xl mb-6">
+      {% endif %}
+      <p class="text-sm mb-2">{{ post.published_at|date:"Y年n月j日" }}{% if post.author %} ／ {{ post.author.username }}{% endif %}</p>
+      <h1 class="text-3xl font-bold mb-4">{{ post.title }}</h1>
+      {% if post.tags.all %}
+      <div class="flex flex-wrap gap-1.5 mb-6">
+        {% for tag in post.tags.all %}
+        <a href="{% url 'blog:post_list' %}?tag={{ tag.slug }}"
+          class="text-xs px-3 py-1 rounded-full border border-[#9e7b3b] hover:bg-[#9e7b3b] hover:text-black transition">#{{ tag.name }}</a>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <div class="whitespace-pre-line leading-relaxed">{{ post.content }}</div>
+    </article>
+  </div>
+</section>
+{% endblock %}

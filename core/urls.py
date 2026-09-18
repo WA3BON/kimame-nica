@@ -1,10 +1,11 @@
 from django.urls import path
-from .views import IndexView, ContactView, EstimateView, PrivacyPolicyView, OrderPolicyView, TermsOfServiceView, AppPolicyView
+from .views import IndexView, ContactView, EstimateView, MyPageView, PrivacyPolicyView, OrderPolicyView, TermsOfServiceView, AppPolicyView
 
 app_name = 'core'
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
+    path('mypage/', MyPageView.as_view(), name='mypage'),
     path('contact/', ContactView.as_view(), name='contact'),
     path('estimate/', EstimateView.as_view(), name='estimate'),
     path("privacy-policy/", PrivacyPolicyView.as_view(), name="privacy_policy"),

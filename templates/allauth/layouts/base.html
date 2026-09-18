@@ -1,0 +1,33 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+  {% tailwind_css %}
+  <title>{% block head_title %}{% endblock head_title %} - KiMame</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+  {% block extra_head %}{% endblock extra_head %}
+</head>
+<body class="bg-black text-[#9e7b3b] min-h-screen">
+  <header class="w-full py-4 px-8 flex justify-center border-b border-[#9e7b3b]/30">
+    <a href="{% url 'core:index' %}" class="text-xl font-bold tracking-wide">KiMame</a>
+  </header>
+  {% block body %}
+  <section class="flex items-center justify-center py-20 px-6 min-h-[70vh]">
+    <div class="rounded-3xl shadow-xl max-w-md w-full p-10 bg-black border-2 border-[#9e7b3b]">
+      {% if messages %}
+      <div class="mb-6">
+        {% for message in messages %}
+        <div class="bg-[#9e7b3b] text-black p-4 rounded-lg shadow mb-2">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% block content %}{% endblock content %}
+    </div>
+  </section>
+  {% endblock body %}
+  {% block extra_body %}{% endblock extra_body %}
+  <script src="{% static 'core/js/common.js' %}"></script>
+</body>
+</html>

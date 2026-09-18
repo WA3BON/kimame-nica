@@ -4,264 +4,284 @@
 {% block content %}
 
 <section x-data="{ scrolled: false }" x-init="window.addEventListener('scroll', () => scrolled = window.scrollY > 100)"
-  class="relative h-screen w-full overflow-hidden">
-  <div class="absolute inset-0 z-0">
-    <img src="{% static 'core/images/coffee-farm2.jpg' %}" alt="コーヒー農園"
-      class="w-full h-full object-cover brightness-25" />
-  </div>
+ class="relative h-screen w-full overflow-hidden">
+ <div class="absolute inset-0 z-0">
+ <img src="{% static 'core/images/coffee-farm2.jpg' %}" alt="コーヒー農園"
+ class="w-full h-full object-cover brightness-25" />
+ </div>
 
-  <div :class="scrolled ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'"
-    class="absolute inset-0 bg-[#7f5b37] bg-repeat bg-center transition-all duration-1000 ease-in-out z-50"
-    style="background-image: url('{% static 'core/images/texture_Pbrown.jpg' %}');">
-    <div class="flex items-center justify-center h-full">
-      <img src="{{ company_info.logo.url }}" alt="{{ company_info.name }}" class="w-100 md:w-100 h-auto" />
-    </div>
-  </div>
+ <div :class="scrolled ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'"
+ class="absolute inset-0 bg-[#7f5b37] bg-repeat bg-center transition-all duration-1000 ease-in-out z-50"
+ style="background-image: url('{% static 'core/images/texture_Pbrown.jpg' %}');">
+ <div class="flex items-center justify-center h-full">
+ <img src="{{ company_info.logo.url }}" alt="{{ company_info.name }}" class="w-100 md:w-100 h-auto" />
+ </div>
+ </div>
 
-  <div :class="scrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-1000 z-20 flex flex-col items-center justify-centerr fade-in opacity-0 translate-y-6"
-    style="transition-delay: 1000ms;">
-    <img src="{{ company_info.title.url }}" alt="{{ company_info.name }}" class="h-20 w-auto">
-    <h2 class="text-2xl md:text-3xl font-bold text-center mb-12 min-h-[4rem]">コーヒーとカカオの生豆販売 </h2>
-  </div>
+ <div :class="scrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
+ class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-1000 z-20 flex flex-col items-center justify-centerr fade-in opacity-0 translate-y-6"
+ style="transition-delay: 1000ms;">
+ <img src="{{ company_info.title.url }}" alt="{{ company_info.name }}" class="h-20 w-auto">
+ <h2 class="text-2xl md:text-3xl font-bold text-center mb-12 min-h-[4rem]">コーヒーとカカオの生豆販売 </h2>
+ </div>
 </section>
 
-<section id="products" class="py-16 text-[#9e7b3b] bg-cover bg-repeat" style="background-image: url('{% static "core/images/texture_PBlack.jpg" %}');">
+<section id="products" class="py-16 text-[#9e7b3b] bg-cover bg-repeat" style="background-image: url('{% static "core/images/texture_Pblack.jpg" %}');">
 
-  <div class="text-center mb-10">
-    <h2 class="text-3xl font-bold tracking-wide">商品一覧</h2>
-  </div>
+ <div class="text-center mb-10">
+ <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 opacity-70">Featured Products</p>
+ <div class="flex items-center justify-center gap-3">
+ <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70" alt="">
+ <h2 class="shimmer-title text-3xl font-bold tracking-wide">注目の商品</h2>
+ <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70 -scale-x-100" alt="">
+ </div>
+ </div>
 
-  <div class="relative max-w-7xl mx-auto px-8">
-    <div class="splide" id="product-carousel">
-      <div class="splide__track">
-        <ul class="splide__list">
-          {% for product in products %}
-          <li class="splide__slide p-4">
-            <div
-              class="relative bg-black border-2 border-[#9e7b3b] rounded-lg overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300">
+ <div class="relative max-w-7xl mx-auto px-8">
+ <div class="splide" id="product-carousel">
+ <div class="splide__track">
+ <ul class="splide__list">
+ {% for product in featured_products %}
+ <li class="splide__slide p-4">
+ <a href="{% url 'shop:product_detail' product.pk %}"
+ class="shine-card block relative bg-black/80 border border-[#9e7b3b] rounded-lg overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300">
+ <div class="absolute top-2 left-2 bg-black rounded-full shadow">
+ <img src="{{ product.logo.url }}" alt="{{ product.name }}" class="h-10 m-2">
+ </div>
 
-              <div class="absolute top-2 left-2 bg-black rounded-full shadow">
-                <img src="{{ product.logo.url }}" alt="{{ product.name }}" class="h-10 m-2">
-              </div>
+ <div
+ class="absolute top-2 right-2 bg-[#9e7b3b] text-black text-xs font-bold px-4 py-1 rounded-full shadow">
+ {{ product.origin }}
+ </div>
 
-              <div
-                class="absolute top-2 right-2 bg-[#9e7b3b] text-black text-xs font-bold px-4 py-1 rounded-full shadow">
-                {{ product.origin }}
-              </div>
+ <img src="{{ product.image.url }}" alt="{{ product.title }}" class="w-full h-48 object-cover">
 
-              <img src="{{ product.image.url }}" alt="{{ product.title }}" class="w-full h-48 object-cover">
-
-              <div class="p-4 flex flex-col">
-                <p class="text-xl font-bold">{{ product.name }}</p>
-                <p class="text-sm whitespace-pre-line mt-2">{{ product.description }}</p>
-                <p class="mt-4 font-bold ml-auto">1㎏あたり{{ product.price }} 円～</p>
-              </div>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
-  </div>
+ <div class="p-4 flex flex-col">
+ {% if product.title %}
+ <p class="text-sm">{{ product.title }}</p>
+ {% endif %}
+ <p class="text-xl font-bold">{{ product.name }}</p>
+ <ul class="mt-2 text-sm space-y-0.5">
+ {% for variant in product.variants.all %}
+ <li class="flex justify-between gap-4">
+ <span>{{ variant.label }}</span>
+ <span class="font-bold">{{ variant.price }} 円</span>
+ </li>
+ {% endfor %}
+ </ul>
+ </div>
+ </a>
+ </li>
+ {% endfor %}
+ </ul>
+ </div>
+ </div>
+ <div class="text-center mt-10">
+ <a href="{% url 'shop:product_list' %}"
+ class="inline-block px-8 py-3 bg-[#9e7b3b] text-black rounded-xl font-semibold border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
+ 商品一覧を見る
+ </a>
+ </div>
+ </div>
 </section>
 
-<section class="bg-[#573414] bg-[radial-gradient(circle_at_20%_30%,rgba(255,255,255,0.08),transparent_40%),radial-gradient(circle_at_80%_70%,rgba(0,0,0,0.15),transparent_40%)]">
-  <div class="relative max-w-7xl mx-auto p-10 text-black">
-    <h2 class="text-3xl md:text-4xl font-bold text-center">産地について</h2>
+<section class="bg-[#9e7b3b] py-16">
+ <div class="relative max-w-6xl mx-auto px-6">
+ <div class="text-center mb-12">
+ <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 text-black/60">Our Origins</p>
+ <div class="flex items-center justify-center gap-3">
+ <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70" alt="">
+ <h2 class="shimmer-title text-3xl md:text-4xl font-bold">産地について</h2>
+ <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70 -scale-x-100" alt="">
+ </div>
+ </div>
 
-    <div class="flex flex-col relative justify-center items-center">
-      <div class="w-[70%] md:w-[50%] h-auto">
-        {% if company_info.map %}
-        <img src="{{ company_info.map.url }}" alt="中米マップ" class="w-full h-full object-contain">
-        {% else %}
-        <p>マップ画像が登録されていません</p>
-        {% endif %}
-      </div>
+ {% if company_info.map %}
+ <div class="grid grid-cols-1 lg:grid-cols-[1fr_2fr_1fr] gap-8 items-center">
+ <div class="order-2 lg:order-1 border-2 border-black/20 rounded-2xl p-6 text-black">
+ <div class="flex items-center gap-2 mb-3">
+ <img src="{% static 'core/images/leaf3.png' %}" class="h-4" alt="">
+ <h3 class="font-bold text-base">ニカラグアについて</h3>
+ </div>
+ <p class="text-sm leading-relaxed">
+ ニカラグアは中央アメリカに位置し、太平洋と大西洋(カリブ海)の両方に面した、火山と湖に彩られる自然豊かな国です。国土の中央から北部にかけては火山活動によって生まれた肥沃な土壌が広がり、標高1,000mを超える山岳地帯も点在しています。昼夜の寒暖差が大きく、雨季と乾季がはっきりと分かれる気候は、コーヒーやカカオといった繊細な農作物をゆっくりと熟成させるのに適しており、古くから中米有数の産地として知られています。国土の中央にはニカラグア湖という中米最大級の湖も広がり、湖畔一帯も肥沃な農地として利用されています。KiMameでは、こうした恵まれた自然環境の中で現地の生産者が一つひとつ丁寧に育てた生豆を、直接仕入れて皆さまにお届けしています。
+ </p>
+ </div>
 
-      {% for product in products|slice:":4" %}
-      {% if forloop.counter == 1 %}
-      <div class="md:absolute md:top-0 md:left-0 fade-in w-[60%] bg-repeat translate-y-6 transition-all duration-700"
-        style="transition-delay: 0ms;">
-        <div class="bg-contain bg-left bg-no-repeat"
-          style="background-image: url('{% static 'core/images/leaf3.png' %}');">
-          <img src="{{ product.logo.url }}" alt="{{ product.name }}" class="h-12 mb-2">
-          <h3 class="font-bold">{{ product.title }}</h3>
-          <h3 class="font-bold">{{ product.name }}</h3>
-          <p class="text-sm">{{ product.origin }}</p>
-        </div>
-      </div>
-      {% endif %}
+ <div class="order-1 lg:order-2 relative" style="min-height: 420px;">
+ <img src="{{ company_info.map.url }}" alt="中米マップ" class="w-full h-auto">
 
-      {% if forloop.counter == 2 %}
-      <div
-        class="md:absolute md:top-0 md:right-0 fade-in w-[60%] text-right bg-cover opacity-0 translate-y-6 transition-all duration-700"
-        style="transition-delay: 500ms;">
-        <div class="bg-contain bg-right bg-no-repeat"
-          style="background-image: url('{% static 'core/images/leaf3.png' %}');">
-          <img src="{{ product.logo.url }}" alt="{{ product.name }}" class="h-12 mb-2 ml-auto">
-          <h3 class="font-bold">{{ product.title }}</h3>
-          <h3 class="font-bold">{{ product.name }}</h3>
-          <p class="text-sm">{{ product.origin }}</p>
-        </div>
-      </div>
-      {% endif %}
+ {% for city in nicaragua_landmarks %}
+ <span class="absolute -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-black/60 z-0"
+ style="left: {{ city.x }}%; top: {{ city.y }}%;"></span>
+ <span class="absolute -translate-x-1/2 translate-y-1 text-xs font-semibold text-white bg-black/70 px-2 py-0.5 rounded-full whitespace-nowrap shadow z-0 hover:z-30 hover:bg-black hover:scale-125 transition-transform"
+ style="left: {{ city.x }}%; top: {{ city.y }}%;">{{ city.name }}</span>
+ {% endfor %}
 
-      {% if forloop.counter == 3 %}
-      <div class="md:absolute md:bottom-0 md:left-0 fade-in w-[60%] opacity-0 translate-y-6 transition-all duration-700"
-        style="transition-delay: 1000ms;">
-        <div class="bg-contain bg-left bg-no-repeat"
-          style="background-image: url('{% static 'core/images/leaf3.png' %}');">
-          <img src="{{ product.logo.url }}" alt="{{ product.name }}" class="h-12 mb-2">
-          <h3 class="font-bold">{{ product.title }}</h3>
-          <h3 class="font-bold">{{ product.name }}</h3>
-          <p class="text-sm">{{ product.origin }}</p>
-        </div>
-      </div>
-      {% endif %}
+ {% for label in origin_labels %}
+ <a href="{{ label.url }}"
+ class="absolute -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black text-[#9e7b3b] border-2 border-[#9e7b3b] shadow flex items-center justify-center text-lg font-bold z-10 hover:z-30 hover:scale-125 transition-transform"
+ style="left: {{ label.x }}%; top: {{ label.y }}%;" title="{{ label.origin }} - {{ label.name }}">{{ label.no }}</a>
+ {% endfor %}
+ </div>
 
-      {% if forloop.counter == 4 %}
-      <div
-        class="md:absolute md:bottom-0 md:right-0 fade-in w-[60%] text-right opacity-0 translate-y-6 transition-all duration-700"
-        style="transition-delay: 1500ms;">
-        <div class="bg-contain bg-right bg-no-repeat"
-          style="background-image: url('{% static 'core/images/leaf3.png' %}');">
-          <img src="{{ product.logo.url }}" alt="{{ product.name }}" class="h-12 mb-2 ml-auto">
-          <h3 class="font-bold">{{ product.title }}</h3>
-          <h3 class="font-bold">{{ product.name }}</h3>
-          <p class="text-sm">{{ product.origin }}</p>
-        </div>
-        {% endif %}
-        {% endfor %}
-      </div>
-    </div>
-  </div>
+ <div class="order-3 border-2 border-black/20 rounded-2xl p-6 text-black">
+ <div class="flex items-center gap-2 mb-3">
+ <img src="{% static 'core/images/leaf3.png' %}" class="h-4" alt="">
+ <h3 class="font-bold text-base">コーヒー豆とカカオ豆</h3>
+ </div>
+ <p class="text-sm leading-relaxed">
+ KiMameが扱うコーヒー豆は、主に北部の山岳地帯(ヒノテガ、マタガルパ、エステリなど)で栽培されています。標高1,000mを超える高地は日照と冷涼な気候のバランスが良く、コーヒーチェリーがゆっくりと熟すことで、フルーティーで華やかな香りとすっきりとした酸味を持つ生豆が育ちます。一方カカオ豆は、太平洋沿岸やニカラグア湖畔の肥沃な低地で栽培され、高温多湿な気候の中でじっくりと発酵・乾燥されることで、濃厚でコクのある奥深い風味が生まれます。同じニカラグアの中でも、標高や気候の違いによってコーヒーとカカオそれぞれに適した産地が分かれているのも興味深い点で、生産者はその土地ならではの個性を大切にしながら、一粒一粒を丁寧に育てています。
+ </p>
+ </div>
+ </div>
+
+ <div class="max-w-3xl mx-auto mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
+ {% for label in origin_labels %}
+ <a href="{{ label.url }}"
+ class="flex items-center gap-3 bg-[#f3e6d0] border-2 border-[#9e7b3b] rounded-lg px-4 py-3 hover:scale-[1.02] transition-transform">
+ <span class="flex-shrink-0 w-9 h-9 rounded-full bg-black text-[#9e7b3b] border-2 border-[#9e7b3b] flex items-center justify-center text-base font-bold">{{ label.no }}</span>
+ {% if label.logo %}
+ <img src="{{ label.logo }}" alt="{{ label.name }}" class="h-8 w-8 rounded-full object-cover flex-shrink-0">
+ {% endif %}
+ <span class="min-w-0">
+ <span class="block font-bold text-black text-sm leading-tight truncate">{{ label.origin }}</span>
+ <span class="block text-black/80 text-xs leading-tight truncate">{{ label.name }}</span>
+ </span>
+ </a>
+ {% endfor %}
+ </div>
+ {% endif %}
+ </div>
 </section>
 
-<section class="relative bg-black text-center text-[#9e7b3b] py-16">
-  <div class="max-w-6xl mx-auto px-6">
-    <h2 class="text-3xl md:text-4xl font-bold mb-12 z-10">
-      お手元に届くまでの流れ
-    </h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-2 p-2 justify-items-center">
+<section class="relative bg-cover bg-repeat text-center text-[#9e7b3b] py-16" style="background-image: url('{% static "core/images/texture_Pblack.jpg" %}');">
+ <div class="max-w-6xl mx-auto px-6">
+ <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 opacity-70">How It Works</p>
+ <div class="flex items-center justify-center gap-3 mb-12">
+ <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70" alt="">
+ <h2 class="shimmer-title text-3xl md:text-4xl font-bold z-10">お手元に届くまでの流れ</h2>
+ <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70 -scale-x-100" alt="">
+ </div>
+ <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-2 p-2 justify-items-center">
 
-      {% for step in shipping_steps %}
-      <div class="fade-in opacity-0 translate-y-6 transition-all duration-700" style="transition-delay: 0ms;">
-        <div class="flex flex-col items-center">
-          <div class="relative w-60 h-60 mb-4">
-            <img src="{{ step.image.url }}" alt="{{ step.title }}"
-              class="w-full h-full object-cover rounded-full border-4 border-[#9e7b3b] shadow-md">
-            <div
-              class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 bg-[#9e7b3b] p-6 rounded-full text-black text-xl font-bold shadow">
-              <p>0{{ step.no }}</p>
-            </div>
-          </div>
-          <h3 class="text-lg font-semibold mb-1">{{ step.title }}</h3>
-          <p class="text-sm">{{ step.description }}</p>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-  <div class="max-w-4xl mx-auto px-6 py-20 relative z-10">
-    <h2 class="text-xl md:text-2xl font-bold mb-12  relative z-10">
-      お見積り・ご不明な点等ございましたら、下記よりお問い合わせください。
-    </h2>
-    <div class="flex flex-col md:flex-row gap-6 justify-center items-center mt-10">
-      <a href="{% url 'core:estimate' %}"
-        class="w-60 bg-[#9e7b3b] text-black py-4 px-6 rounded-xl font-semibold text-center border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">お見積り</a>
-      <a href="{% url 'core:contact' %}"
-        class="w-60 bg-[#9e7b3b] text-black py-4 px-6 rounded-xl font-semibold text-center border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">お問い合わせ</a>
-    </div>
-  </div>
+ {% for step in shipping_steps %}
+ <div class="fade-in opacity-0 translate-y-6 transition-all duration-700" style="transition-delay: 0ms;">
+ <div class="flex flex-col items-center">
+ <div class="relative w-60 h-60 mb-4">
+ <img src="{{ step.image.url }}" alt="{{ step.title }}"
+ class="w-full h-full object-cover rounded-full border-4 border-[#9e7b3b] shadow-md">
+ <div
+ class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 bg-[#9e7b3b] p-6 rounded-full text-black text-xl font-bold shadow">
+ <p>0{{ step.no }}</p>
+ </div>
+ </div>
+ <h3 class="text-lg font-semibold mb-1">{{ step.title }}</h3>
+ <p class="text-sm">{{ step.description }}</p>
+ </div>
+ </div>
+ {% endfor %}
+ </div>
+ </div>
+ <div class="max-w-4xl mx-auto px-6 py-20 relative z-10">
+ <h2 class="text-xl md:text-2xl font-bold mb-12 relative z-10">
+ お見積り・ご不明な点等ございましたら、下記よりお問い合わせください。
+ </h2>
+ <div class="flex flex-col md:flex-row gap-6 justify-center items-center mt-10">
+ <a href="{% url 'core:estimate' %}"
+ class="w-60 bg-[#9e7b3b] text-black py-4 px-6 rounded-xl font-semibold text-center border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">お見積り</a>
+ <a href="{% url 'core:contact' %}"
+ class="w-60 bg-[#9e7b3b] text-black py-4 px-6 rounded-xl font-semibold text-center border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">お問い合わせ</a>
+ </div>
+ </div>
 </section>
 
 <section id="company" class="w-full bg-center bg-cover py-20 px-6"
-  style="background-image: url('{% static 'core/images/coffee-farm3.jpg' %}');">
-  <div
-    class="relative max-w-4xl mx-auto bg-black/90 backdrop-blur-md rounded-3xl shadow-xl p-10 flex flex-col md:flex-col gap-6 items-center justify-center"
-    style="background-image: url('{% static 'core/images/texture_Pblack.jpg' %}'); background-repeat: repeat;">
-    {% if company_info.logo %}
-    <img src="{{ company_info.logo.url }}" alt="{{ company_info.name }}" class="h-60 mb-2">
-    {% endif %}
-    <p class="whitespace-pre-line leading-relaxed mb-6">{{ company_info.description }}</p>
+ style="background-image: url('{% static 'core/images/coffee-farm3.jpg' %}');">
+ <div
+ class="relative max-w-4xl mx-auto bg-black/90 backdrop-blur-md rounded-3xl shadow-xl p-10 flex flex-col md:flex-col gap-6 items-center justify-center"
+ style="background-image: url('{% static 'core/images/texture_Pblack.jpg' %}'); background-repeat: repeat;">
+ {% if company_info.logo %}
+ <img src="{{ company_info.logo.url }}" alt="{{ company_info.name }}" class="h-60 mb-2">
+ {% endif %}
+ <p class="whitespace-pre-line leading-relaxed mb-6">{{ company_info.description }}</p>
 
-    <ul class="space-y-2 text-sm">
-      <li><span class="font-semibold">住所:</span> {{ company_info.address }}</li>
-      {% if company_info.phone %}
-      <li><span class="font-semibold">電話:</span> {{ company_info.phone }}</li>
-      {% endif %}
-      {% if company_info.email %}
-      <li>
-        <span class="font-semibold">Email:</span>
-        <a href="mailto:{{ company_info.email }}" class="hover:underline">
-          {{ company_info.email }}
-        </a>
-      </li>
-      {% endif %}
-    </ul>
+ <ul class="space-y-2 text-sm">
+ <li><span class="font-semibold">住所:</span> {{ company_info.address }}</li>
+ {% if company_info.phone %}
+ <li><span class="font-semibold">電話:</span> {{ company_info.phone }}</li>
+ {% endif %}
+ {% if company_info.email %}
+ <li>
+ <span class="font-semibold">Email:</span>
+ <a href="mailto:{{ company_info.email }}" class="hover:underline">
+ {{ company_info.email }}
+ </a>
+ </li>
+ {% endif %}
+ </ul>
 
-    <div class="m-10">
-      <a href="{% url 'core:contact' %}"
-        class="bg-[#9e7b3b] text-black px-8 py-4 rounded-xl font-semibold border border-transparen hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
-        お問い合わせ
-      </a>
-    </div>
+ <div class="m-10">
+ <a href="{% url 'core:contact' %}"
+ class="bg-[#9e7b3b] text-black px-8 py-4 rounded-xl font-semibold border border-transparen hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
+ お問い合わせ
+ </a>
+ </div>
 
-  </div>
+ </div>
 </section>
 
 <style>
-  /* 矢印全体の共通デザイン */
-  .splide__arrow {
-    background: #9e7b3b;
-    /* ゴールド背景 */
-    color: black;
-    /* 矢印色 */
-    border: 2px solid #9e7b3b;
-    /* ゴールド枠 */
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    /* 丸型 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(158, 123, 59, 0.6);
-    /* 光沢感 */
-  }
+ /* 矢印全体の共通デザイン */
+ .splide__arrow {
+ background: #9e7b3b;
+ /* ゴールド背景 */
+ color: black;
+ /* 矢印色 */
+ border: 2px solid #9e7b3b;
+ /* ゴールド枠 */
+ width: 3rem;
+ height: 3rem;
+ border-radius: 50%;
+ /* 丸型 */
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-size: 1.4rem;
+ font-weight: bold;
+ transition: all 0.3s ease;
+ box-shadow: 0 0 10px rgba(158, 123, 59, 0.6);
+ /* 光沢感 */
+ }
 
-  /* ホバー時 */
-  .splide__arrow:hover {
-    background: black;
-    color: #9e7b3b;
-    border-color: #9e7b3b;
-    box-shadow: 0 0 12px rgba(158, 123, 59, 0.9);
-  }
+ /* ホバー時 */
+ .splide__arrow:hover {
+ background: black;
+ color: #9e7b3b;
+ border-color: #9e7b3b;
+ box-shadow: 0 0 12px rgba(158, 123, 59, 0.9);
+ }
 
-  /* 左矢印位置 */
-  .splide__arrow--prev {
-    left: -1rem;
-  }
+ /* 左矢印位置 */
+ .splide__arrow--prev {
+ left: -1rem;
+ }
 
-  /* 右矢印位置 */
-  .splide__arrow--next {
-    right: -1rem;
-  }
+ /* 右矢印位置 */
+ .splide__arrow--next {
+ right: -1rem;
+ }
 
-  /* スマホ用位置調整 */
-  @media (max-width: 767px) {
-    .splide__arrow--prev {
-      left: 0rem;
-    }
+ /* スマホ用位置調整 */
+ @media (max-width: 767px) {
+ .splide__arrow--prev {
+ left: 0rem;
+ }
 
-    .splide__arrow--next {
-      right: 0rem;
-    }
-  }
+ .splide__arrow--next {
+ right: 0rem;
+ }
+ }
 </style>
 
 {% endblock %}

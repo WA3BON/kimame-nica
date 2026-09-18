@@ -8,3 +8,66 @@
   * the scope of this path.
   */
 @source "../../../**/*.{html,py,js}";
+
+[x-cloak] {
+  display: none !important;
+}
+
+/* 見出しのキラキラ演出 */
+.shimmer-char {
+  display: inline-block;
+  animation: shimmer-sparkle 2.4s ease-in-out infinite;
+}
+
+@keyframes shimmer-sparkle {
+  0%, 100% {
+    color: #9e7b3b;
+    text-shadow: none;
+    transform: translateY(0);
+  }
+  50% {
+    color: #f6e7c1;
+    text-shadow: 0 0 6px #f6e7c1, 0 0 14px #9e7b3b;
+    transform: translateY(-2px);
+  }
+}
+
+/* カードホバー時のきらっと光るエフェクト */
+.shine-card {
+  position: relative;
+}
+.shine-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: skewX(-20deg);
+  pointer-events: none;
+  z-index: 20;
+}
+.shine-card:hover::after {
+  left: 150%;
+  transition: left 0.7s ease;
+}
+
+/* Djangoフォームのエラー一覧(allauthのform.as_p出力含む)を目立たせる */
+ul.errorlist,
+p.errorlist {
+  list-style: none;
+  margin: 0 0 1rem 0;
+  padding: 0;
+}
+ul.errorlist li,
+p.errorlist {
+  background-color: #4b1113;
+  color: #ffb4b4;
+  border: 1px solid #b91c1c;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}

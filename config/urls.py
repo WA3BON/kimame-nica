@@ -8,9 +8,11 @@ from django.urls import path, include
 from django.views.generic.base import RedirectView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(settings.ADMIN_URL_PATH, admin.site.urls),
+    path('accounts/', include('allauth.urls')),
     path('', include('core.urls', namespace='core')),
-    path('shop/', include('shop.urls', namespace='shop')), 
+    path('shop/', include('shop.urls', namespace='shop')),
+    path('blog/', include('blog.urls', namespace='blog')),
     path("robots.txt", RedirectView.as_view(
         url=settings.STATIC_URL + "core/robots.txt"
     )),

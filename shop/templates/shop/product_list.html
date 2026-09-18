@@ -1,0 +1,87 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}!KiMame¡商品一覧{% endblock %}
+
+{% block content %}
+<section class="bg-black/90 py-20 px-6 text-[#9e7b3b] min-h-screen">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-10">
+      <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 opacity-70">Products</p>
+      <div class="flex items-center justify-center gap-3">
+        <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70" alt="">
+        <h2 class="shimmer-title text-3xl font-bold">商品一覧</h2>
+        <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70 -scale-x-100" alt="">
+      </div>
+    </div>
+
+    <form method="get" class="flex flex-wrap gap-4 justify-center items-end mb-12">
+      <div>
+        <label for="id_product_type" class="block text-sm mb-1">豆の種類</label>
+        <select id="id_product_type" name="product_type"
+          class="bg-black border border-[#9e7b3b] rounded-lg px-3 py-2">
+          <option value="">すべて</option>
+          {% for value, label in product_types %}
+          <option value="{{ value }}" {% if value == selected_product_type %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="id_origin" class="block text-sm mb-1">原産地</label>
+        <select id="id_origin" name="origin"
+          class="bg-black border border-[#9e7b3b] rounded-lg px-3 py-2">
+          <option value="">すべて</option>
+          {% for o in origins %}
+          <option value="{{ o }}" {% if o == selected_origin %}selected{% endif %}>{{ o }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit"
+        class="px-6 py-2 bg-[#9e7b3b] text-black rounded-lg font-semibold border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
+        絞り込む
+      </button>
+      {% if selected_product_type or selected_origin %}
+      <a href="{% url 'shop:product_list' %}" class="px-6 py-2 underline">条件をクリア</a>
+      {% endif %}
+    </form>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for product in products %}
+      <div class="shine-card bg-black/80 border border-[#9e7b3b] rounded-lg overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300 relative">
+        <a href="{% url 'shop:product_detail' product.pk %}" class="block relative">
+          <div class="absolute top-2 left-2 bg-black rounded-full shadow">
+            <img src="{{ product.logo.url }}" alt="{{ product.name }}" class="h-10 m-2">
+          </div>
+          <div class="absolute top-2 right-2 bg-[#9e7b3b] text-black text-xs font-bold px-4 py-1 rounded-full shadow">
+            {{ product.origin }}
+          </div>
+          <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover">
+          <div class="p-4 flex flex-col">
+            {% if product.title %}
+            <p class="text-sm">{{ product.title }}</p>
+            {% endif %}
+            <p class="text-xl font-bold">{{ product.name }}</p>
+            <ul class="mt-2 text-sm space-y-0.5">
+              {% for variant in product.variants.all %}
+              <li class="flex justify-between gap-4">
+                <span>{{ variant.label }}</span>
+                <span class="font-bold">{{ variant.price }} 円</span>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </a>
+        <div class="flex justify-center p-3 pt-0">
+          <a href="{% url 'shop:product_detail' product.pk %}"
+            class="inline-block text-center bg-[#9e7b3b] text-black font-semibold px-6 py-2 rounded-lg border-2 border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
+            購入する
+          </a>
+        </div>
+      </div>
+      {% empty %}
+      <p class="col-span-full text-center">該当する商品はありません。</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

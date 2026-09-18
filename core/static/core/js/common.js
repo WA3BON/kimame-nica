@@ -1,4 +1,39 @@
 // common.js
+
+/* ===============================
+   Alpine.js コンポーネント定義
+   (Alpine は defer で先に読み込まれるため、
+    DOMContentLoaded より前に window へ登録しておく必要がある)
+=============================== */
+window.consentBanner = function () {
+  return {
+    show: false,
+    init() {
+      this.show = !localStorage.getItem('kimame_consent_v1');
+    },
+    accept() {
+      localStorage.setItem('kimame_consent_v1', '1');
+      this.show = false;
+    },
+  };
+};
+
+window.parallax = function () {
+  return {
+    scrollY: 0,
+    bgY: 0,
+    leafY: 0,
+    init() {
+      this.handleScroll();
+    },
+    handleScroll() {
+      this.scrollY = window.scrollY;
+      this.bgY = this.scrollY * 0.3;
+      this.leafY = this.scrollY * 0.6;
+    }
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   /* ===============================
      Splide カルーセル
@@ -48,9 +83,25 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /* ===============================
+     見出しのキラキラ演出(1文字ずつ順番に光る)
+  =============================== */
+  document.querySelectorAll('.shimmer-title').forEach((el) => {
+    const text = el.textContent;
+    el.textContent = '';
+    el.setAttribute('aria-label', text);
+    [...text].forEach((ch, i) => {
+      const span = document.createElement('span');
+      span.className = 'shimmer-char';
+      span.style.animationDelay = (i * 0.08) + 's';
+      span.textContent = ch === ' ' ? ' ' : ch;
+      el.appendChild(span);
+    });
+  });
+
+  /* ===============================
      入力フォームの装飾
   =============================== */
-  const inputs = document.querySelectorAll('input, select, textarea');
+  const inputs = document.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]), select, textarea');
   inputs.forEach(input => {
     input.classList.add(
       'w-full', 'px-4', 'py-2', 'border', 'border-[#9e7b3b]',
@@ -60,23 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
       input.classList.add('h-32', 'resize-none');
     }
   });
-
-  /* ===============================
-     Parallax（Alpine.js 用）
-  =============================== */
-  window.parallax = function () {
-    return {
-      scrollY: 0,
-      bgY: 0,
-      leafY: 0,
-      init() {
-        this.handleScroll();
-      },
-      handleScroll() {
-        this.scrollY = window.scrollY;
-        this.bgY = this.scrollY * 0.3;
-        this.leafY = this.scrollY * 0.6;
-      }
-    }
-  }
+  document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(input => {
+    input.classList.add('accent-[#9e7b3b]', 'w-4', 'h-4');
+  });
 });

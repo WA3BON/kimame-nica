@@ -1,6 +1,13 @@
 from traceback import format_tb
 from django.contrib import admin
-from .models import CompanyInfo, ShippingStep, PrivacyPolicy, OrderPolicy, TermsOfService, AppPolicy
+from .models import CompanyInfo, Inquiry, ShippingStep, PrivacyPolicy, OrderPolicy, TermsOfService, AppPolicy
+
+@admin.register(Inquiry)
+class InquiryAdmin(admin.ModelAdmin):
+    list_display = ('kind', 'name', 'email', 'user', 'created_at')
+    list_filter = ('kind', 'created_at')
+    search_fields = ('name', 'email', 'message')
+    readonly_fields = ('created_at',)
 
 @admin.register(CompanyInfo)
 class CompanyInfoAdmin(admin.ModelAdmin):

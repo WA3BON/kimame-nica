@@ -23,6 +23,17 @@ CSRF_TRUSTED_ORIGINS = [
     if origin.strip()
 ]
 
+# Customizable admin path (e.g. "secret-panel/") to keep the default /admin/
+# off of automated bot/brute-force scans. Always normalized to end in "/".
+ADMIN_URL_PATH = os.environ.get("ADMIN_URL_PATH", "admin").strip("/") + "/"
+
+TURNSTILE_SITE_KEY = os.environ.get("TURNSTILE_SITE_KEY", "")
+TURNSTILE_SECRET_KEY = os.environ.get("TURNSTILE_SECRET_KEY", "")
+
+STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY", "")
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
+STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
+
 SECURE_SETTINGS = os.environ.get("SECURE_SETTINGS", "False") == "True"
 if SECURE_SETTINGS:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
@@ -62,16 +73,24 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'core',
     'shop',
+    'blog',
     'tailwind',
     'theme',
     "widget_tweaks",
     'cloudinary',
     'cloudinary_storage',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 if DEBUG:
     INSTALLED_APPS += ["django_browser_reload"]
+
+SITE_ID = 1
 
 TAILWIND_APP_NAME = "theme"
 
@@ -85,9 +104,35 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+LOGIN_REDIRECT_URL = 'core:mypage'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'core:index'
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_ADAPTER = 'core.adapters.GmailAccountAdapter'
+ACCOUNT_SIGNUP_FORM_CLASS = 'core.forms.SignupForm'
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APP": {
+            "client_id": os.environ.get("GOOGLE_OAUTH_CLIENT_ID", ""),
+            "secret": os.environ.get("GOOGLE_OAUTH_CLIENT_SECRET", ""),
+            "key": "",
+        },
+        "SCOPE": ["profile", "email"],
+        "AUTH_PARAMS": {"access_type": "online"},
+    }
+}
 
 if DEBUG:
     MIDDLEWARE.append("django_browser_reload.middleware.BrowserReloadMiddleware")
@@ -119,6 +164,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 "core.context_processors.company_info",
+                "core.context_processors.turnstile",
+                "shop.context_processors.cart_summary",
             ],
         },
     },

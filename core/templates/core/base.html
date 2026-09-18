@@ -30,51 +30,84 @@
 </head>
 <body class="relative bg-black text-[#9e7b3b]">
 
-<header 
+<div x-data="{ loading: true }"
+     x-init="window.addEventListener('load', () => loading = false);
+             window.addEventListener('beforeunload', () => loading = true)"
+     x-show="loading" x-transition:leave="transition-opacity duration-500" x-transition:leave-end="opacity-0" x-cloak
+     :class="{ 'pointer-events-none': !loading }"
+     class="fixed inset-0 z-[80] bg-black flex items-center justify-center">
+  {% if company_info.favicon %}
+  <img src="{{ company_info.favicon.url }}" class="w-16 h-16 animate-steam" alt="loading">
+  {% endif %}
+</div>
+
+<div x-data="consentBanner()" x-show="show" x-cloak
+     class="fixed inset-0 z-[70] bg-black/95 flex items-center justify-center p-6">
+  <div class="max-w-lg border border-[#9e7b3b] rounded-xl p-6 text-center bg-black">
+    <p class="mb-4">当サイトはプライバシーポリシーに基づき Cookie 等を利用します。詳しくは
+      <a href="{% url 'core:privacy_policy' %}" class="underline">プライバシーポリシー</a>をご確認ください。</p>
+    <button @click="accept()"
+      class="px-6 py-2 bg-[#9e7b3b] text-black rounded-xl font-semibold border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
+      同意する
+    </button>
+  </div>
+</div>
+
+<header
     x-data="{ scrolled: false, open: false }" 
     x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 50 })"
     class="fixed top-0 left-0 w-full z-30 transition-all duration-500">
-  <div 
-        style="background-image: url('{% static "core/images/texture_Pbrown.jpg" %}');"
-        class="w-full bg-center bg-repeat px-8 py-2 flex justify-between items-center transition-all duration-500 brightness-120"
-    >
+  <div class="w-full bg-black/40 px-8 py-3 flex justify-between items-center transition-all duration-500">
     <a href="{% url 'core:index' %}" class="flex items-center">
       <img src="{{ company_info.favicon.url }}" alt="{{ company_info.name }}" class="h-10 w-auto">
       <img  src="{{ company_info.title.url }}" alt="{{ company_info.name }}" class="h-10 w-auto">
     </a>
 
-    <!-- PC menu -->
-    <nav class="hidden md:flex space-x-6 font-bold items-center text-[#9e7b3b]">
-      <a href="{% url 'core:index' %}" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">ホーム</a>
-      <a href="{% url 'core:index' %}#products" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">商品一覧</a>
-      <a href="{% url 'core:index' %}#company" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">会社情報</a>
-      <a href="{% url 'core:contact' %}" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">お問合せ</a>
-      <a href="{% url 'core:estimate' %}" class="px-6 py-2 bg-[#9e7b3b] text-black rounded-xl border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">お見積り</a>
-    </nav>
-    
-    <!-- Hamburger -->
-     <button @click="open = !open" class="relative z-50 w-8 h-8 flex items-center justify-center md:hidden" aria-label="Menu">
-      <span class="absolute w-6 h-0.5 bg-[#9e7b3b] transition-all duration-300" :class="open ? 'rotate-45' : '-translate-y-2'"></span>
-      <span class="absolute w-6 h-0.5 bg-[#9e7b3b] transition-all duration-300" :class="open ? 'opacity-0' : ''"></span>
-      <span class="absolute w-6 h-0.5 bg-[#9e7b3b] transition-all duration-300" :class="open ? '-rotate-45' : 'translate-y-2'"></span>
-    </button>
+    <div class="flex items-center gap-3 pl-4">
+      <a href="{% if user.is_authenticated %}{% url 'core:mypage' %}{% else %}{% url 'account_login' %}{% endif %}"
+        class="relative flex items-center justify-center w-10 h-10 rounded-full bg-[#9e7b3b] shadow-md" aria-label="マイページ">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+          <circle cx="12" cy="8" r="4"></circle>
+          <path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"></path>
+        </svg>
+      </a>
+
+      <a href="{% url 'shop:cart' %}" class="relative flex items-center justify-center w-10 h-10 rounded-full bg-[#9e7b3b] shadow-md" aria-label="カート">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        {% if cart_item_count %}
+        <span class="absolute -top-1 -right-1 bg-black text-[#9e7b3b] text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center border border-[#9e7b3b]">{{ cart_item_count }}</span>
+        {% endif %}
+      </a>
+
+      <!-- Hamburger -->
+      <button @click="open = !open" class="relative z-[60] w-10 h-10 rounded-full bg-[#9e7b3b] shadow-md flex items-center justify-center" aria-label="Menu">
+        <span class="absolute w-5 h-0.5 bg-black transition-all duration-300" :class="open ? 'rotate-45' : '-translate-y-1.5'"></span>
+        <span class="absolute w-5 h-0.5 bg-black transition-all duration-300" :class="open ? 'opacity-0' : ''"></span>
+        <span class="absolute w-5 h-0.5 bg-black transition-all duration-300" :class="open ? '-rotate-45' : 'translate-y-1.5'"></span>
+      </button>
+    </div>
   </div>
 
-  <!-- Mobile menu -->
+  <!-- Menu overlay -->
   <div
     x-show="open"
     x-transition
     class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center space-y-8 text-[#9e7b3b] text-xl"
   >
-    <!-- close btn -->
-    <button @click="open = false" class="absolute top-1 right-8 text-[#9e7b3b] text-5xl">
-      &times;
-    </button>
-
     <a @click="open = false" href="{% url 'core:index' %}" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">ホーム</a>
-    <a @click="open = false" href="{% url 'core:index' %}#products" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">商品一覧</a>
-    <a @click="open = false" href="{% url 'core:index' %}#company" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">会社概要</a>
-    <a @click="open = false" href="{% url 'core:contact' %}" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">お問合せ</a>
+    <a @click="open = false" href="{% url 'shop:product_list' %}" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">商品一覧</a>
+    <a @click="open = false" href="{% url 'core:index' %}#company" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">会社情報</a>
+    <a @click="open = false" href="{% url 'blog:post_list' %}" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">ブログ</a>
+    {% if not user.is_authenticated %}
+    <a @click="open = false" href="{% url 'account_login' %}" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">ログイン</a>
+    {% endif %}
+    <a @click="open = false" href="{% url 'core:contact' %}" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">お問い合わせ</a>
     <a href="{% url 'core:estimate' %}" class="w-[40%] sm:w-[20%] bg-[#9e7b3b] text-black py-3 px-6 rounded-xl font-semibold text-center border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">お見積り</a>
   </div>
 </header>
@@ -93,13 +126,13 @@
       <img src="{{ company_info.title.url }}" alt="{{ company_info.name }}" class="w-[50%] md:w-[25%] h-auto">
       {% endif %}
     </div>
-    <nav class="flex flex-col md:flex-row md:space-x-10 space-y-2 md:space-y-0 text-center justify-center text-sm">
-      <a href="{% url 'core:index' %}#company" class="hover:text-black/80">会社概要</a>
-      <a href="{% url 'core:order_policy' %}" class="hover:text-black/80">特定商取引法に基づく表記</a>
-      <a href="{% url 'core:privacy_policy' %}" class="hover:text-black/80">プライバシーポリシー</a>
-      <a href="{% url 'core:terms_of_service' %}" class="hover:text-black/80">利用規約</a>
-      <a href="{% url 'core:app_policy' %}" class="hover:text-black/80">アプリケーション規約</a>
-      <a href="{% url 'core:contact' %}" class="hover:text-black/80">お問い合わせ</a>
+    <nav class="flex flex-col md:flex-row md:space-x-10 space-y-2 md:space-y-0 text-center justify-center text-sm font-bold text-black">
+      <a href="{% url 'core:index' %}#company" class="hover:underline">会社概要</a>
+      <a href="{% url 'core:order_policy' %}" class="hover:underline">特定商取引法に基づく表記</a>
+      <a href="{% url 'core:privacy_policy' %}" class="hover:underline">プライバシーポリシー</a>
+      <a href="{% url 'core:terms_of_service' %}" class="hover:underline">利用規約</a>
+      <a href="{% url 'core:app_policy' %}" class="hover:underline">アプリケーション規約</a>
+      <a href="{% url 'core:contact' %}" class="hover:underline">お問い合わせ</a>
     </nav>
 
     <div class="mt-6 border-t border-black/50 pt-4 text-sm font-bold text-center">

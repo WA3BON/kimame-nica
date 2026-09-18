@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% block title %}!KiMame¡決済がキャンセルされました{% endblock %}
+
+{% block content %}
+<section class="bg-black/90 flex flex-col items-center justify-center py-32 px-6 text-[#9e7b3b] text-center min-h-[60vh]">
+ <h2 class="text-3xl font-bold mb-6">決済がキャンセルされました</h2>
+ <p class="mb-10">カートの内容は保持されています。もう一度お試しください。</p>
+ <a href="{% url 'shop:cart' %}"
+ class="px-6 py-2 bg-[#9e7b3b] text-black rounded-xl font-semibold border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
+ カートに戻る
+ </a>
+</section>
+{% endblock %}

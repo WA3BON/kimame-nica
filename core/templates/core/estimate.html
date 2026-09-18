@@ -15,9 +15,16 @@
     </div>
     {% endif %}
 
-  <div class="backdrop-blur-md rounded-3xl shadow-xl max-w-2xl w-full p-10" style="background-image: url('{% static 'core/images/texture_Pblack.jpg' %}'); background-repeat: repeat; background-size: auto;">
+  <div class="backdrop-blur-md rounded-3xl shadow-xl max-w-2xl w-full p-10 border-2 border-[#9e7b3b]" style="background-image: url('{% static 'core/images/texture_Pblack.jpg' %}'); background-repeat: repeat; background-size: auto;">
        
-    <h2 class="text-3xl font-bold text-center mb-6">見積り依頼</h2>
+    <div class="text-center mb-6">
+      <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 opacity-70">Estimate</p>
+      <div class="flex items-center justify-center gap-3">
+        <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70" alt="">
+        <h2 class="shimmer-title text-3xl font-bold">見積り依頼</h2>
+        <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70 -scale-x-100" alt="">
+      </div>
+    </div>
     <p class="text-center mb-8">商品のお見積りはこちらから送信できます。</p>
     <form action="{% url 'core:estimate' %}" method="post">
       {% csrf_token %}
@@ -52,6 +59,20 @@
         {{ form.message }}
       </div>
 
+      <div class="pt-2">
+        <label for="id_privacy_agree" class="flex items-start gap-2 text-sm">
+          {{ form.privacy_agree }}
+          <span><a href="{% url 'core:privacy_policy' %}" target="_blank" class="underline">プライバシーポリシー</a>に同意する</span>
+        </label>
+        {% if form.privacy_agree.errors %}
+        <p class="text-red-400 text-sm mt-1">{{ form.privacy_agree.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <div class="flex justify-center py-4">
+        <div class="cf-turnstile" data-sitekey="{{ TURNSTILE_SITE_KEY }}"></div>
+      </div>
+
       <div class="text-center py-6">
         <button type="submit"
                 class="px-6 py-2 bg-[#9e7b3b] text-black rounded-xl font-semibold border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
@@ -61,5 +82,5 @@
     </form>
   </div>
 </section>
-
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 {% endblock %}

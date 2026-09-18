@@ -1,0 +1,77 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches: [main]
+
+env:
+  # Matches the existing production Cloud Run service (created outside this
+  # session) — region us-central1, image pushed to the pre-existing "webapp"
+  # Artifact Registry repo. Do not change these without also migrating the
+  # live service, or deploys will create a second, disconnected service.
+  REGION: us-central1
+  SERVICE: kimame-nica
+  REPOSITORY: webapp
+
+permissions:
+  contents: read
+  id-token: write # required for Workload Identity Federation (no long-lived key)
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Authenticates via Workload Identity Federation — no service-account JSON key involved.
+      # vars.GCP_WORKLOAD_IDENTITY_PROVIDER / vars.GCP_SERVICE_ACCOUNT are set once the
+      # Workload Identity Pool/Provider and deploy service account are created (see README/plan).
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker "${{ env.REGION }}-docker.pkg.dev" --quiet
+
+      - name: Build and push image
+        run: |
+          IMAGE="${{ env.REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.sha }}"
+          docker build -t "$IMAGE" .
+          docker push "$IMAGE"
+          echo "IMAGE=$IMAGE" >> "$GITHUB_ENV"
+
+      # Secrets live in GCP Secret Manager, never in GitHub — Cloud Run pulls them at deploy time.
+      # Each secret below must already exist in Secret Manager before the first deploy.
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
+          image: ${{ env.IMAGE }}
+          secrets: |
+            SECRET_KEY=SECRET_KEY:latest
+            DATABASE_URL=DATABASE_URL:latest
+            CLOUDINARY_URL=CLOUDINARY_URL:latest
+            GMAIL_CLIENT_ID=GMAIL_CLIENT_ID:latest
+            GMAIL_CLIENT_SECRET=GMAIL_CLIENT_SECRET:latest
+            GMAIL_REFRESH_TOKEN=GMAIL_REFRESH_TOKEN:latest
+            TURNSTILE_SITE_KEY=TURNSTILE_SITE_KEY:latest
+            TURNSTILE_SECRET_KEY=TURNSTILE_SECRET_KEY:latest
+            STRIPE_PUBLISHABLE_KEY=STRIPE_PUBLISHABLE_KEY:latest
+            STRIPE_SECRET_KEY=STRIPE_SECRET_KEY:latest
+            STRIPE_WEBHOOK_SECRET=STRIPE_WEBHOOK_SECRET:latest
+            GOOGLE_OAUTH_CLIENT_ID=GOOGLE_OAUTH_CLIENT_ID:latest
+            GOOGLE_OAUTH_CLIENT_SECRET=GOOGLE_OAUTH_CLIENT_SECRET:latest
+            ADMIN_URL_PATH=ADMIN_URL_PATH:latest
+          env_vars: |
+            DEBUG=False
+            SECURE_SETTINGS=True
+            ALLOWED_HOSTS=${{ vars.ALLOWED_HOSTS }}
+            CSRF_TRUSTED_ORIGINS=${{ vars.CSRF_TRUSTED_ORIGINS }}
+            ADMIN_EMAIL=${{ vars.ADMIN_EMAIL }}
+            GMAIL_SENDER=${{ vars.GMAIL_SENDER }}
