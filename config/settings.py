@@ -1,4 +1,5 @@
 import os
+import re
 from pathlib import Path
 
 # Build paths inside the project
@@ -11,17 +12,14 @@ load_dotenv()
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = [
-    host.strip()
-    for host in os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
-    if host.strip()
-]
+def _env_list(name, default=""):
+    # Semicolons are accepted because gcloud splits --set-env-vars on commas.
+    return [v for v in re.split(r"[,;\s]+", os.environ.get(name, default)) if v]
 
-CSRF_TRUSTED_ORIGINS = [
-    origin.strip()
-    for origin in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
-    if origin.strip()
-]
+
+ALLOWED_HOSTS = _env_list("ALLOWED_HOSTS", "127.0.0.1,localhost")
+
+CSRF_TRUSTED_ORIGINS = _env_list("CSRF_TRUSTED_ORIGINS")
 
 # Customizable admin path (e.g. "secret-panel/") to keep the default /admin/
 # off of automated bot/brute-force scans. Always normalized to end in "/".
