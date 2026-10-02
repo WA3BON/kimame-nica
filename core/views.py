@@ -109,7 +109,7 @@ class IndexView(TemplateView):
         context["shipping_steps"] = ShippingStep.objects.all().order_by("no")
         context["why_choose_us"] = WhyChooseUs.objects.all().order_by("no")
         context["top_faqs"] = Faq.objects.filter(is_published=True, show_on_top=True)[:6]
-        products = Product.objects.all()
+        products = Product.objects.order_by("no").prefetch_related("variants")
         context["products"] = products
         context["featured_products"] = (
             Product.objects.order_by("-created_at").prefetch_related("variants")[:5]
@@ -127,6 +127,13 @@ class IndexView(TemplateView):
                 "x": x,
                 "y": y,
                 "logo": p.logo.url if p.logo else "",
+                "image": p.image.url if p.image else "",
+                "title": p.title,
+                "description": p.description,
+                "roast_level": p.roast_level,
+                "type": p.get_product_type_display(),
+                "starting_price": p.starting_price,
+                "in_stock": p.in_stock,
                 "url": reverse("shop:product_detail", args=[p.pk]),
             })
         landmarks = []

@@ -155,80 +155,131 @@
  </div>
 </section>
 
-<section class="bg-[#9e7b3b] py-16">
+<section id="origins" class="bg-[#9e7b3b] py-16">
  <div class="relative max-w-6xl mx-auto px-6">
- <div class="text-center mb-12">
+ <div class="text-center mb-10 lg:mb-14">
  <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 text-black">Our Origins</p>
  <div class="flex items-center justify-center gap-3">
  <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70" alt="">
  <h2 class="shimmer-title text-3xl md:text-4xl font-bold">産地について</h2>
  <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70 -scale-x-100" alt="">
  </div>
+ <p class="mt-3 text-sm text-black/70">スクロールして、豆が育つ場所を旅してみてください。</p>
  </div>
 
  {% if company_info.map %}
- <div class="grid grid-cols-1 lg:grid-cols-[1fr_2fr_1fr] gap-8 items-center">
- <div class="order-2 lg:order-1 border-2 border-black/20 rounded-2xl p-6 text-black">
- <div class="flex items-center gap-2 mb-3">
- <img src="{% static 'core/images/leaf3.png' %}" class="h-4" alt="">
- <h3 class="font-bold text-base">ニカラグアについて</h3>
- </div>
- <p class="text-sm leading-relaxed">
- ニカラグアは中央アメリカに位置し、太平洋と大西洋(カリブ海)の両方に面した、火山と湖に彩られる自然豊かな国です。国土の中央から北部にかけては火山活動によって生まれた肥沃な土壌が広がり、標高1,000mを超える山岳地帯も点在しています。昼夜の寒暖差が大きく、雨季と乾季がはっきりと分かれる気候は、コーヒーやカカオといった繊細な農作物をゆっくりと熟成させるのに適しており、古くから中米有数の産地として知られています。国土の中央にはニカラグア湖という中米最大級の湖も広がり、湖畔一帯も肥沃な農地として利用されています。KiMameでは、こうした恵まれた自然環境の中で現地の生産者が一つひとつ丁寧に育てた生豆を、直接仕入れて皆さまにお届けしています。
- </p>
- </div>
-
- <div class="order-1 lg:order-2 map-frame relative rounded-[1.75rem] p-3 md:p-5 bg-[#1b1308] shadow-2xl border border-[#9e7b3b]/40">
- <div class="relative rounded-2xl overflow-hidden" style="min-height: 420px;">
- <img src="{{ company_info.map.url }}" alt="中米マップ" class="w-full h-auto block">
- <div class="map-vignette absolute inset-0 pointer-events-none"></div>
+ <div class="origin-story grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12">
+ {# 地図: スマホは画面上部に、PCは左側に固定 #}
+ <div class="sticky top-14 lg:top-24 z-10 self-start -mx-6 px-6 pt-2 pb-3 lg:m-0 lg:p-0 bg-[#9e7b3b] lg:bg-transparent shadow-[0_12px_16px_-12px_rgba(0,0,0,0.35)] lg:shadow-none">
+ <div class="w-full max-w-[320px] sm:max-w-md mx-auto lg:max-w-none">
+ <div class="map-frame relative rounded-[1.5rem] p-2 md:p-4 bg-[#1b1308] shadow-2xl border border-[#9e7b3b]/40">
+ <div class="relative rounded-2xl overflow-hidden">
+ <div class="origin-map-layer relative" style="--inv: 1;">
+ <img src="{{ company_info.map.url }}" alt="ニカラグアの産地マップ" class="w-full h-auto block">
 
  {% for city in nicaragua_landmarks %}
- <span class="absolute -translate-x-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-white/70 z-0"
- style="left: {{ city.x }}%; top: {{ city.y }}%;"></span>
- <span class="absolute -translate-x-1/2 translate-y-1.5 text-[11px] tracking-wide font-medium text-white/90 bg-black/40 backdrop-blur-sm border border-white/15 px-2 py-0.5 rounded-full whitespace-nowrap z-0 hover:z-30 hover:bg-black/80 hover:scale-125 transition-transform"
- style="left: {{ city.x }}%; top: {{ city.y }}%;">{{ city.name }}</span>
- {% endfor %}
-
- {% for label in origin_labels %}
- <a href="{{ label.url }}"
- class="map-pin absolute -translate-x-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#9e7b3b] text-black ring-2 ring-[#f3e6d0] shadow-[0_3px_10px_rgba(0,0,0,0.5)] flex items-center justify-center text-base font-bold z-10 hover:z-30 hover:scale-125 transition-transform"
- style="left: {{ label.x }}%; top: {{ label.y }}%;" title="{{ label.origin }} - {{ label.name }}">{{ label.no }}</a>
- {% endfor %}
- </div>
- </div>
-
- <div class="order-3 border-2 border-black/20 rounded-2xl p-6 text-black">
- <div class="flex items-center gap-2 mb-3">
- <img src="{% static 'core/images/leaf3.png' %}" class="h-4" alt="">
- <h3 class="font-bold text-base">コーヒー豆とカカオ豆</h3>
- </div>
- <p class="text-sm leading-relaxed">
- KiMameが扱うコーヒー豆は、主に北部の山岳地帯(ヒノテガ、マタガルパ、エステリなど)で栽培されています。標高1,000mを超える高地は日照と冷涼な気候のバランスが良く、コーヒーチェリーがゆっくりと熟すことで、フルーティーで華やかな香りとすっきりとした酸味を持つ生豆が育ちます。一方カカオ豆は、太平洋沿岸やニカラグア湖畔の肥沃な低地で栽培され、高温多湿な気候の中でじっくりと発酵・乾燥されることで、濃厚でコクのある奥深い風味が生まれます。同じニカラグアの中でも、標高や気候の違いによってコーヒーとカカオそれぞれに適した産地が分かれているのも興味深い点で、生産者はその土地ならではの個性を大切にしながら、一粒一粒を丁寧に育てています。
- </p>
- </div>
- </div>
-
- <div class="max-w-3xl mx-auto mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
- {% for label in origin_labels %}
- <a href="{{ label.url }}"
- class="flex items-center gap-3 bg-[#f3e6d0] border-2 border-[#9e7b3b] rounded-lg px-4 py-3 hover:scale-[1.02] transition-transform">
- <span class="flex-shrink-0 w-9 h-9 rounded-full bg-[#9e7b3b] text-black ring-2 ring-black/20 shadow-[0_2px_6px_rgba(0,0,0,0.3)] flex items-center justify-center text-base font-bold">{{ label.no }}</span>
- {% if label.logo %}
- <img src="{{ label.logo }}" alt="{{ label.name }}" class="h-8 w-8 rounded-full object-cover flex-shrink-0">
- {% endif %}
- <span class="min-w-0">
- <span class="block font-bold text-black text-sm leading-tight truncate">{{ label.origin }}</span>
- <span class="block text-black/80 text-xs leading-tight truncate">{{ label.name }}</span>
+ <span class="origin-landmark absolute z-0 pointer-events-none" style="left: {{ city.x }}%; top: {{ city.y }}%;">
+ <span class="block w-1 h-1 rounded-full bg-white/70 mx-auto"></span>
+ <span class="block mt-0.5 text-[10px] tracking-wide text-white/75 whitespace-nowrap">{{ city.name }}</span>
  </span>
- </a>
+ {% endfor %}
+
+ {% for label in origin_labels %}
+ <button type="button" data-goto="origin-{{ label.no }}"
+ class="origin-pin absolute z-10 w-8 h-8 md:w-9 md:h-9 rounded-full bg-[#9e7b3b] text-black ring-2 ring-[#f3e6d0] shadow-[0_3px_10px_rgba(0,0,0,0.5)] flex items-center justify-center text-sm md:text-base font-bold"
+ style="left: {{ label.x }}%; top: {{ label.y }}%;" title="{{ label.origin }} - {{ label.name }}">{{ label.no }}</button>
  {% endfor %}
  </div>
+ <div class="map-vignette absolute inset-0 pointer-events-none"></div>
+ <p class="origin-caption absolute left-3 bottom-3 text-[11px] tracking-[0.2em] uppercase text-[#f3e6d0]/80 bg-black/50 backdrop-blur px-3 py-1 rounded-full">Nicaragua</p>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ {# 章: スクロールに合わせて地図が動く #}
+ <div class="relative z-0">
+ <article class="origin-chapter" data-x="50" data-y="50" data-zoom="1" data-caption="Nicaragua">
+ <p class="text-xs tracking-[0.3em] uppercase font-bold text-black/60 mb-2">Chapter 01</p>
+ <h3 class="text-2xl font-bold text-black mb-4">火山と湖の国、ニカラグア</h3>
+ <p class="text-sm leading-loose text-black/85">ニカラグアは中央アメリカに位置し、太平洋と大西洋(カリブ海)の両方に面した、火山と湖に彩られる自然豊かな国です。国土の中央から北部にかけては火山活動によって生まれた肥沃な土壌が広がり、標高1,000mを超える山岳地帯も点在しています。昼夜の寒暖差が大きく、雨季と乾季がはっきりと分かれる気候は、コーヒーやカカオといった繊細な農作物をゆっくりと熟成させるのに適しており、古くから中米有数の産地として知られています。国土の中央にはニカラグア湖という中米最大級の湖も広がり、湖畔一帯も肥沃な農地として利用されています。KiMameでは、こうした恵まれた自然環境の中で現地の生産者が一つひとつ丁寧に育てた生豆を、直接仕入れて皆さまにお届けしています。</p>
+ </article>
+
+ {% for label in origin_labels %}
+ <article id="origin-{{ label.no }}" class="origin-chapter" data-x="{{ label.x }}" data-y="{{ label.y }}" data-zoom="2.2" data-pin="{{ label.no }}" data-caption="{{ label.origin }}">
+ <div class="rounded-2xl overflow-hidden bg-[#1b1308] text-[#f3e6d0] shadow-2xl border border-black/20">
+ {% if label.image %}
+ <div class="relative h-44 md:h-52">
+ <img src="{{ label.image }}" alt="{{ label.name }}" class="w-full h-full object-cover">
+ <div class="absolute inset-0 bg-gradient-to-t from-[#1b1308] via-transparent to-transparent"></div>
+ <span class="absolute top-3 left-3 w-9 h-9 rounded-full bg-[#9e7b3b] text-black font-bold flex items-center justify-center ring-2 ring-[#f3e6d0]">{{ label.no }}</span>
+ {% if not label.in_stock %}<span class="absolute top-3 right-3 text-[11px] font-bold bg-black/70 px-3 py-1 rounded-full">SOLD OUT</span>{% endif %}
+ </div>
+ {% endif %}
+ <div class="p-5 md:p-6">
+ <p class="text-[11px] tracking-[0.2em] uppercase text-[#c9a876] mb-1">{{ label.origin }} ・ {{ label.type }}{% if label.roast_level %} ・ {{ label.roast_level }}{% endif %}</p>
+ <h3 class="text-xl md:text-2xl font-bold mb-1">{{ label.name }}</h3>
+ {% if label.title %}<p class="text-sm text-[#c9a876] mb-3">{{ label.title }}</p>{% endif %}
+ {% if label.description %}<p class="text-sm leading-relaxed text-[#f3e6d0]/80 line-clamp-4 mb-4">{{ label.description }}</p>{% endif %}
+ <div class="flex items-center justify-between gap-3">
+ {% if label.starting_price is not None %}<p class="text-sm"><span class="text-lg font-bold text-[#9e7b3b]">¥{{ label.starting_price|floatformat:"0g" }}</span><span class="text-xs text-[#c9a876]"> 〜</span></p>{% else %}<span></span>{% endif %}
+ <a href="{{ label.url }}" class="inline-flex items-center gap-2 bg-[#9e7b3b] text-black text-sm font-bold px-4 py-2 rounded-full hover:bg-[#f3e6d0] transition">この豆を見る →</a>
+ </div>
+ </div>
+ </div>
+ </article>
+ {% endfor %}
+
+ <article class="origin-chapter" data-x="50" data-y="50" data-zoom="1" data-caption="Coffee &amp; Cacao">
+ <p class="text-xs tracking-[0.3em] uppercase font-bold text-black/60 mb-2">Last Chapter</p>
+ <h3 class="text-2xl font-bold text-black mb-4">高地のコーヒー、低地のカカオ</h3>
+ <p class="text-sm leading-loose text-black/85">KiMameが扱うコーヒー豆は、主に北部の山岳地帯(ヒノテガ、マタガルパ、エステリなど)で栽培されています。標高1,000mを超える高地は日照と冷涼な気候のバランスが良く、コーヒーチェリーがゆっくりと熟すことで、フルーティーで華やかな香りとすっきりとした酸味を持つ生豆が育ちます。一方カカオ豆は、太平洋沿岸やニカラグア湖畔の肥沃な低地で栽培され、高温多湿な気候の中でじっくりと発酵・乾燥されることで、濃厚でコクのある奥深い風味が生まれます。同じニカラグアの中でも、標高や気候の違いによってコーヒーとカカオそれぞれに適した産地が分かれているのも興味深い点で、生産者はその土地ならではの個性を大切にしながら、一粒一粒を丁寧に育てています。</p>
+ <a href="{% url 'shop:product_list' %}" class="inline-block mt-6 px-6 py-3 bg-black text-[#9e7b3b] rounded-full font-bold hover:bg-[#1b1308] transition">すべての商品を見る →</a>
+ </article>
+ </div>
+ </div>
+
+ <script>
+ (function () {
+   const story = document.querySelector('.origin-story');
+   if (!story) return;
+   const layer = story.querySelector('.origin-map-layer');
+   const caption = story.querySelector('.origin-caption');
+   const pins = story.querySelectorAll('.origin-pin');
+   const chapters = story.querySelectorAll('.origin-chapter');
+   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+
+   function focus(ch) {
+     const z = parseFloat(ch.dataset.zoom) || 1;
+     const x = parseFloat(ch.dataset.x), y = parseFloat(ch.dataset.y);
+     // Translate so the point (x%, y%) sits in the middle, without exposing the map edges.
+     const tx = clamp(50 - x * z, 100 - 100 * z, 0);
+     const ty = clamp(50 - y * z, 100 - 100 * z, 0);
+     layer.style.transform = `translate(${tx}%, ${ty}%) scale(${z})`;
+     layer.style.setProperty('--inv', 1 / z);
+     layer.classList.toggle('is-zoomed', z > 1);
+     pins.forEach(p => p.classList.toggle('is-active', p.textContent.trim() === ch.dataset.pin));
+     chapters.forEach(c => c.classList.toggle('is-active', c === ch));
+     if (caption) caption.textContent = ch.dataset.caption || '';
+   }
+
+   const io = new IntersectionObserver((entries) => {
+     entries.forEach(e => { if (e.isIntersecting) focus(e.target); });
+   }, { rootMargin: '-45% 0px -45% 0px' });
+   chapters.forEach(c => io.observe(c));
+   focus(chapters[0]);
+
+   pins.forEach(p => p.addEventListener('click', () => {
+     const target = document.getElementById(p.dataset.goto);
+     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+   }));
+ })();
+ </script>
  {% endif %}
  </div>
 </section>
 
-<section class="relative bg-cover bg-repeat text-center text-[#9e7b3b] py-16" style="background-image: url('{% static "core/images/texture_Pblack.jpg" %}');">
+<section class="relative bg-black bg-repeat text-center text-[#9e7b3b] py-16" style="background-image: url('{% static "core/images/texture_Pblack.jpg" %}');">
  <div class="max-w-6xl mx-auto px-6">
  <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 text-[#c9a876]">How It Works</p>
  <div class="flex items-center justify-center gap-3 mb-12">
@@ -236,31 +287,38 @@
  <h2 class="shimmer-title text-3xl md:text-4xl font-bold z-10">お手元に届くまでの流れ</h2>
  <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70 -scale-x-100" alt="">
  </div>
- <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-2 p-2 justify-items-center">
 
+ {# スマホ: 縦のタイムライン / タブレット以上: 横並びの丸写真 #}
+ <ol class="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 sm:gap-10 mb-2 sm:p-2 sm:justify-items-center text-left sm:text-center">
  {% for step in shipping_steps %}
- <div class="fade-in opacity-0 translate-y-6 transition-all duration-700" style="transition-delay: 0ms;">
- <div class="flex flex-col items-center">
- <div class="relative w-60 h-60 mb-4">
+ <li class="fade-in opacity-0 translate-y-6 transition-all duration-700 relative flex sm:flex-col items-start sm:items-center gap-4 sm:gap-0 pb-8 sm:pb-0 last:pb-0">
+ {% if not forloop.last %}<span class="sm:hidden absolute left-10 top-20 bottom-0 w-px bg-gradient-to-b from-[#9e7b3b] to-[#9e7b3b]/20"></span>{% endif %}
+ <div class="relative flex-shrink-0 w-20 h-20 sm:w-60 sm:h-60 sm:mb-4">
+ {% if step.image %}
  <img src="{{ step.image.url }}" alt="{{ step.title }}"
- class="w-full h-full object-cover rounded-full border-4 border-[#9e7b3b] shadow-md">
- <div
- class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 bg-[#9e7b3b] p-6 rounded-full text-black text-xl font-bold shadow">
- <p>0{{ step.no }}</p>
- </div>
- </div>
- <h3 class="text-lg font-semibold mb-1">{{ step.title }}</h3>
- {% if step.duration %}
- <span class="inline-block text-xs font-bold text-black bg-[#9e7b3b] px-3 py-1 rounded-full mb-2">{{ step.duration }}</span>
+ class="w-full h-full object-cover rounded-full border-2 sm:border-4 border-[#9e7b3b] shadow-md">
+ {% else %}
+ <div class="w-full h-full rounded-full border-2 sm:border-4 border-[#9e7b3b] bg-black/60"></div>
  {% endif %}
- <p class="text-sm">{{ step.description }}</p>
+ <div class="absolute -top-1 -left-1 sm:top-1/2 sm:left-0 sm:-translate-y-1/2 sm:-translate-x-1/2 w-8 h-8 sm:w-auto sm:h-auto sm:p-6 rounded-full bg-[#9e7b3b] text-black text-xs sm:text-xl font-bold shadow flex items-center justify-center ring-2 ring-black sm:ring-0">
+ 0{{ step.no }}
+ </div>
+ </div>
+ <div class="flex-1 min-w-0 pt-1 sm:pt-0 rounded-xl sm:rounded-none bg-black/55 sm:bg-transparent backdrop-blur-[2px] sm:backdrop-blur-none p-4 sm:p-0 border border-[#9e7b3b]/25 sm:border-0">
+ <div class="flex flex-wrap items-center gap-2 sm:flex-col sm:gap-0 mb-2 sm:mb-0">
+ <h3 class="text-base sm:text-lg font-semibold sm:mb-1 text-[#f3e6d0] sm:text-[#9e7b3b]">{{ step.title }}</h3>
+ {% if step.duration %}
+ <span class="inline-block text-[11px] sm:text-xs font-bold text-black bg-[#9e7b3b] px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full sm:mb-2">{{ step.duration }}</span>
+ {% endif %}
+ </div>
+ <p class="text-sm leading-relaxed text-[#f3e6d0]/85 sm:text-[#9e7b3b]">{{ step.description }}</p>
  {% if step.detail %}
  <p class="text-xs text-[#c9a876] mt-2 leading-relaxed">{{ step.detail }}</p>
  {% endif %}
  </div>
- </div>
+ </li>
  {% endfor %}
- </div>
+ </ol>
  </div>
  <div class="max-w-4xl mx-auto px-6 py-20 relative z-10">
  <h2 class="text-xl md:text-2xl font-bold mb-12 relative z-10">
