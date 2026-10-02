@@ -1,0 +1,12 @@
+{% extends "admin/index.html" %}
+{% load admin_dashboard %}
+
+{# Full-width dashboard: drop the "recent actions" sidebar so the order tables have room. #}
+{% block coltype %}colM{% endblock %}
+
+{% block content %}
+{% admin_dashboard %}
+{{ block.super }}
+{% endblock %}
+
+{% block sidebar %}{% endblock %}

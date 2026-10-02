@@ -71,3 +71,45 @@ p.errorlist {
   font-size: 0.875rem;
   font-weight: 600;
 }
+
+/* 産地マップを上品に見せる額装風の枠とヴィネット */
+.map-frame {
+  background-image:
+    linear-gradient(135deg, rgba(158, 123, 59, 0.15), transparent 40%),
+    linear-gradient(315deg, rgba(158, 123, 59, 0.12), transparent 40%);
+}
+.map-vignette {
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.35) 100%);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.35);
+}
+.map-pin::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  border: 1px solid rgba(243, 230, 208, 0.35);
+  pointer-events: none;
+}
+
+/* ヒーロー背景のゆっくりズーム(Ken Burns) */
+.hero-zoom {
+  animation: hero-zoom 24s ease-out infinite alternate;
+  transform-origin: center;
+}
+@keyframes hero-zoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.12); }
+}
+/* スクロール誘導ライン */
+.scroll-cue {
+  animation: scroll-cue 2s ease-in-out infinite;
+  transform-origin: top;
+}
+@keyframes scroll-cue {
+  0% { transform: scaleY(0); opacity: 1; }
+  60% { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(1); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-zoom, .scroll-cue { animation: none; }
+}

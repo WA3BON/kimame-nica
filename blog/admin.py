@@ -11,7 +11,9 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('thumbnail_preview', 'title', 'author', 'is_published', 'published_at')
+    list_display = ('thumbnail_preview', 'title', 'author', 'is_published', 'published_at', 'updated_at')
+    list_display_links = ('thumbnail_preview', 'title')
+    list_editable = ('is_published',)
     list_filter = ('is_published', 'tags')
     search_fields = ('title', 'content')
     filter_horizontal = ('tags',)

@@ -32,6 +32,11 @@ STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY", "")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
 STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
 
+# Where new-order / inquiry notifications are sent. Several addresses can be
+# given separated by ";" (e.g. "a@example.com;b@example.com").
+ADMIN_EMAILS = _env_list("ADMIN_EMAIL")
+ADMIN_EMAIL = ADMIN_EMAILS[0] if ADMIN_EMAILS else ""
+
 SECURE_SETTINGS = os.environ.get("SECURE_SETTINGS", "False") == "True"
 if SECURE_SETTINGS:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
@@ -219,6 +224,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = 'ja'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tokyo'
 USE_I18N = True
 USE_TZ = True

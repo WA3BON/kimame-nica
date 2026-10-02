@@ -1,0 +1,52 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}!KiMame¡よくある質問{% endblock %}
+
+{% block content %}
+{% if faqs %}
+<script type="application/ld+json">{{ faq_jsonld|safe }}</script>
+{% endif %}
+
+<section class="py-20 px-6 text-[#9e7b3b] bg-repeat" style="background-image: url('{% static 'core/images/texture_Pblack.jpg' %}');">
+ <div class="max-w-3xl mx-auto">
+ <div class="text-center mb-12">
+ <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 text-[#c9a876]">FAQ</p>
+ <div class="flex items-center justify-center gap-3">
+ <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70" alt="">
+ <h1 class="shimmer-title text-3xl md:text-4xl font-bold">よくある質問</h1>
+ <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70 -scale-x-100" alt="">
+ </div>
+ </div>
+
+ {% if faq_groups|length > 1 %}
+ <nav class="flex flex-wrap justify-center gap-2 mb-10">
+ {% for group in faq_groups %}
+ <a href="#faq-{{ forloop.counter }}" class="text-sm border border-[#9e7b3b]/60 rounded-full px-4 py-1.5 hover:bg-[#9e7b3b] hover:text-black transition">{{ group.label }}</a>
+ {% endfor %}
+ </nav>
+ {% endif %}
+
+ {% for group in faq_groups %}
+ <div id="faq-{{ forloop.counter }}" class="mb-12 scroll-mt-24">
+ <h2 class="text-lg font-bold mb-4 pb-2 border-b border-[#9e7b3b]/40">{{ group.label }}</h2>
+ <div class="space-y-3">
+ {% for faq in group.items %}
+ {% include 'core/partials/faq_item.html' %}
+ {% endfor %}
+ </div>
+ </div>
+ {% empty %}
+ <p class="text-center">現在、よくある質問は準備中です。</p>
+ {% endfor %}
+
+ <div class="text-center mt-16 border-t border-[#9e7b3b]/30 pt-12">
+ <p class="mb-6 font-bold">解決しない場合は、お気軽にお問い合わせください。</p>
+ <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+ <a href="{% url 'core:contact' %}" class="w-60 bg-[#9e7b3b] text-black py-3 px-6 rounded-xl font-semibold text-center border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">お問い合わせ</a>
+ <a href="{% url 'core:estimate' %}" class="w-60 border border-[#9e7b3b] py-3 px-6 rounded-xl font-semibold text-center hover:bg-[#9e7b3b] hover:text-black transition">お見積り</a>
+ </div>
+ </div>
+ </div>
+</section>
+{% endblock %}

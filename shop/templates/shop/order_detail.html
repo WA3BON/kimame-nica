@@ -18,6 +18,9 @@
  <div class="border-2 border-[#9e7b3b] rounded-2xl p-8">
  <h2 class="text-2xl font-bold mb-2">注文 #{{ order.pk }}</h2>
  <p class="mb-2">状態: {{ order.get_status_display }} / {{ order.created_at|date:"Y年n月j日 H:i" }}</p>
+ {% if order.tracking_number %}
+ <p class="mb-2">配送: DHL / 追跡番号: <a href="{{ order.tracking_url }}" target="_blank" rel="noopener" class="font-bold underline hover:text-[#f3e6d0]">{{ order.tracking_number }}</a></p>
+ {% endif %}
  {% if order.status == 'pending' %}
  <a href="{% url 'shop:order_pay' order.pk %}"
  class="inline-block mb-6 px-6 py-2 bg-[#9e7b3b] text-black rounded-xl font-semibold border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
@@ -62,7 +65,7 @@
  <p>〒{{ order.shipping_postal_code }} {{ order.shipping_prefecture }}{{ order.shipping_city }}{{ order.shipping_address_line1 }} {{ order.shipping_address_line2 }}</p>
  <p>電話: {{ order.shipping_phone }}</p>
  {% if order.status == 'fulfilled' %}
- <p class="text-sm mt-2 opacity-70">発送済みのため、お名前・お届け先は変更できません。</p>
+ <p class="text-sm mt-2 text-[#c9a876]">発送済みのため、お名前・お届け先は変更できません。</p>
  {% endif %}
  </div>
 

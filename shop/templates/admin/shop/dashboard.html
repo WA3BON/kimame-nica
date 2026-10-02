@@ -1,0 +1,220 @@
+<style>
+  .kd { margin-bottom: 30px; }
+  .kd h2.kd-title { font-size: 15px; margin: 24px 0 10px; padding: 0; background: none; color: var(--body-fg); text-transform: none; letter-spacing: 0; }
+  .kd-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  .kd-card { display: block; border: 1px solid var(--hairline-color); border-radius: 10px; padding: 12px 14px; background: var(--darkened-bg); text-decoration: none !important; color: var(--body-fg) !important; }
+  .kd-card:hover { border-color: var(--link-fg); }
+  .kd-card .kd-num { font-size: 26px; font-weight: bold; line-height: 1.2; }
+  .kd-card .kd-label { font-size: 12px; color: var(--body-quiet-color); }
+  .kd-card .kd-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+  .kd-alert { border-left: 4px solid #dc2626; }
+  .kd table { width: 100%; }
+  .kd td, .kd th { vertical-align: middle; }
+  .kd-links { display: flex; flex-wrap: wrap; gap: 8px; }
+  .kd-links a { border: 1px solid var(--hairline-color); border-radius: 999px; padding: 6px 14px; font-size: 13px; }
+  .kd-grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
+  .kd-panel { border: 1px solid var(--hairline-color); border-radius: 10px; padding: 14px 16px; }
+  .kd-panel h3 { display: flex; justify-content: space-between; align-items: center; margin: 0 0 10px; font-size: 14px; }
+  .kd-panel h3 a { font-size: 12px; font-weight: normal; }
+  .kd-panel dl { display: grid; grid-template-columns: 7.5em 1fr; gap: 6px 10px; margin: 0; font-size: 13px; }
+  .kd-panel dt { color: var(--body-quiet-color); }
+  .kd-panel dd { margin: 0; white-space: pre-line; }
+  .kd-steps { list-style: none; margin: 0; padding: 0; font-size: 13px; }
+  .kd-steps li { list-style: none; display: flex; gap: 10px; align-items: baseline; padding: 6px 0; border-bottom: 1px dashed var(--hairline-color); }
+  .kd-steps li:last-child { border-bottom: none; }
+  .kd-steps .no { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: #9e7b3b; color: #000; font-weight: bold; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; }
+  .kd-steps .dur { margin-left: auto; color: var(--body-quiet-color); white-space: nowrap; }
+  .kd-empty { color: var(--body-quiet-color); font-size: 13px; padding: 8px 0; }
+</style>
+
+<div class="kd">
+  <div class="kd-row">
+    <a class="kd-card {% if todo_orders %}kd-alert{% endif %}" href="{{ todo_url }}">
+      <div class="kd-num">{{ todo_count }}</div>
+      <div class="kd-label">要対応の注文(未発送)</div>
+    </a>
+    <div class="kd-card">
+      <div class="kd-num">{{ today_count }}</div>
+      <div class="kd-label">本日の受注</div>
+    </div>
+    <div class="kd-card">
+      <div class="kd-num">{{ month_sales|floatformat:"0g" }}<small>円</small></div>
+      <div class="kd-label">今月の売上({{ month_count }}件)</div>
+    </div>
+    <a class="kd-card {% if new_inquiries %}kd-alert{% endif %}" href="{% url 'admin:core_inquiry_changelist' %}?status__exact=new">
+      <div class="kd-num">{{ new_inquiries }}</div>
+      <div class="kd-label">未対応のお問い合わせ</div>
+    </a>
+  </div>
+
+  <h2 class="kd-title">注文ステータス</h2>
+  <div class="kd-row">
+    {% for card in status_cards %}
+    <a class="kd-card" href="{{ card.url }}">
+      <div class="kd-num">{{ card.count }}</div>
+      <div class="kd-label"><span class="kd-dot" style="background:{{ card.color }}"></span>{{ card.label }}</div>
+    </a>
+    {% endfor %}
+  </div>
+
+  <h2 class="kd-title">📦 発送が必要な注文(古い順)</h2>
+  {% if todo_orders %}
+  <div class="module">
+    <table>
+      <thead><tr><th>注文</th><th>状態</th><th>受注日</th><th>お客様</th><th>商品</th><th>合計</th><th></th></tr></thead>
+      <tbody>
+        {% for order in todo_orders %}
+        <tr>
+          <td><a href="{% url 'admin:shop_order_change' order.pk %}">#{{ order.pk }}</a></td>
+          <td>{{ order.badge }}</td>
+          <td>{{ order.created_at|date:"n/j H:i" }}</td>
+          <td>{{ order.shipping_name }}<br><small>{{ order.shipping_prefecture }}</small></td>
+          <td>{% for item in order.items.all %}{{ item.product_name }} ({{ item.weight_kg|floatformat:"-2" }}kg)×{{ item.quantity }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</td>
+          <td>{{ order.total|floatformat:"0g" }}円</td>
+          <td><a href="{% url 'admin:shop_order_sheet' order.pk %}" target="_blank">📄 シート</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="kd-empty">未発送の注文はありません 🎉</p>
+  {% endif %}
+
+  <h2 class="kd-title">🧾 受注一覧(最新15件) <a href="{% url 'admin:shop_order_changelist' %}" style="font-size:12px;font-weight:normal;margin-left:8px;">すべて見る →</a></h2>
+  {% if recent_orders %}
+  <div class="module">
+    <table>
+      <thead><tr><th>注文</th><th>状態</th><th>受注日時</th><th>お客様</th><th>商品</th><th>合計</th><th>DHL追跡</th><th></th></tr></thead>
+      <tbody>
+        {% for order in recent_orders %}
+        <tr>
+          <td><a href="{% url 'admin:shop_order_change' order.pk %}">#{{ order.pk }}</a></td>
+          <td>{{ order.badge }}</td>
+          <td>{{ order.created_at|date:"Y/n/j H:i" }}</td>
+          <td>{{ order.shipping_name }}<br><small>{{ order.contact_email }}</small></td>
+          <td>{% for item in order.items.all %}{{ item.product_name }} ({{ item.weight_kg|floatformat:"-2" }}kg)×{{ item.quantity }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</td>
+          <td>{{ order.total|floatformat:"0g" }}円</td>
+          <td>{% if order.tracking_number %}<a href="{{ order.tracking_url }}" target="_blank" rel="noopener">{{ order.tracking_number }}</a>{% else %}-{% endif %}</td>
+          <td><a href="{% url 'admin:shop_order_sheet' order.pk %}" target="_blank">📄 シート</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="kd-empty">まだ受注はありません。</p>
+  {% endif %}
+
+  <h2 class="kd-title">⚠️ 在庫が少ない商品(3以下)</h2>
+  {% if low_stock %}
+  <div class="module">
+    <table>
+      <tbody>
+        {% for v in low_stock %}
+        <tr>
+          <td><a href="{% url 'admin:shop_product_change' v.product_id %}">{{ v.product.name }}</a></td>
+          <td>{{ v.label }}</td>
+          <td style="color:#dc2626;font-weight:bold;">残り {{ v.stock }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="kd-empty">在庫が少ない商品はありません。</p>
+  {% endif %}
+
+  <h2 class="kd-title">✉️ 最新のお問い合わせ</h2>
+  {% if recent_inquiries %}
+  <div class="module">
+    <table>
+      <tbody>
+        {% for q in recent_inquiries %}
+        <tr>
+          <td>{{ q.created_at|date:"n/j H:i" }}</td>
+          <td>{{ q.get_kind_display }}{% if q.status == 'new' %} <strong style="color:#dc2626;">未対応</strong>{% endif %}</td>
+          <td><a href="{% url 'admin:core_inquiry_change' q.pk %}">{{ q.name }}</a></td>
+          <td>{{ q.message|truncatechars:40 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="kd-empty">お問い合わせはまだありません。</p>
+  {% endif %}
+
+  <h2 class="kd-title">🏠 サイトの基本情報</h2>
+  <div class="kd-grid2">
+    <div class="kd-panel">
+      <h3>会社情報
+        {% if company %}<a href="{% url 'admin:core_companyinfo_change' company.pk %}">編集する →</a>{% else %}<a href="{% url 'admin:core_companyinfo_add' %}">登録する →</a>{% endif %}
+      </h3>
+      {% if company %}
+      {% if company.logo %}<img src="{{ company.logo.url }}" alt="" style="height:48px;margin-bottom:8px;background:#000;border-radius:6px;padding:4px;">{% endif %}
+      <dl>
+        <dt>会社名</dt><dd>{{ company.name }}</dd>
+        <dt>住所</dt><dd>{{ company.address }}</dd>
+        <dt>電話</dt><dd>{{ company.phone|default:"-" }}</dd>
+        <dt>メール</dt><dd>{{ company.email }}</dd>
+        <dt>紹介文</dt><dd>{{ company.description|truncatechars:120 }}</dd>
+        <dt>更新日</dt><dd>{{ company.updated_at|date:"Y/n/j H:i" }}</dd>
+      </dl>
+      {% else %}<p class="kd-empty">会社情報が未登録です。</p>{% endif %}
+    </div>
+
+    <div class="kd-panel">
+      <h3>配送・お支払い(特定商取引法の表記)
+        {% if order_policy %}<a href="{% url 'admin:core_orderpolicy_change' order_policy.pk %}">編集する →</a>{% endif %}
+      </h3>
+      {% if order_policy %}
+      <dl>
+        <dt>配送方法</dt><dd>DHL(コーヒー豆送付プラン)</dd>
+        <dt>引渡し時期</dt><dd>{{ order_policy.delivery_time }}</dd>
+        <dt>送料</dt><dd>{{ order_policy.delivery_cost }}</dd>
+        <dt>その他の費用</dt><dd>{{ order_policy.shipping_fee }}</dd>
+        <dt>支払方法</dt><dd>{{ order_policy.payment_method }}</dd>
+        <dt>返品・交換</dt><dd>{{ order_policy.return_policy|truncatechars:80 }}</dd>
+      </dl>
+      {% else %}<p class="kd-empty">未登録です。</p>{% endif %}
+    </div>
+
+    <div class="kd-panel">
+      <h3>お届けまでの流れ(トップページ)
+        <a href="{% url 'admin:core_shippingstep_changelist' %}">編集する →</a>
+      </h3>
+      {% if shipping_steps %}
+      <ul class="kd-steps">
+        {% for step in shipping_steps %}
+        <li><span class="no">{{ step.no }}</span><a href="{% url 'admin:core_shippingstep_change' step.pk %}">{{ step.title }}</a><span class="dur">{{ step.duration|default:"" }}</span></li>
+        {% endfor %}
+      </ul>
+      {% else %}<p class="kd-empty">未登録です。</p>{% endif %}
+    </div>
+
+    <div class="kd-panel">
+      <h3>トップページの掲載内容</h3>
+      <dl>
+        <dt>選ばれる理由</dt><dd>{{ why_count }}件 <a href="{% url 'admin:core_whychooseus_changelist' %}">編集</a></dd>
+        <dt>よくある質問</dt><dd>公開 {{ faq_count }}件(うちトップ表示 {{ faq_top_count }}件) <a href="{% url 'admin:core_faq_changelist' %}">編集</a></dd>
+        <dt>ブログ下書き</dt><dd>{{ draft_posts }}件 <a href="{% url 'admin:blog_post_changelist' %}">編集</a></dd>
+      </dl>
+    </div>
+  </div>
+
+  <h2 class="kd-title">クイックリンク</h2>
+  <div class="kd-links">
+    <a href="{% url 'admin:shop_order_changelist' %}">受注一覧</a>
+    <a href="{% url 'admin:shop_product_changelist' %}">商品・在庫</a>
+    <a href="{% url 'admin:shop_product_add' %}">＋ 商品を追加</a>
+    <a href="{% url 'admin:blog_post_add' %}">＋ ブログを書く</a>
+    <a href="{% url 'admin:blog_post_changelist' %}">ブログ一覧{% if draft_posts %}(下書き {{ draft_posts }}){% endif %}</a>
+    <a href="{% url 'admin:auth_user_changelist' %}">ユーザー</a>
+    <a href="{% url 'admin:core_companyinfo_changelist' %}">会社情報</a>
+    <a href="{% url 'admin:core_whychooseus_changelist' %}">選ばれる理由</a>
+    <a href="{% url 'admin:core_shippingstep_changelist' %}">お届けまでの流れ</a>
+    <a href="{% url 'admin:core_inquiry_changelist' %}">お問い合わせ</a>
+    <a href="{% url 'admin:core_faq_changelist' %}">よくある質問</a>
+  </div>
+</div>

@@ -26,7 +26,7 @@
     {% if order_policy %}
     <h2 class="text-xl font-semibold pt-6 mb-2">お問い合わせ窓口</h2>
       <p>責任者: {{ order_policy.manager }}</p>
-      <p>メールアドレス: <a href="mailto:{{ order_policy.email }}" class="text-[#9e7b3b]/80">{{ order_policy.email }}</a></p>
+      <p>メールアドレス: <a href="mailto:{{ order_policy.email }}" class="text-[#c9a876] underline">{{ order_policy.email }}</a></p>
       <p>住所: {{ order_policy.address }}</p>
     {% endif %}
 

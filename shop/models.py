@@ -123,6 +123,7 @@ class Order(models.Model):
     class Status(models.TextChoices):
         PENDING = 'pending', '支払い待ち'
         PAID = 'paid', '支払い完了'
+        PREPARING = 'preparing', '発送準備中'
         FAILED = 'failed', '決済失敗'
         FULFILLED = 'fulfilled', '発送済み'
         CANCELED = 'canceled', 'キャンセル'
@@ -150,11 +151,25 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     paid_at = models.DateTimeField(null=True, blank=True)
 
+    tracking_number = models.CharField("追跡番号(DHL)", max_length=100, blank=True, default="", db_default="", help_text='DHLの送り状番号(Waybill No.)。入力するとお客様の注文ページに追跡リンクが表示されます')
+    shipped_at = models.DateTimeField("発送日時", null=True, blank=True)
+    admin_note = models.TextField("社内メモ", blank=True, default="", db_default="", help_text='お客様には表示されません')
+
     class Meta:
         ordering = ['-created_at']
+        verbose_name = "受注"
+        verbose_name_plural = "受注"
 
     def __str__(self):
         return f"Order #{self.pk} ({self.status})"
+
+    @property
+    def tracking_url(self):
+        """Shipments go out with DHL Express (coffee bean plan), so link to DHL's tracker."""
+        if not self.tracking_number:
+            return ""
+        number = self.tracking_number.replace(" ", "").replace("-", "")
+        return f"https://www.dhl.com/jp-ja/home/tracking/tracking-express.html?submit=1&tracking-id={number}"
 
 
 class OrderItem(models.Model):

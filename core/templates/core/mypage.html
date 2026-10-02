@@ -20,7 +20,7 @@
     </div>
 
     <div class="text-center mb-12">
-      <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 opacity-70">My Page</p>
+      <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 text-[#c9a876]">My Page</p>
       <div class="flex items-center justify-center gap-3">
         <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70" alt="">
         <h2 class="shimmer-title text-3xl font-bold">マイページ</h2>
@@ -74,7 +74,7 @@
             <div class="flex justify-between items-center">
               <div>
                 <p class="font-semibold">注文 #{{ order.pk }}</p>
-                <p class="text-sm opacity-70">{{ order.created_at|date:"Y年n月j日" }}</p>
+                <p class="text-sm text-[#c9a876]">{{ order.created_at|date:"Y年n月j日" }}</p>
               </div>
               <div class="text-right">
                 <p class="font-bold">{{ order.total }} 円</p>
@@ -85,7 +85,7 @@
           {% endfor %}
         </div>
         {% else %}
-        <p class="opacity-80">注文履歴はまだありません。</p>
+        <p>注文履歴はまだありません。</p>
         {% endif %}
       </div>
 
@@ -98,8 +98,8 @@
           {% for inquiry in inquiries %}
           <div class="border border-[#9e7b3b] rounded-xl p-4">
             <div class="flex justify-between items-center mb-1">
-              <span class="text-xs px-2 py-0.5 rounded-full border border-[#9e7b3b] opacity-80">{{ inquiry.get_kind_display }}</span>
-              <span class="text-xs opacity-70">{{ inquiry.created_at|date:"Y年n月j日 H:i" }}</span>
+              <span class="text-xs px-2 py-0.5 rounded-full border border-[#9e7b3b] text-[#c9a876]">{{ inquiry.get_kind_display }}</span>
+              <span class="text-xs text-[#c9a876]">{{ inquiry.created_at|date:"Y年n月j日 H:i" }}</span>
             </div>
             {% if inquiry.kind == 'estimate' %}
             <p class="text-sm mt-2">商品名: {{ inquiry.product }} / 予定数量: {{ inquiry.quantity }} / お届け先: {{ inquiry.prefecture }}</p>
@@ -109,7 +109,7 @@
           {% endfor %}
         </div>
         {% else %}
-        <p class="mb-6 opacity-80">お問い合わせ履歴はまだありません。</p>
+        <p class="mb-6">お問い合わせ履歴はまだありません。</p>
         {% endif %}
 
         <div class="flex flex-col sm:flex-row gap-4">

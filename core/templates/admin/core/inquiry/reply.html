@@ -1,0 +1,37 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">ホーム</a> ›
+  <a href="{% url 'admin:core_inquiry_changelist' %}">お問い合わせ</a> ›
+  <a href="{{ change_url }}">{{ inquiry.name }}</a> › 返信
+</div>
+{% endblock %}
+
+{% block content %}
+<div style="max-width:820px;">
+  <div class="module" style="padding:12px 16px;margin-bottom:20px;">
+    <p style="margin:0 0 6px;"><strong>{{ inquiry.get_kind_display }}</strong> / {{ inquiry.created_at|date:"Y年n月j日 H:i" }}</p>
+    <p style="margin:0 0 6px;">{{ inquiry.name }} 様 &lt;{{ inquiry.email }}&gt;</p>
+    {% if inquiry.product %}<p style="margin:0 0 6px;">商品: {{ inquiry.product }}{% if inquiry.quantity %} / 数量: {{ inquiry.quantity }}{% endif %}{% if inquiry.prefecture %} / {{ inquiry.prefecture }}{% endif %}</p>{% endif %}
+    <p style="margin:0;white-space:pre-line;">{{ inquiry.message }}</p>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <p><strong>宛先:</strong> {{ inquiry.email }}</p>
+    {% for field in form %}
+      <div style="margin-bottom:14px;">
+        <label for="{{ field.id_for_label }}" style="display:block;font-weight:bold;margin-bottom:4px;">{{ field.label }}</label>
+        {{ field.errors }}
+        {{ field }}
+      </div>
+    {% endfor %}
+    <div class="submit-row" style="display:flex;gap:10px;align-items:center;">
+      <input type="submit" class="default" value="✉️ この内容で送信する"
+             onclick="return confirm('{{ inquiry.email }} にメールを送信します。よろしいですか？');">
+      <a href="{{ change_url }}">キャンセル</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

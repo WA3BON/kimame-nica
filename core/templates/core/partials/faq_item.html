@@ -1,0 +1,14 @@
+<div x-data="{ open: false }" class="border border-[#9e7b3b]/40 rounded-xl bg-black/50 overflow-hidden transition-colors" :class="open && 'border-[#9e7b3b]'">
+ <button type="button" @click="open = !open" :aria-expanded="open"
+ class="w-full flex items-center gap-4 text-left px-5 py-4 hover:bg-[#9e7b3b]/10 transition">
+ <span class="flex-shrink-0 w-8 h-8 rounded-full bg-[#9e7b3b] text-black font-bold flex items-center justify-center">Q</span>
+ <span class="flex-1 font-bold text-[#f3e6d0]">{{ faq.question }}</span>
+ <span class="flex-shrink-0 text-[#9e7b3b] text-2xl leading-none transition-transform duration-300" :class="open && 'rotate-45'">+</span>
+ </button>
+ <div x-show="open" x-cloak x-transition.opacity.duration.300ms class="px-5 pb-5">
+ <div class="flex gap-4 pt-1">
+ <span class="flex-shrink-0 w-8 h-8 rounded-full border border-[#9e7b3b] text-[#9e7b3b] font-bold flex items-center justify-center">A</span>
+ <p class="flex-1 text-sm leading-relaxed text-[#f3e6d0]/85 whitespace-pre-line">{{ faq.answer }}</p>
+ </div>
+ </div>
+</div>

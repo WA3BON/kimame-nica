@@ -1,4 +1,5 @@
 import json
+import logging
 import stripe
 
 from django.conf import settings
@@ -18,6 +19,9 @@ from .forms import CheckoutForm
 from .models import Address, CartItem, Order, OrderItem, Product, ProductVariant
 from core.google.gmail import send_mail_with_gmail
 from core.models import CompanyInfo
+from core.notifications import notify_admins
+
+logger = logging.getLogger(__name__)
 
 
 class ProductListView(ListView):
@@ -241,13 +245,13 @@ class StripeWebhookView(View):
         session = event["data"]["object"]
 
         if event_type == "checkout.session.completed":
-            self._mark_paid(session)
+            self._mark_paid(request, session)
         elif event_type in ("payment_intent.payment_failed", "checkout.session.async_payment_failed"):
             self._mark_failed(session)
 
         return HttpResponse(status=200)
 
-    def _mark_paid(self, session):
+    def _mark_paid(self, request, session):
         order = Order.objects.filter(stripe_checkout_session_id=session.get("id")).first()
         if not order or order.status != Order.Status.PENDING:
             return
@@ -267,14 +271,43 @@ class StripeWebhookView(View):
             CartItem.objects.filter(cart__user=order.user).delete()
 
         company = CompanyInfo.objects.first()
+        sender_name = company.name if company else "KiMame"
+        items = list(order.items.all())
         body = "\n".join(
-            [f"{item.product_name} x{item.quantity} = {item.line_total}円" for item in order.items.all()]
+            [f"{item.product_name} ({float(item.weight_kg):g}kg) x{item.quantity} = {item.line_total:,.0f}円" for item in items]
         )
-        send_mail_with_gmail(
-            to_email=order.contact_email,
-            subject="【KiMame】ご注文ありがとうございます",
-            body=f"ご注文ありがとうございます。\n\n{body}\n\n合計: {order.total}円",
-            sender_name=company.name if company else "KiMame",
+
+        # Mail failures must not make Stripe retry the webhook (the order is already marked paid).
+        try:
+            send_mail_with_gmail(
+                to_email=order.contact_email,
+                subject="【KiMame】ご注文ありがとうございます",
+                body=f"ご注文ありがとうございます。\n\n{body}\n\n合計: {order.total:,.0f}円",
+                sender_name=sender_name,
+            )
+        except Exception:
+            logger.exception("Order #%s: failed to send confirmation mail to customer", order.pk)
+
+        admin_url = request.build_absolute_uri(
+            reverse("admin:shop_order_change", args=[order.pk])
+        )
+        address = (
+            f"〒{order.shipping_postal_code} {order.shipping_prefecture}{order.shipping_city}"
+            f"{order.shipping_address_line1} {order.shipping_address_line2}".strip()
+        )
+        notify_admins(
+            subject=f"【KiMame】新規受注 #{order.pk}({order.shipping_name}様 / {order.total:,.0f}円)",
+            body=(
+                f"新しい注文が入りました(支払い完了)。\n\n"
+                f"注文番号: #{order.pk}\n"
+                f"日時: {timezone.localtime(order.paid_at):%Y-%m-%d %H:%M}\n"
+                f"お客様: {order.shipping_name} ({order.contact_email})\n"
+                f"電話: {order.shipping_phone}\n"
+                f"お届け先: {address}\n\n"
+                f"【ご注文内容】\n{body}\n\n"
+                f"合計: {order.total:,.0f}円\n\n"
+                f"管理画面で確認: {admin_url}"
+            ),
         )
 
     def _mark_failed(self, session):

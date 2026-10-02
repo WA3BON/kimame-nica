@@ -7,11 +7,12 @@ from django.views.generic import TemplateView, ListView, DetailView, FormView
 from django.shortcuts import render
 from django.conf import settings
 from django.urls import reverse
-from .models import CompanyInfo, Inquiry
+from .models import CompanyInfo, Faq, Inquiry
 
 from .models import (
     AppPolicy,
     ShippingStep,
+    WhyChooseUs,
     PrivacyPolicy,
     OrderPolicy,
     TermsOfService,
@@ -20,6 +21,7 @@ from shop.models import Product, Order
 from .forms import ContactForm, EstimateForm, ProfileForm
 from django.urls import reverse_lazy
 from .google.gmail import send_mail_with_gmail
+from .notifications import notify_admins
 
 
 # Nicaragua's approximate bounding box, used to place origin labels on the
@@ -105,6 +107,8 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["shipping_steps"] = ShippingStep.objects.all().order_by("no")
+        context["why_choose_us"] = WhyChooseUs.objects.all().order_by("no")
+        context["top_faqs"] = Faq.objects.filter(is_published=True, show_on_top=True)[:6]
         products = Product.objects.all()
         context["products"] = products
         context["featured_products"] = (
@@ -135,6 +139,31 @@ class IndexView(TemplateView):
         origin_labels = _avoid_landmarks(origin_labels, landmarks)
         origin_labels = _spread_pins(origin_labels)
         context["origin_labels"] = origin_labels
+        return context
+
+
+class FaqView(TemplateView):
+    template_name = "core/faq.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        faqs = list(Faq.objects.filter(is_published=True))
+        context["faqs"] = faqs
+        context["faq_groups"] = [
+            {"label": label, "items": [f for f in faqs if f.category == value]}
+            for value, label in Faq.Category.choices
+            if any(f.category == value for f in faqs)
+        ]
+        # Structured data so search engines can show the Q&A directly in results.
+        context["faq_jsonld"] = json.dumps({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {"@type": "Question", "name": f.question,
+                 "acceptedAnswer": {"@type": "Answer", "text": f.answer}}
+                for f in faqs
+            ],
+        }, ensure_ascii=False).replace("<", r"\u003c")
         return context
 
 
@@ -185,7 +214,7 @@ class ContactView(TurnstileFormViewMixin, FormView):
         message = form.cleaned_data["message"]
         company = CompanyInfo.objects.first()
 
-        Inquiry.objects.create(
+        inquiry = Inquiry.objects.create(
             user=self.request.user if self.request.user.is_authenticated else None,
             kind=Inquiry.Kind.CONTACT,
             name=name,
@@ -194,16 +223,11 @@ class ContactView(TurnstileFormViewMixin, FormView):
         )
 
         # ① 管理者へ通知（Gmail API）
-        try:
-            send_mail_with_gmail(
-                to_email=settings.ADMIN_EMAIL,
-                subject="【KiMame】新しいお問い合わせ",
-                body=f"お名前: {name}\nメール: {email}\n\n{message}",
-                sender_name=company.name,
-            )
-
-        except Exception as e:
-            print("Gmail送信エラー:", e)
+        admin_url = self.request.build_absolute_uri(reverse("admin:core_inquiry_change", args=[inquiry.pk]))
+        notify_admins(
+            subject="【KiMame】新しいお問い合わせ",
+            body=f"お名前: {name}\nメール: {email}\n\n{message}\n\n管理画面で返信: {admin_url}",
+        )
 
         # ② 問い合わせ者へ自動返信
         send_mail_with_gmail(
@@ -238,7 +262,7 @@ class EstimateView(TurnstileFormViewMixin, FormView):
         message = form.cleaned_data["message"]
         company = CompanyInfo.objects.first()
 
-        Inquiry.objects.create(
+        inquiry = Inquiry.objects.create(
             user=self.request.user if self.request.user.is_authenticated else None,
             kind=Inquiry.Kind.ESTIMATE,
             name=name,
@@ -258,12 +282,8 @@ class EstimateView(TurnstileFormViewMixin, FormView):
         
         メッセージ:{message}"""
 
-        send_mail_with_gmail(
-            to_email=settings.ADMIN_EMAIL,
-            subject="【KiMame】見積り依頼",
-            body=admin_body,
-            sender_name=company.name,
-        )
+        admin_url = self.request.build_absolute_uri(reverse("admin:core_inquiry_change", args=[inquiry.pk]))
+        notify_admins(subject="【KiMame】見積り依頼", body=f"{admin_body}\n\n管理画面で返信: {admin_url}")
 
         # ② 依頼者へ自動返信
         user_body = f"""{name} 様

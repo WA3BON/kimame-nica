@@ -7,13 +7,13 @@
 <section class="bg-black/90 py-20 px-6 text-[#9e7b3b] min-h-screen">
   <div class="max-w-5xl mx-auto">
     <div class="text-center mb-8">
-      <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 opacity-70">Blog</p>
+      <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 text-[#c9a876]">Blog</p>
       <div class="flex items-center justify-center gap-3">
         <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70" alt="">
         <h2 class="shimmer-title text-3xl font-bold">ブログ</h2>
         <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70 -scale-x-100" alt="">
       </div>
-      <p class="max-w-xl mx-auto mt-4 text-sm leading-relaxed opacity-80">
+      <p class="max-w-xl mx-auto mt-4 text-sm leading-relaxed text-[#c9a876]">
         産地の風景、コーヒーとカカオにまつわる豆知識、KiMameからのお知らせなど。<br>
         現地の空気を感じてもらえるような記事を、少しずつお届けしていきます。
       </p>
@@ -34,7 +34,7 @@
         </button>
       </div>
       {% if query or selected_tag %}
-      <a href="{% url 'blog:post_list' %}" class="text-sm underline opacity-80 hover:opacity-100">条件をクリア</a>
+      <a href="{% url 'blog:post_list' %}" class="text-sm underline">条件をクリア</a>
       {% endif %}
     </form>
 
@@ -62,15 +62,15 @@
         <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}" class="w-full h-40 object-cover">
         {% endif %}
         <div class="p-4 flex flex-col flex-1">
-          <p class="text-xs mb-2 opacity-70">{{ post.published_at|date:"Y年n月j日" }}{% if post.author %} ／ {{ post.author.username }}{% endif %}</p>
+          <p class="text-xs mb-2 text-[#c9a876]">{{ post.published_at|date:"Y年n月j日" }}{% if post.author %} ／ {{ post.author.username }}{% endif %}</p>
           <p class="text-lg font-bold mb-2">{{ post.title }}</p>
           {% if post.excerpt %}
-          <p class="text-sm line-clamp-3 opacity-90">{{ post.excerpt }}</p>
+          <p class="text-sm line-clamp-3">{{ post.excerpt }}</p>
           {% endif %}
           {% if post.tags.all %}
           <div class="flex flex-wrap gap-1.5 mt-3">
             {% for tag in post.tags.all %}
-            <span class="text-[11px] px-2 py-0.5 rounded-full border border-[#9e7b3b]/70 opacity-80">#{{ tag.name }}</span>
+            <span class="text-[11px] px-2 py-0.5 rounded-full border border-[#9e7b3b] text-[#c9a876]">#{{ tag.name }}</span>
             {% endfor %}
           </div>
           {% endif %}
@@ -92,7 +92,7 @@
     </div>
     {% endif %}
     {% else %}
-    <p class="text-center opacity-80">
+    <p class="text-center">
       {% if query or selected_tag %}条件に一致する記事が見つかりませんでした。{% else %}まだ記事がありません。{% endif %}
     </p>
     {% endif %}
