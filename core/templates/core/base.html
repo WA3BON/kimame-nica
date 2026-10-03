@@ -39,8 +39,7 @@
              window.addEventListener('beforeunload', () => loading = true)"
      x-show="loading" x-transition:leave="transition-opacity duration-700" x-transition:leave-end="opacity-0"
      :class="{ 'pointer-events-none': !loading }"
-     class="site-loader fixed inset-0 z-[80] bg-[#7f5b37] bg-repeat bg-center flex items-center justify-center"
-     style="background-image: url('{% static 'core/images/texture_Pbrown.jpg' %}');">
+     class="site-loader km-texture-brown fixed inset-0 z-[80] flex items-center justify-center">
   {% if company_info.logo %}
   <img src="{{ company_info.logo.url }}" alt="{{ company_info.name }}" class="loader-logo w-40 md:w-56 h-auto">
   {% elif company_info.favicon %}
@@ -57,9 +56,10 @@
   </div>
 </div>
 
+<div x-data="{ scrolled: false, open: false, home: {% if request.resolver_match.namespace == 'core' and request.resolver_match.url_name == 'index' %}true{% else %}false{% endif %} }"
+     x-init="scrolled = window.scrollY > 40; window.addEventListener('scroll', () => { scrolled = window.scrollY > 40 })"
+     x-effect="document.documentElement.classList.toggle('overflow-hidden', open)">
 <header
-    x-data="{ scrolled: false, open: false, home: {% if request.resolver_match.namespace == 'core' and request.resolver_match.url_name == 'index' %}true{% else %}false{% endif %} }"
-    x-init="scrolled = window.scrollY > 40; window.addEventListener('scroll', () => { scrolled = window.scrollY > 40 })"
     :class="(scrolled || !home || open) ? 'km-header-solid' : 'bg-gradient-to-b from-black/50 to-transparent'"
     class="fixed top-0 left-0 w-full z-30 transition-colors duration-500 km-header-solid">
   <div class="relative max-w-7xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
@@ -96,6 +96,9 @@
     </div>
   </div>
 
+</header>
+
+{# Menu overlay sits outside <header>: the header's backdrop-filter would trap this fixed overlay inside the 64px header. #}
   <div x-show="open" x-cloak x-transition.opacity.duration.300ms @keydown.escape.window="open = false"
        class="fixed inset-0 top-16 z-50 km-body overflow-y-auto">
     <div class="max-w-md mx-auto px-8 pt-10 pb-12 flex flex-col">
@@ -119,7 +122,7 @@
       </div>
     </div>
   </div>
-</header>
+</div>
 
 <main>
   {% block main %}{% block content %}{% endblock %}{% endblock %}

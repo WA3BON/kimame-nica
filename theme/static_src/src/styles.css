@@ -315,9 +315,23 @@ main input.km-qty { width: 5rem; text-align: center; padding: 0.5rem; }
 
 /* ローディング画面と同じ茶色のテクスチャ(産地セクション) */
 .km-texture-brown {
-  background-color: #7f5b37;
+  background-color: #704c2a;
+  background-image: url("../../core/images/texture_brown_tile.jpg");
   background-repeat: repeat;
-  background-attachment: fixed;
+  background-size: 400px 400px;
+  background-position: 0 0;
+}
+/* 産地セクション: 上下に柔らかい陰影(タイル自体には影を入れない) */
+.km-origins-bg { box-shadow: inset 0 40px 60px -40px rgba(0, 0, 0, 0.45), inset 0 -40px 60px -40px rgba(0, 0, 0, 0.45); }
+/* スマホで地図の後ろに敷く帯: 同じタイルを敷き、下端はフェードさせて継ぎ目を出さない */
+@media (max-width: 1023px) {
+  .km-map-strip {
+    background-color: #704c2a;
+    background-image: url("../../core/images/texture_brown_tile.jpg");
+    background-size: 400px 400px;
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 22px), transparent);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 22px), transparent);
+  }
 }
 #origins .km-eyebrow { color: #f3e6d0; opacity: 0.85; }
 #origins h2.shimmer-title, #origins .origin-chapter h3 { text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35); }

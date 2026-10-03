@@ -629,6 +629,12 @@ msgstr "Imagen del logotipo (texto)"
 msgid "産地マップ画像"
 msgstr "Imagen del mapa de origen"
 
+msgid "トップ画像(ヒーロー背景)"
+msgstr "Imagen principal (fondo de la portada)"
+
+msgid "会社紹介の写真"
+msgstr "Foto de la sección de la empresa"
+
 msgid "お届けまでの流れ"
 msgstr "Proceso de entrega"
 

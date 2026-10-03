@@ -231,6 +231,8 @@ ES = {
     "OGP説明文": "Descripción OGP",
     "ロゴ文字画像": "Imagen del logotipo (texto)",
     "産地マップ画像": "Imagen del mapa de origen",
+    "トップ画像(ヒーロー背景)": "Imagen principal (fondo de la portada)",
+    "会社紹介の写真": "Foto de la sección de la empresa",
     "お届けまでの流れ": "Proceso de entrega",
     "目安期間": "Plazo aproximado",
     "例: 約3〜5営業日": "Ej.: aprox. 3–5 días hábiles",

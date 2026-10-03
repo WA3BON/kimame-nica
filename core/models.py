@@ -71,6 +71,8 @@ class CompanyInfo(models.Model):
     ogp_description = models.TextField(_('OGP説明文'), blank=True)
     title = CloudinaryField(_('ロゴ文字画像'), folder='company/', blank=True, null=True)
     map = CloudinaryField(_('産地マップ画像'), folder='company/', blank=True, null=True)
+    hero_image = CloudinaryField(_('トップ画像(ヒーロー背景)'), folder='company/hero/', blank=True, null=True)
+    about_image = CloudinaryField(_('会社紹介の写真'), folder='company/', blank=True, null=True)
     updated_at = models.DateTimeField(_('更新日時'), auto_now=True)
 
     class Meta:
