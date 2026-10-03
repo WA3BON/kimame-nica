@@ -7,6 +7,7 @@ from django.template.response import TemplateResponse
 from django.urls import path, reverse
 from django.utils import timezone
 from django.utils.html import format_html, format_html_join
+from django.utils.translation import gettext as _g, gettext_lazy as _, override
 
 from .google.gmail import send_mail_with_gmail
 from .notifications import sender_name
@@ -20,8 +21,8 @@ INQUIRY_STATUS_COLORS = {
 
 
 class InquiryReplyForm(forms.Form):
-    subject = forms.CharField(label='件名', max_length=200, widget=forms.TextInput(attrs={'style': 'width:100%'}))
-    body = forms.CharField(label='本文', widget=forms.Textarea(attrs={'rows': 18, 'style': 'width:100%'}))
+    subject = forms.CharField(label=_('件名'), max_length=200, widget=forms.TextInput(attrs={'style': 'width:100%'}))
+    body = forms.CharField(label=_('本文'), widget=forms.Textarea(attrs={'rows': 18, 'style': 'width:100%'}))
 
 
 @admin.register(Inquiry)
@@ -35,9 +36,9 @@ class InquiryAdmin(admin.ModelAdmin):
     customer_fields = ('kind', 'name', 'email', 'user', 'product', 'quantity', 'prefecture', 'message', 'created_at')
     readonly_fields = customer_fields + ('reply_button', 'reply_history')
     fieldsets = (
-        ('対応', {'fields': ('reply_button', 'status', 'admin_note')}),
-        ('お客様からの内容(編集不可)', {'fields': customer_fields}),
-        ('返信履歴', {'fields': ('reply_history',)}),
+        (_('対応'), {'fields': ('reply_button', 'status', 'admin_note')}),
+        (_('お客様からの内容(編集不可)'), {'fields': customer_fields}),
+        (_('返信履歴'), {'fields': ('reply_history',)}),
     )
 
     def get_queryset(self, request):
@@ -69,7 +70,7 @@ class InquiryAdmin(admin.ModelAdmin):
                         sender_name=sender_name(),
                     )
                 except Exception as e:
-                    self.message_user(request, f"送信に失敗しました: {e}", messages.ERROR)
+                    self.message_user(request, _g('送信に失敗しました: {error}').format(error=e), messages.ERROR)
                 else:
                     InquiryReply.objects.create(
                         inquiry=inquiry, sent_by=request.user, **form.cleaned_data
@@ -77,15 +78,17 @@ class InquiryAdmin(admin.ModelAdmin):
                     if inquiry.status == Inquiry.Status.NEW:
                         inquiry.status = Inquiry.Status.REPLIED
                         inquiry.save(update_fields=['status'])
-                    self.message_user(request, f"{inquiry.email} に返信を送信しました。", messages.SUCCESS)
+                    self.message_user(request, _g('{email} に返信を送信しました。').format(email=inquiry.email), messages.SUCCESS)
                     return redirect(change_url)
         else:
+            with override('ja'):
+                kind_label = str(inquiry.get_kind_display())
             quoted = "\n".join(f"> {line}" for line in inquiry.message.splitlines())
             form = InquiryReplyForm(initial={
-                'subject': f"Re: 【KiMame】{inquiry.get_kind_display()}について",
+                'subject': f"Re: 【KiMame】{kind_label}について",
                 'body': (
                     f"{inquiry.name} 様\n\n"
-                    f"この度は{inquiry.get_kind_display()}いただき、誠にありがとうございます。\n\n\n\n"
+                    f"この度は{kind_label}いただき、誠にありがとうございます。\n\n\n\n"
                     f"今後ともよろしくお願いいたします。\n{sender_name()}\n\n"
                     f"---- お問い合わせ内容 ----\n{quoted}"
                 ),
@@ -93,7 +96,7 @@ class InquiryAdmin(admin.ModelAdmin):
 
         context = {
             **self.admin_site.each_context(request),
-            'title': f'{inquiry.name} 様へ返信',
+            'title': _g('{name} 様へ返信').format(name=inquiry.name),
             'inquiry': inquiry,
             'form': form,
             'change_url': change_url,
@@ -101,7 +104,7 @@ class InquiryAdmin(admin.ModelAdmin):
         }
         return TemplateResponse(request, 'admin/core/inquiry/reply.html', context)
 
-    @admin.display(description='状態', ordering='status')
+    @admin.display(description=_('状態'), ordering='status')
     def status_badge(self, obj):
         return format_html(
             '<span style="display:inline-block;padding:3px 10px;border-radius:999px;background:{};'
@@ -109,28 +112,28 @@ class InquiryAdmin(admin.ModelAdmin):
             INQUIRY_STATUS_COLORS.get(obj.status, '#6b7280'), obj.get_status_display(),
         )
 
-    @admin.display(description='内容')
+    @admin.display(description=_('内容'))
     def message_preview(self, obj):
         return obj.message[:40] + ('…' if len(obj.message) > 40 else '')
 
-    @admin.display(description='返信数', ordering='_reply_count')
+    @admin.display(description=_('返信数'), ordering='_reply_count')
     def reply_count(self, obj):
         return obj._reply_count or '-'
 
-    @admin.display(description='返信')
+    @admin.display(description=_('返信'))
     def reply_button(self, obj):
         if not obj.pk:
             return '-'
         return format_html(
-            '<a class="button" style="padding:8px 16px;" href="{}">✉️ {} 様にメールで返信する</a>',
-            reverse('admin:core_inquiry_reply', args=[obj.pk]), obj.name,
+            '<a class="button" style="padding:8px 16px;" href="{}">✉️ {}</a>',
+            reverse('admin:core_inquiry_reply', args=[obj.pk]), _g('{name} 様にメールで返信する').format(name=obj.name),
         )
 
-    @admin.display(description='送信済みの返信')
+    @admin.display(description=_('送信済みの返信'))
     def reply_history(self, obj):
         replies = list(obj.replies.select_related('sent_by'))
         if not replies:
-            return 'まだ返信していません'
+            return _g('まだ返信していません')
         return format_html_join(
             '', '<div style="border:1px solid var(--hairline-color);border-radius:6px;padding:10px;margin-bottom:10px;">'
                 '<div style="font-size:12px;color:var(--body-quiet-color);">{} / {}</div>'

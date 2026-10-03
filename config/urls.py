@@ -7,7 +7,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import RedirectView
 
+from core.views import admin_language
+
 urlpatterns = [
+    path(settings.ADMIN_URL_PATH + 'lang/<str:lang>/', admin_language, name='admin_set_language'),
     path(settings.ADMIN_URL_PATH, admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('', include('core.urls', namespace='core')),

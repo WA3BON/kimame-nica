@@ -5,51 +5,50 @@
 
 <section x-data="{ lifted: false }"
  x-init="setTimeout(() => lifted = true, 1600); window.addEventListener('scroll', () => { if (window.scrollY > 40) lifted = true })"
- class="relative h-screen min-h-[560px] w-full overflow-hidden text-[#f3e6d0]">
- <div class="absolute inset-0 z-0">
+ class="relative min-h-[100svh] w-full flex flex-col text-[#f3e6d0]">
+ <div class="absolute inset-0 z-0 overflow-hidden">
  <img src="{% static 'core/images/coffee-farm2.jpg' %}" alt="コーヒー農園"
  class="hero-zoom w-full h-full object-cover" />
- <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/45 to-black"></div>
+ <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/45 to-[#0e0a06]"></div>
  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(0,0,0,0.6)_100%)]"></div>
  </div>
 
- <div class="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6">
- <div :class="lifted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'" class="transition-all duration-1000 delay-300 ease-out">
- <p class="text-[11px] md:text-xs tracking-[0.4em] uppercase font-bold text-[#c9a876] mb-5">
- <span class="inline-block w-8 h-px bg-[#c9a876] align-middle mr-3"></span>From Nicaragua to Japan<span class="inline-block w-8 h-px bg-[#c9a876] align-middle ml-3"></span>
+ <div class="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-5 pt-24 pb-28">
+ <div :class="lifted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'" class="w-full max-w-3xl transition-all duration-1000 delay-300 ease-out">
+ <p class="flex items-center justify-center gap-2 sm:gap-3 text-[10px] sm:text-xs tracking-[0.25em] sm:tracking-[0.4em] uppercase font-bold text-[#c9a876] mb-5">
+ <span class="w-5 sm:w-8 h-px bg-[#c9a876]"></span>From Nicaragua to Japan<span class="w-5 sm:w-8 h-px bg-[#c9a876]"></span>
  </p>
- <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-wide mb-5">
- 産地から、まっすぐ。<br class="sm:hidden"><span class="text-[#9e7b3b]">コーヒーとカカオの生豆</span>
+ <h1 class="font-bold leading-[1.35] tracking-wide mb-5 text-[clamp(1.6rem,7.2vw,3.75rem)]">
+ <span class="block">産地から、まっすぐ。</span>
+ <span class="block text-[#c9a876] [text-shadow:0_2px_14px_rgba(0,0,0,0.85)]">コーヒーとカカオの生豆</span>
  </h1>
- <p class="text-sm md:text-base text-[#f3e6d0]/80 leading-relaxed max-w-xl mx-auto mb-9">
- ニカラグアの生産者が丁寧に育てた生豆を、現地から直接お届けします。
+ <p class="text-[13px] sm:text-base text-[#f3e6d0]/80 leading-relaxed max-w-md sm:max-w-xl mx-auto mb-8">
+ ニカラグアの生産者が丁寧に育てた生豆を、<br class="hidden sm:inline">現地から直接お届けします。
  </p>
- <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
- <a href="{% url 'shop:product_list' %}"
- class="w-56 bg-[#9e7b3b] text-black py-3 px-6 rounded-full font-bold border border-transparent hover:bg-black/60 hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">商品を見る</a>
- <a href="#why"
- class="w-56 border border-[#f3e6d0]/60 backdrop-blur-sm py-3 px-6 rounded-full font-bold hover:border-[#9e7b3b] hover:text-[#9e7b3b] transition">KiMameについて</a>
+ <div class="flex flex-row gap-3 justify-center items-center">
+ <a href="{% url 'shop:product_list' %}" class="km-btn px-5 sm:px-8">商品を見る</a>
+ <a href="#why" class="km-btn-outline px-5 sm:px-8 backdrop-blur-sm">KiMameについて</a>
  </div>
  </div>
  </div>
 
  <a href="#why" :class="lifted ? 'opacity-100' : 'opacity-0'"
- class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-[10px] tracking-[0.3em] text-[#c9a876] transition-opacity duration-1000 delay-700">
+ class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-[10px] tracking-[0.3em] text-[#c9a876] transition-opacity duration-1000 delay-700">
  SCROLL
- <span class="scroll-cue block w-px h-10 bg-gradient-to-b from-[#c9a876] to-transparent"></span>
+ <span class="scroll-cue block w-px h-8 sm:h-10 bg-gradient-to-b from-[#c9a876] to-transparent"></span>
  </a>
 
  <div :class="lifted ? '-translate-y-full' : 'translate-y-0'"
- class="absolute inset-0 bg-[#7f5b37] bg-repeat bg-center transition-transform duration-1000 ease-in-out z-20"
+ class="fixed inset-0 bg-[#7f5b37] bg-repeat bg-center transition-transform duration-1000 ease-in-out z-40 pointer-events-none"
  style="background-image: url('{% static 'core/images/texture_Pbrown.jpg' %}');">
  <div class="flex items-center justify-center h-full">
- <img src="{{ company_info.logo.url }}" alt="{{ company_info.name }}" class="w-40 md:w-56 h-auto" />
+ {% if company_info.logo %}<img src="{{ company_info.logo.url }}" alt="{{ company_info.name }}" class="w-40 md:w-56 h-auto" />{% endif %}
  </div>
  </div>
 </section>
 
 {% if why_choose_us %}
-<section id="why" class="relative bg-black text-[#9e7b3b] py-16 scroll-mt-16">
+<section id="why" class="relative text-[#9e7b3b] py-20 md:py-28 scroll-mt-16">
  <div class="max-w-5xl mx-auto px-6">
  <div class="text-center mb-14">
  <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 text-[#c9a876]">Why KiMame</p>
@@ -66,13 +65,13 @@
  {% if reason.image %}
  <div class="w-full md:w-2/5 flex-shrink-0">
  <img src="{{ reason.image.url }}" alt="{{ reason.title }}"
- class="w-full h-64 object-cover rounded-2xl shadow-lg border-2 border-[#9e7b3b]">
+ class="w-full h-64 object-cover rounded-[1.25rem] shadow-2xl ring-1 ring-[#9e7b3b]/40">
  </div>
  {% endif %}
  <div class="w-full {% if reason.image %}md:w-3/5{% endif %} text-left">
  <span class="block text-5xl font-bold text-[#9e7b3b]/30 mb-2">0{{ forloop.counter }}</span>
- <h3 class="text-xl font-bold mb-3">{{ reason.title }}</h3>
- <p class="text-sm leading-relaxed whitespace-pre-line">{{ reason.story }}</p>
+ <h3 class="text-xl font-bold mb-3 text-[#c9a876]">{{ reason.title }}</h3>
+ <p class="text-sm leading-[1.95] whitespace-pre-line text-[#f3e6d0]/80">{{ reason.story }}</p>
  </div>
  </div>
  {% endfor %}
@@ -81,7 +80,7 @@
 </section>
 {% endif %}
 
-<section id="products" class="relative py-20 text-[#f3e6d0] bg-cover bg-repeat" style="background-image: url('{% static "core/images/texture_Pblack.jpg" %}');">
+<section id="products" class="relative py-20 md:py-28 text-[#f3e6d0] bg-[#0a0704] border-y border-[#9e7b3b]/15">
  <div class="max-w-6xl mx-auto px-6">
  <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
  <div>
@@ -155,22 +154,22 @@
  </div>
 </section>
 
-<section id="origins" class="bg-[#9e7b3b] py-16">
+<section id="origins" class="km-texture-brown py-20 md:py-28 scroll-mt-16" style="background-image: url('{% static 'core/images/texture_Pbrown.jpg' %}');">
  <div class="relative max-w-6xl mx-auto px-6">
  <div class="text-center mb-10 lg:mb-14">
- <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 text-black">Our Origins</p>
+ <p class="km-eyebrow mb-1">Our Origins</p>
  <div class="flex items-center justify-center gap-3">
  <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70" alt="">
  <h2 class="shimmer-title text-3xl md:text-4xl font-bold">産地について</h2>
  <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70 -scale-x-100" alt="">
  </div>
- <p class="mt-3 text-sm text-black/70">スクロールして、豆が育つ場所を旅してみてください。</p>
+ <p class="mt-3 text-sm text-[#f3e6d0]/60">スクロールして、豆が育つ場所を旅してみてください。</p>
  </div>
 
  {% if company_info.map %}
  <div class="origin-story grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12">
  {# 地図: スマホは画面上部に、PCは左側に固定 #}
- <div class="sticky top-14 lg:top-24 z-10 self-start -mx-6 px-6 pt-2 pb-3 lg:m-0 lg:p-0 bg-[#9e7b3b] lg:bg-transparent shadow-[0_12px_16px_-12px_rgba(0,0,0,0.35)] lg:shadow-none">
+ <div class="sticky top-14 lg:top-24 z-10 self-start -mx-6 px-6 pt-2 pb-3 lg:m-0 lg:p-0 km-texture-brown lg:!bg-none lg:!bg-transparent shadow-[0_12px_16px_-12px_rgba(0,0,0,0.45)]" style="background-image: url('{% static 'core/images/texture_Pbrown.jpg' %}'); lg:shadow-none">
  <div class="w-full max-w-[320px] sm:max-w-md mx-auto lg:max-w-none">
  <div class="map-frame relative rounded-[1.5rem] p-2 md:p-4 bg-[#1b1308] shadow-2xl border border-[#9e7b3b]/40">
  <div class="relative rounded-2xl overflow-hidden">
@@ -200,14 +199,14 @@
  {# 章: スクロールに合わせて地図が動く #}
  <div class="relative z-0">
  <article class="origin-chapter" data-x="50" data-y="50" data-zoom="1" data-caption="Nicaragua">
- <p class="text-xs tracking-[0.3em] uppercase font-bold text-black/60 mb-2">Chapter 01</p>
- <h3 class="text-2xl font-bold text-black mb-4">火山と湖の国、ニカラグア</h3>
- <p class="text-sm leading-loose text-black/85">ニカラグアは中央アメリカに位置し、太平洋と大西洋(カリブ海)の両方に面した、火山と湖に彩られる自然豊かな国です。国土の中央から北部にかけては火山活動によって生まれた肥沃な土壌が広がり、標高1,000mを超える山岳地帯も点在しています。昼夜の寒暖差が大きく、雨季と乾季がはっきりと分かれる気候は、コーヒーやカカオといった繊細な農作物をゆっくりと熟成させるのに適しており、古くから中米有数の産地として知られています。国土の中央にはニカラグア湖という中米最大級の湖も広がり、湖畔一帯も肥沃な農地として利用されています。KiMameでは、こうした恵まれた自然環境の中で現地の生産者が一つひとつ丁寧に育てた生豆を、直接仕入れて皆さまにお届けしています。</p>
+ <p class="km-eyebrow mb-2">Chapter 01</p>
+ <h3 class="text-2xl font-bold text-[#c9a876] mb-4">火山と湖の国、ニカラグア</h3>
+ <p class="text-sm leading-loose text-[#f3e6d0]/80">ニカラグアは中央アメリカに位置し、太平洋と大西洋(カリブ海)の両方に面した、火山と湖に彩られる自然豊かな国です。国土の中央から北部にかけては火山活動によって生まれた肥沃な土壌が広がり、標高1,000mを超える山岳地帯も点在しています。昼夜の寒暖差が大きく、雨季と乾季がはっきりと分かれる気候は、コーヒーやカカオといった繊細な農作物をゆっくりと熟成させるのに適しており、古くから中米有数の産地として知られています。国土の中央にはニカラグア湖という中米最大級の湖も広がり、湖畔一帯も肥沃な農地として利用されています。KiMameでは、こうした恵まれた自然環境の中で現地の生産者が一つひとつ丁寧に育てた生豆を、直接仕入れて皆さまにお届けしています。</p>
  </article>
 
  {% for label in origin_labels %}
  <article id="origin-{{ label.no }}" class="origin-chapter" data-x="{{ label.x }}" data-y="{{ label.y }}" data-zoom="2.2" data-pin="{{ label.no }}" data-caption="{{ label.origin }}">
- <div class="rounded-2xl overflow-hidden bg-[#1b1308] text-[#f3e6d0] shadow-2xl border border-black/20">
+ <div class="km-card overflow-hidden text-[#f3e6d0]">
  {% if label.image %}
  <div class="relative h-44 md:h-52">
  <img src="{{ label.image }}" alt="{{ label.name }}" class="w-full h-full object-cover">
@@ -223,7 +222,7 @@
  {% if label.description %}<p class="text-sm leading-relaxed text-[#f3e6d0]/80 line-clamp-4 mb-4">{{ label.description }}</p>{% endif %}
  <div class="flex items-center justify-between gap-3">
  {% if label.starting_price is not None %}<p class="text-sm"><span class="text-lg font-bold text-[#9e7b3b]">¥{{ label.starting_price|floatformat:"0g" }}</span><span class="text-xs text-[#c9a876]"> 〜</span></p>{% else %}<span></span>{% endif %}
- <a href="{{ label.url }}" class="inline-flex items-center gap-2 bg-[#9e7b3b] text-black text-sm font-bold px-4 py-2 rounded-full hover:bg-[#f3e6d0] transition">この豆を見る →</a>
+ <a href="{{ label.url }}" class="km-btn km-btn-sm">この豆を見る →</a>
  </div>
  </div>
  </div>
@@ -231,10 +230,10 @@
  {% endfor %}
 
  <article class="origin-chapter" data-x="50" data-y="50" data-zoom="1" data-caption="Coffee &amp; Cacao">
- <p class="text-xs tracking-[0.3em] uppercase font-bold text-black/60 mb-2">Last Chapter</p>
- <h3 class="text-2xl font-bold text-black mb-4">高地のコーヒー、低地のカカオ</h3>
- <p class="text-sm leading-loose text-black/85">KiMameが扱うコーヒー豆は、主に北部の山岳地帯(ヒノテガ、マタガルパ、エステリなど)で栽培されています。標高1,000mを超える高地は日照と冷涼な気候のバランスが良く、コーヒーチェリーがゆっくりと熟すことで、フルーティーで華やかな香りとすっきりとした酸味を持つ生豆が育ちます。一方カカオ豆は、太平洋沿岸やニカラグア湖畔の肥沃な低地で栽培され、高温多湿な気候の中でじっくりと発酵・乾燥されることで、濃厚でコクのある奥深い風味が生まれます。同じニカラグアの中でも、標高や気候の違いによってコーヒーとカカオそれぞれに適した産地が分かれているのも興味深い点で、生産者はその土地ならではの個性を大切にしながら、一粒一粒を丁寧に育てています。</p>
- <a href="{% url 'shop:product_list' %}" class="inline-block mt-6 px-6 py-3 bg-black text-[#9e7b3b] rounded-full font-bold hover:bg-[#1b1308] transition">すべての商品を見る →</a>
+ <p class="km-eyebrow mb-2">Last Chapter</p>
+ <h3 class="text-2xl font-bold text-[#c9a876] mb-4">高地のコーヒー、低地のカカオ</h3>
+ <p class="text-sm leading-loose text-[#f3e6d0]/80">KiMameが扱うコーヒー豆は、主に北部の山岳地帯(ヒノテガ、マタガルパ、エステリなど)で栽培されています。標高1,000mを超える高地は日照と冷涼な気候のバランスが良く、コーヒーチェリーがゆっくりと熟すことで、フルーティーで華やかな香りとすっきりとした酸味を持つ生豆が育ちます。一方カカオ豆は、太平洋沿岸やニカラグア湖畔の肥沃な低地で栽培され、高温多湿な気候の中でじっくりと発酵・乾燥されることで、濃厚でコクのある奥深い風味が生まれます。同じニカラグアの中でも、標高や気候の違いによってコーヒーとカカオそれぞれに適した産地が分かれているのも興味深い点で、生産者はその土地ならではの個性を大切にしながら、一粒一粒を丁寧に育てています。</p>
+ <a href="{% url 'shop:product_list' %}" class="km-btn mt-6 self-start">すべての商品を見る →</a>
  </article>
  </div>
  </div>
@@ -279,7 +278,7 @@
  </div>
 </section>
 
-<section class="relative bg-black bg-repeat text-center text-[#9e7b3b] py-16" style="background-image: url('{% static "core/images/texture_Pblack.jpg" %}');">
+<section class="relative text-center text-[#9e7b3b] py-20 md:py-28 bg-[#0a0704] border-y border-[#9e7b3b]/15">
  <div class="max-w-6xl mx-auto px-6">
  <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 text-[#c9a876]">How It Works</p>
  <div class="flex items-center justify-center gap-3 mb-12">
@@ -296,7 +295,7 @@
  <div class="relative flex-shrink-0 w-20 h-20 sm:w-60 sm:h-60 sm:mb-4">
  {% if step.image %}
  <img src="{{ step.image.url }}" alt="{{ step.title }}"
- class="w-full h-full object-cover rounded-full border-2 sm:border-4 border-[#9e7b3b] shadow-md">
+ class="w-full h-full object-cover rounded-full ring-2 sm:ring-[3px] ring-[#9e7b3b] ring-offset-2 sm:ring-offset-4 ring-offset-[#0a0704] shadow-2xl">
  {% else %}
  <div class="w-full h-full rounded-full border-2 sm:border-4 border-[#9e7b3b] bg-black/60"></div>
  {% endif %}
@@ -304,14 +303,14 @@
  0{{ step.no }}
  </div>
  </div>
- <div class="flex-1 min-w-0 pt-1 sm:pt-0 rounded-xl sm:rounded-none bg-black/55 sm:bg-transparent backdrop-blur-[2px] sm:backdrop-blur-none p-4 sm:p-0 border border-[#9e7b3b]/25 sm:border-0">
+ <div class="flex-1 min-w-0 pt-1 sm:pt-0 rounded-xl sm:rounded-none bg-[#17110b] sm:bg-transparent p-4 sm:p-0 border border-[#9e7b3b]/25 sm:border-0">
  <div class="flex flex-wrap items-center gap-2 sm:flex-col sm:gap-0 mb-2 sm:mb-0">
- <h3 class="text-base sm:text-lg font-semibold sm:mb-1 text-[#f3e6d0] sm:text-[#9e7b3b]">{{ step.title }}</h3>
+ <h3 class="text-base sm:text-lg font-bold sm:mb-1 text-[#f3e6d0] sm:text-[#c9a876]">{{ step.title }}</h3>
  {% if step.duration %}
  <span class="inline-block text-[11px] sm:text-xs font-bold text-black bg-[#9e7b3b] px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full sm:mb-2">{{ step.duration }}</span>
  {% endif %}
  </div>
- <p class="text-sm leading-relaxed text-[#f3e6d0]/85 sm:text-[#9e7b3b]">{{ step.description }}</p>
+ <p class="text-sm leading-relaxed text-[#f3e6d0]/80">{{ step.description }}</p>
  {% if step.detail %}
  <p class="text-xs text-[#c9a876] mt-2 leading-relaxed">{{ step.detail }}</p>
  {% endif %}
@@ -320,56 +319,55 @@
  {% endfor %}
  </ol>
  </div>
- <div class="max-w-4xl mx-auto px-6 py-20 relative z-10">
- <h2 class="text-xl md:text-2xl font-bold mb-12 relative z-10">
- お見積り・ご不明な点等ございましたら、下記よりお問い合わせください。
- </h2>
- <div class="flex flex-col md:flex-row gap-6 justify-center items-center mt-10">
- <a href="{% url 'core:estimate' %}"
- class="w-60 bg-[#9e7b3b] text-black py-4 px-6 rounded-xl font-semibold text-center border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">お見積り</a>
- <a href="{% url 'core:contact' %}"
- class="w-60 bg-[#9e7b3b] text-black py-4 px-6 rounded-xl font-semibold text-center border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">お問い合わせ</a>
+ <div class="max-w-3xl mx-auto px-6 mt-16">
+ <div class="km-card p-8 sm:p-10">
+ <p class="km-eyebrow mb-3">Contact</p>
+ <h2 class="text-lg md:text-2xl font-bold text-[#f3e6d0] leading-relaxed mb-8">お見積り・ご不明な点などございましたら、<br class="hidden sm:inline">お気軽にお問い合わせください。</h2>
+ <div class="flex flex-col sm:flex-row gap-3 justify-center">
+ <a href="{% url 'core:estimate' %}" class="km-btn sm:min-w-[11rem]">お見積り</a>
+ <a href="{% url 'core:contact' %}" class="km-btn-outline sm:min-w-[11rem]">お問い合わせ</a>
+ </div>
  </div>
  </div>
 </section>
 
-<section id="company" class="w-full bg-center bg-cover py-20 px-6"
- style="background-image: url('{% static 'core/images/coffee-farm3.jpg' %}');">
- <div
- class="relative max-w-4xl mx-auto bg-black/90 backdrop-blur-md rounded-3xl shadow-xl p-10 flex flex-col md:flex-col gap-6 items-center justify-center"
- style="background-image: url('{% static 'core/images/texture_Pblack.jpg' %}'); background-repeat: repeat;">
- {% if company_info.logo %}
- <img src="{{ company_info.logo.url }}" alt="{{ company_info.name }}" class="h-60 mb-2">
- {% endif %}
- <p class="whitespace-pre-line leading-relaxed mb-6">{{ company_info.description }}</p>
-
- <ul class="space-y-2 text-sm">
- <li><span class="font-semibold">住所:</span> {{ company_info.address }}</li>
- {% if company_info.phone %}
- <li><span class="font-semibold">電話:</span> {{ company_info.phone }}</li>
- {% endif %}
- {% if company_info.email %}
- <li>
- <span class="font-semibold">Email:</span>
- <a href="mailto:{{ company_info.email }}" class="hover:underline">
- {{ company_info.email }}
- </a>
- </li>
- {% endif %}
- </ul>
-
- <div class="m-10">
- <a href="{% url 'core:contact' %}"
- class="bg-[#9e7b3b] text-black px-8 py-4 rounded-xl font-semibold border border-transparen hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
- お問い合わせ
- </a>
+<section id="company" class="relative py-20 md:py-28 px-5 scroll-mt-16">
+ <div class="max-w-6xl mx-auto">
+ <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-0 items-stretch">
+ <div class="relative min-h-[280px] sm:min-h-[360px] rounded-[1.5rem] lg:rounded-r-none overflow-hidden">
+ <img src="{% static 'core/images/coffee-farm3.jpg' %}" alt="ニカラグアのコーヒー農園" class="absolute inset-0 w-full h-full object-cover">
+ <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+ <div class="absolute bottom-0 inset-x-0 p-6 sm:p-8">
+ <p class="km-eyebrow mb-2">About Us</p>
+ <p class="text-2xl sm:text-3xl font-bold text-[#f3e6d0] leading-snug">中米の恵みを、<br>あなたの毎日に。</p>
+ </div>
  </div>
 
+ <div class="km-card lg:rounded-l-none p-7 sm:p-10 flex flex-col">
+ <div class="flex items-center gap-3 mb-6">
+ {% if company_info.favicon %}<img src="{{ company_info.favicon.url }}" alt="" class="h-11 w-auto">{% endif %}
+ <div>
+ <p class="km-eyebrow">Company</p>
+ <h2 class="text-xl font-bold text-[#9e7b3b]">{{ company_info.name }}</h2>
+ </div>
+ </div>
+ <p class="text-sm leading-[1.95] text-[#f3e6d0]/80 whitespace-pre-line mb-8">{{ company_info.description }}</p>
+ <dl class="grid grid-cols-[4.5rem_1fr] gap-y-3 text-sm mb-8">
+ <dt class="text-[#c9a876] font-bold">所在地</dt><dd class="text-[#f3e6d0]/85">{{ company_info.address }}</dd>
+ {% if company_info.phone %}<dt class="text-[#c9a876] font-bold">電話</dt><dd class="text-[#f3e6d0]/85">{{ company_info.phone }}</dd>{% endif %}
+ {% if company_info.email %}<dt class="text-[#c9a876] font-bold">メール</dt><dd><a href="mailto:{{ company_info.email }}" class="text-[#f3e6d0]/85 hover:text-[#c9a876] underline-offset-4 hover:underline break-all">{{ company_info.email }}</a></dd>{% endif %}
+ </dl>
+ <div class="mt-auto flex flex-col sm:flex-row gap-3">
+ <a href="{% url 'core:contact' %}" class="km-btn">お問い合わせ</a>
+ <a href="{% url 'core:estimate' %}" class="km-btn-outline">お見積り依頼</a>
+ </div>
+ </div>
+ </div>
  </div>
 </section>
 
 {% if top_faqs %}
-<section id="faq" class="bg-black text-[#9e7b3b] py-16 px-6">
+<section id="faq" class="text-[#9e7b3b] pb-20 md:pb-28 px-5">
  <div class="max-w-3xl mx-auto">
  <div class="text-center mb-10">
  <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 text-[#c9a876]">FAQ</p>

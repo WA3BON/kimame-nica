@@ -1,0 +1,147 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrastyle %}{{ block.super }}
+{% if company_info.favicon %}<link rel="icon" href="{{ company_info.favicon.url }}">{% endif %}
+<style>
+  /* ---- KiMame admin theme ---- */
+  :root, html[data-theme="light"] {
+    --primary: #9e7b3b;
+    --secondary: #1b130b;
+    --accent: #c9a876;
+    --primary-fg: #fffaf0;
+    --body-bg: #fffdf9;
+    --darkened-bg: #f7f1e6;
+    --selected-bg: #f1e6d1;
+    --selected-row: #fbf4e6;
+    --header-color: #f3e6d0;
+    --header-branding-color: #c9a876;
+    --header-bg: #120d08;
+    --header-link-color: #f3e6d0;
+    --breadcrumbs-fg: #c9a876;
+    --breadcrumbs-link-fg: #f3e6d0;
+    --breadcrumbs-bg: #241a10;
+    --link-fg: #7d5f27;
+    --link-hover-color: #4a3812;
+    --link-selected-fg: #4a3812;
+    --button-bg: #9e7b3b;
+    --button-hover-bg: #7d5f27;
+    --default-button-bg: #4a3812;
+    --default-button-hover-bg: #2e220b;
+    --object-tools-bg: #9e7b3b;
+    --object-tools-hover-bg: #4a3812;
+  }
+  html[data-theme="dark"] {
+    --primary: #9e7b3b;
+    --secondary: #241a10;
+    --primary-fg: #fffaf0;
+    --body-fg: #eee3cf;
+    --body-bg: #0e0a06;
+    --body-quiet-color: #b8a88f;
+    --body-loud-color: #fffaf0;
+    --darkened-bg: #17110b;
+    --selected-bg: #2a1f14;
+    --selected-row: #241a10;
+    --header-bg: #0a0704;
+    --breadcrumbs-bg: #1b130b;
+    --link-fg: #c9a876;
+    --link-hover-color: #f3e6d0;
+    --link-selected-fg: #f3e6d0;
+    --hairline-color: #2e2418;
+    --border-color: #3a2d1e;
+    --button-bg: #9e7b3b;
+    --button-hover-bg: #c9a876;
+    --default-button-bg: #5c4518;
+    --default-button-hover-bg: #7d5f27;
+    --object-tools-bg: #5c4518;
+    --object-tools-hover-bg: #9e7b3b;
+  }
+  @media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] {
+      --primary: #9e7b3b;
+      --secondary: #241a10;
+      --primary-fg: #fffaf0;
+      --body-fg: #eee3cf;
+      --body-bg: #0e0a06;
+      --body-quiet-color: #b8a88f;
+      --body-loud-color: #fffaf0;
+      --darkened-bg: #17110b;
+      --selected-bg: #2a1f14;
+      --selected-row: #241a10;
+      --header-bg: #0a0704;
+      --breadcrumbs-bg: #1b130b;
+      --link-fg: #c9a876;
+      --link-hover-color: #f3e6d0;
+      --link-selected-fg: #f3e6d0;
+      --hairline-color: #2e2418;
+      --border-color: #3a2d1e;
+      --button-bg: #9e7b3b;
+      --button-hover-bg: #c9a876;
+      --default-button-bg: #5c4518;
+      --default-button-hover-bg: #7d5f27;
+      --object-tools-bg: #5c4518;
+      --object-tools-hover-bg: #9e7b3b;
+    }
+  }
+
+  #header { border-bottom: 1px solid rgba(158, 123, 59, 0.35); }
+  #branding { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  #site-name a { display: inline-flex; align-items: center; gap: 10px; letter-spacing: 0.06em; }
+  #site-name img { height: 30px; width: auto; }
+  .km-lang { display: inline-flex; border: 1px solid rgba(201, 168, 118, 0.45); border-radius: 999px; overflow: hidden; font-size: 12px; }
+  .km-lang a { padding: 4px 11px; color: #f3e6d0 !important; text-decoration: none !important; }
+  .km-lang a[aria-current="true"] { background: #9e7b3b; color: #120d08 !important; font-weight: bold; }
+  .km-lang a:hover { background: rgba(158, 123, 59, 0.3); }
+  .module h2, .module caption, .inline-group h2 { letter-spacing: 0.04em; }
+
+  /* ---- login page: same brown texture as the storefront loading screen ---- */
+  body.login {
+    background: #7f5b37 url("{% static 'core/images/texture_Pbrown.jpg' %}") repeat center;
+    min-height: 100vh;
+  }
+  body.login #container {
+    margin-top: 12vh;
+    max-width: 400px;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #120d08;
+    border: 1px solid rgba(158, 123, 59, 0.45);
+    box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
+  }
+  body.login #header { background: #120d08; border-bottom: 1px solid rgba(158, 123, 59, 0.25); padding: 26px 30px 18px; flex-direction: column; justify-content: center; }
+  body.login #branding { flex-direction: column; text-align: center; }
+  body.login #site-name a { flex-direction: column; gap: 8px; }
+  body.login #site-name img { height: 54px; }
+  body.login #content { background: #120d08; color: #f3e6d0; padding: 22px 30px 30px; }
+  body.login #content label { color: #c9a876; font-weight: bold; }
+  body.login #content input[type="text"], body.login #content input[type="password"] {
+    background: #0a0704; color: #f3e6d0; border: 1px solid rgba(158, 123, 59, 0.45); border-radius: 10px; padding: 10px 12px;
+  }
+  body.login #content input[type="text"]:focus, body.login #content input[type="password"]:focus { border-color: #9e7b3b; outline: none; box-shadow: 0 0 0 3px rgba(158, 123, 59, 0.25); }
+  body.login .submit-row input[type="submit"] { width: 100%; border-radius: 999px; padding: 11px; font-weight: bold; background: #9e7b3b; color: #120d08; }
+  body.login .submit-row input[type="submit"]:hover { background: #f3e6d0; }
+  body.login .password-reset-link a { color: #c9a876; }
+  body.login .errornote { border-radius: 10px; }
+</style>
+{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+  <a href="{% url 'admin:index' %}">
+    {% if company_info.favicon %}<img src="{{ company_info.favicon.url }}" alt="">{% endif %}
+    {{ site_header|default:_('Django administration') }}
+  </a>
+</div>
+{% get_current_language as CURRENT_LANG %}
+<nav class="km-lang" aria-label="Language">
+  <a href="{% url 'admin_set_language' 'ja' %}?next={{ request.get_full_path|urlencode }}" {% if CURRENT_LANG == 'ja' %}aria-current="true"{% endif %}>日本語</a>
+  <a href="{% url 'admin_set_language' 'es' %}?next={{ request.get_full_path|urlencode }}" {% if CURRENT_LANG == 'es' %}aria-current="true"{% endif %}>Español</a>
+</nav>
+{% if user.is_anonymous %}
+  {% include "admin/color_theme_toggle.html" %}
+{% endif %}
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

@@ -1,0 +1,10 @@
+{% load static %}
+<div class="text-center mb-10 md:mb-14">
+ {% if eyebrow %}<p class="km-eyebrow mb-2">{{ eyebrow }}</p>{% endif %}
+ <div class="flex items-center justify-center gap-3">
+ <img src="{% static 'core/images/leaf3.png' %}" class="h-4 md:h-5 opacity-70" alt="">
+ <h1 class="km-title">{{ title }}</h1>
+ <img src="{% static 'core/images/leaf3.png' %}" class="h-4 md:h-5 opacity-70 -scale-x-100" alt="">
+ </div>
+ {% if lead %}<p class="km-lead max-w-xl mx-auto mt-4">{{ lead }}</p>{% endif %}
+</div>

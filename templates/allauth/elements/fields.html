@@ -1,0 +1,20 @@
+{% if attrs.form.non_field_errors %}
+<div class="km-alert km-alert-error">{{ attrs.form.non_field_errors.0 }}</div>
+{% endif %}
+{% for field in attrs.form %}
+{% if field.is_hidden %}{{ field }}{% elif field.widget_type == 'checkbox' %}
+<div>
+ <label for="{{ field.id_for_label }}" class="flex items-center gap-2 text-sm text-[#f3e6d0]/80 [&_a]:text-[#c9a876] [&_a]:underline">
+ {{ field }}<span>{{ field.label }}</span>
+ </label>
+ {% if field.errors %}<p class="text-red-300 text-xs mt-1.5">{{ field.errors.0 }}</p>{% endif %}
+</div>
+{% else %}
+<div>
+ <label for="{{ field.id_for_label }}" class="km-label">{{ field.label }}</label>
+ {{ field }}
+ {% if field.help_text %}<p class="text-[11px] text-[#f3e6d0]/45 mt-1.5 leading-relaxed [&_ul]:list-disc [&_ul]:pl-4">{{ field.help_text|safe }}</p>{% endif %}
+ {% if field.errors %}<p class="text-red-300 text-xs mt-1.5">{{ field.errors.0 }}</p>{% endif %}
+</div>
+{% endif %}
+{% endfor %}

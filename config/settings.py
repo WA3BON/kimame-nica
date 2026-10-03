@@ -55,6 +55,9 @@ if DATABASE_URL:
             ssl_require=True,
         )
     }
+    # Neon's "-pooler" endpoint is PgBouncer in transaction mode, which can't keep
+    # server-side cursors alive between queries ("cursor ... does not exist").
+    DATABASES["default"]["DISABLE_SERVER_SIDE_CURSORS"] = True
 else:
     DATABASES = {
         "default": {
@@ -107,6 +110,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'core.middleware.AdminLanguageMiddleware',
     'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -224,6 +228,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = 'ja'
+# The storefront is Japanese only; the admin can be switched to Spanish
+# (see core.middleware.AdminLanguageMiddleware).
+LANGUAGES = [
+    ('ja', '日本語'),
+    ('es', 'Español'),
+]
+LOCALE_PATHS = [BASE_DIR / 'locale']
 TIME_ZONE = 'Asia/Tokyo'
 USE_I18N = True
 USE_TZ = True

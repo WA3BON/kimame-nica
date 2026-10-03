@@ -4,7 +4,8 @@ import math
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView, DetailView, FormView
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.conf import settings
 from django.urls import reverse
 from .models import CompanyInfo, Faq, Inquiry
@@ -374,3 +375,18 @@ class AppPolicyView(ListView):
         # 最終更新日用
         context["last_policy"] = self.get_queryset().last()
         return context
+
+def admin_language(request, lang):
+    """Language switcher for the admin (日本語 / Español); stored in a cookie."""
+    from .middleware import ADMIN_LANG_COOKIE, ADMIN_LANGUAGES
+
+    next_url = request.GET.get("next", "")
+    if not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+        next_url = "/" + settings.ADMIN_URL_PATH
+    response = redirect(next_url)
+    if lang in ADMIN_LANGUAGES:
+        response.set_cookie(
+            ADMIN_LANG_COOKIE, lang, max_age=60 * 60 * 24 * 365, samesite="Lax",
+            secure=request.is_secure(), httponly=True,
+        )
+    return response

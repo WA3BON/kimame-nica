@@ -173,3 +173,154 @@ p.errorlist {
 @keyframes site-loader-out {
   to { opacity: 0; visibility: hidden; pointer-events: none; }
 }
+
+/* =========================================================
+   KiMame デザインシステム(全ページ共通)
+   エスプレッソの背景 / 金の細枠カード / 金のピルボタン / クリーム文字
+   ========================================================= */
+:root {
+  --km-bg: #0e0a06;
+  --km-surface: #17110b;
+  --km-surface-2: #211810;
+  --km-gold: #9e7b3b;
+  --km-gold-light: #c9a876;
+  --km-cream: #f3e6d0;
+  --km-line: rgba(158, 123, 59, 0.28);
+}
+
+.km-body {
+  background-color: var(--km-bg);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(158, 123, 59, 0.14), transparent 70%);
+  background-attachment: fixed;
+  color: var(--km-cream);
+}
+
+/* ページの外枠(固定ヘッダーぶん上を空ける) */
+.km-page { padding: 7.5rem 1.25rem 5rem; min-height: 80vh; }
+@media (min-width: 768px) { .km-page { padding: 8.5rem 2rem 6rem; } }
+
+/* 見出し */
+.km-eyebrow {
+  font-size: 0.7rem; letter-spacing: 0.35em; text-transform: uppercase;
+  font-weight: 700; color: var(--km-gold-light);
+}
+.km-title { font-size: clamp(1.75rem, 5vw, 2.5rem); font-weight: 700; color: var(--km-gold); letter-spacing: 0.04em; }
+.km-lead { font-size: 0.9rem; line-height: 1.9; color: rgba(243, 230, 208, 0.7); }
+
+/* カード */
+.km-card {
+  background: linear-gradient(180deg, rgba(36, 27, 17, 0.92), rgba(21, 16, 10, 0.94));
+  border: 1px solid var(--km-line);
+  border-radius: 1.25rem;
+  box-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.9);
+}
+.km-card-link { transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s, box-shadow 0.3s; }
+.km-card-link:hover {
+  transform: translateY(-4px);
+  border-color: rgba(158, 123, 59, 0.75);
+  box-shadow: 0 28px 50px -24px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(158, 123, 59, 0.25);
+}
+
+/* ボタン */
+.km-btn, .km-btn-outline, .km-btn-ghost {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.75rem 1.75rem; border-radius: 9999px; font-weight: 700; font-size: 0.9rem;
+  letter-spacing: 0.04em; line-height: 1.2; cursor: pointer;
+  transition: background-color 0.25s, color 0.25s, border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+}
+.km-btn { background: var(--km-gold); color: #120d08; border: 1px solid var(--km-gold); }
+.km-btn:hover { background: var(--km-cream); border-color: var(--km-cream); box-shadow: 0 8px 24px -10px rgba(201, 168, 118, 0.7); }
+.km-btn-outline { background: transparent; color: var(--km-cream); border: 1px solid rgba(243, 230, 208, 0.45); }
+.km-btn-outline:hover { border-color: var(--km-gold); color: var(--km-gold); }
+.km-btn-ghost { background: transparent; color: var(--km-gold-light); border: 1px solid transparent; padding-left: 0.5rem; padding-right: 0.5rem; }
+.km-btn-ghost:hover { color: var(--km-cream); }
+.km-btn-sm { padding: 0.5rem 1.1rem; font-size: 0.8rem; }
+.km-btn-block { width: 100%; }
+.km-btn:disabled, .km-btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+
+/* タグ・バッジ */
+.km-pill {
+  display: inline-flex; align-items: center; padding: 0.2rem 0.75rem; border-radius: 9999px;
+  font-size: 0.72rem; font-weight: 700; border: 1px solid var(--km-line); color: var(--km-gold-light);
+}
+.km-pill-gold { background: var(--km-gold); border-color: var(--km-gold); color: #120d08; }
+
+/* フォーム(Django/allauth の素の input にも適用) */
+.km-label { display: block; margin-bottom: 0.4rem; font-size: 0.82rem; font-weight: 700; color: var(--km-gold-light); letter-spacing: 0.04em; }
+.km-field,
+main input[type="text"], main input[type="email"], main input[type="password"], main input[type="number"],
+main input[type="tel"], main input[type="search"], main input[type="url"], main input[type="date"],
+main select, main textarea {
+  width: 100%;
+  background: rgba(10, 7, 4, 0.65);
+  border: 1px solid rgba(158, 123, 59, 0.4);
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.95rem;
+  color: var(--km-cream);
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+main input::placeholder, main textarea::placeholder { color: rgba(243, 230, 208, 0.35); }
+main input:focus, main select:focus, main textarea:focus, .km-field:focus {
+  outline: none; border-color: var(--km-gold); background: rgba(10, 7, 4, 0.85);
+  box-shadow: 0 0 0 3px rgba(158, 123, 59, 0.2);
+}
+main textarea { min-height: 9rem; }
+main select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, #c9a876 50%), linear-gradient(135deg, #c9a876 50%, transparent 50%); background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 2.25rem; }
+main input[type="checkbox"], main input[type="radio"] { accent-color: var(--km-gold); width: 1.05rem; height: 1.05rem; }
+.km-field-inline { width: auto; }
+main input.km-qty { width: 5rem; text-align: center; padding: 0.5rem; }
+
+/* テーブル */
+.km-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.km-table th { text-align: left; font-size: 0.72rem; letter-spacing: 0.12em; color: var(--km-gold-light); font-weight: 700; padding: 0.75rem 1rem; border-bottom: 1px solid var(--km-line); }
+.km-table td { padding: 1rem; border-bottom: 1px solid rgba(158, 123, 59, 0.14); vertical-align: middle; }
+.km-table tr:last-child td { border-bottom: none; }
+
+/* お知らせ */
+.km-alert {
+  display: flex; gap: 0.75rem; align-items: flex-start;
+  background: rgba(158, 123, 59, 0.14); border: 1px solid rgba(158, 123, 59, 0.5);
+  color: var(--km-cream); border-radius: 0.9rem; padding: 0.9rem 1.1rem; font-size: 0.9rem;
+}
+.km-alert-error { background: rgba(185, 28, 28, 0.15); border-color: rgba(248, 113, 113, 0.5); color: #fecaca; }
+
+/* 本文(ブログ・規約) */
+.km-prose { color: rgba(243, 230, 208, 0.88); line-height: 2; font-size: 0.97rem; }
+.km-prose h2, .km-prose h3 { color: var(--km-gold); font-weight: 700; }
+
+/* 金の細い区切り線 */
+.km-rule { height: 1px; background: linear-gradient(90deg, transparent, rgba(158, 123, 59, 0.6), transparent); border: 0; }
+
+/* ヘッダー: スクロール後のすりガラス */
+.km-header-solid {
+  background: rgba(14, 10, 6, 0.82);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(158, 123, 59, 0.22);
+}
+.km-icon-btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  width: 2.5rem; height: 2.5rem; border-radius: 9999px; color: var(--km-gold);
+  border: 1px solid rgba(158, 123, 59, 0.5); background: rgba(14, 10, 6, 0.35);
+  transition: background-color 0.25s, color 0.25s, border-color 0.25s;
+}
+.km-icon-btn:hover { background: var(--km-gold); color: #120d08; border-color: var(--km-gold); }
+.km-badge {
+  position: absolute; top: -0.35rem; right: -0.35rem; min-width: 1.25rem; height: 1.25rem; padding: 0 0.3rem;
+  border-radius: 9999px; background: var(--km-cream); color: #120d08; font-size: 0.7rem; font-weight: 800;
+  display: inline-flex; align-items: center; justify-content: center; line-height: 1;
+  box-shadow: 0 0 0 2px var(--km-bg), 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* ローディング画面と同じ茶色のテクスチャ(産地セクション) */
+.km-texture-brown {
+  background-color: #7f5b37;
+  background-repeat: repeat;
+  background-attachment: fixed;
+}
+#origins .km-eyebrow { color: #f3e6d0; opacity: 0.85; }
+#origins h2.shimmer-title, #origins .origin-chapter h3 { text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35); }
+#origins .origin-chapter > p,
+#origins .text-center > p { color: rgba(243, 230, 208, 0.92) !important; }
+#origins .origin-chapter > h3 { color: #f3e6d0; }

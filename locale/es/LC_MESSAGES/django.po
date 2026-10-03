@@ -1,0 +1,753 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "KiMame 管理画面"
+msgstr "Panel de administración KiMame"
+
+msgid "KiMame 管理"
+msgstr "Administración KiMame"
+
+msgid "ダッシュボード"
+msgstr "Panel"
+
+msgid "ホーム"
+msgstr "Inicio"
+
+msgid "編集"
+msgstr "Editar"
+
+msgid "編集する →"
+msgstr "Editar →"
+
+msgid "登録する →"
+msgstr "Registrar →"
+
+msgid "すべて見る →"
+msgstr "Ver todo →"
+
+msgid "キャンセル"
+msgstr "Cancelar"
+
+msgid "その他"
+msgstr "Otros"
+
+msgid "未登録"
+msgstr "Sin registrar"
+
+msgid "未登録です。"
+msgstr "Sin registrar."
+
+msgid "(なし)"
+msgstr "(ninguna)"
+
+msgid "(画像なし)"
+msgstr "(sin imagen)"
+
+msgid "プレビュー"
+msgstr "Vista previa"
+
+msgid "画像"
+msgstr "Imagen"
+
+msgid "番号"
+msgstr "N.º"
+
+msgid "並び順"
+msgstr "Orden"
+
+msgid "表示順"
+msgstr "Orden de visualización"
+
+msgid "見出し"
+msgstr "Título"
+
+msgid "説明"
+msgstr "Descripción"
+
+msgid "本文"
+msgstr "Texto"
+
+msgid "内容"
+msgstr "Contenido"
+
+msgid "更新日時"
+msgstr "Actualizado"
+
+msgid "更新日"
+msgstr "Actualizado"
+
+msgid "登録日時"
+msgstr "Fecha de registro"
+
+msgid "公開"
+msgstr "Publicado"
+
+msgid "公開日時"
+msgstr "Fecha de publicación"
+
+msgid "ステータス"
+msgstr "Estado"
+
+msgid "状態"
+msgstr "Estado"
+
+msgid "完了"
+msgstr "Completado"
+
+msgid "ユーザー"
+msgstr "Usuarios"
+
+msgid "会員"
+msgstr "Cliente registrado"
+
+msgid "要対応の注文(未発送)"
+msgstr "Pedidos pendientes (sin enviar)"
+
+msgid "本日の受注"
+msgstr "Pedidos de hoy"
+
+msgid "今月の売上(%(n)s件)"
+msgstr "Ventas del mes (%(n)s pedidos)"
+
+msgid "未対応のお問い合わせ"
+msgstr "Consultas sin atender"
+
+msgid "注文ステータス"
+msgstr "Estado de los pedidos"
+
+msgid "📦 発送が必要な注文(古い順)"
+msgstr "📦 Pedidos por enviar (más antiguos primero)"
+
+msgid "注文"
+msgstr "Pedido"
+
+msgid "受注日"
+msgstr "Fecha"
+
+msgid "受注日時"
+msgstr "Fecha y hora"
+
+msgid "お客様"
+msgstr "Cliente"
+
+msgid "📄 シート"
+msgstr "📄 Hoja"
+
+msgid "未発送の注文はありません 🎉"
+msgstr "No hay pedidos pendientes de envío 🎉"
+
+msgid "🧾 受注一覧(最新15件)"
+msgstr "🧾 Pedidos (últimos 15)"
+
+msgid "まだ受注はありません。"
+msgstr "Aún no hay pedidos."
+
+msgid "⚠️ 在庫が少ない商品(3以下)"
+msgstr "⚠️ Productos con poco stock (3 o menos)"
+
+msgid "残り %(n)s"
+msgstr "Quedan %(n)s"
+
+msgid "在庫が少ない商品はありません。"
+msgstr "No hay productos con poco stock."
+
+msgid "✉️ 最新のお問い合わせ"
+msgstr "✉️ Últimas consultas"
+
+msgid "お問い合わせはまだありません。"
+msgstr "Aún no hay consultas."
+
+msgid "🏠 サイトの基本情報"
+msgstr "🏠 Información del sitio"
+
+msgid "会社情報"
+msgstr "Información de la empresa"
+
+msgid "会社情報が未登録です。"
+msgstr "La información de la empresa no está registrada."
+
+msgid "配送・お支払い(特定商取引法の表記)"
+msgstr "Envío y pago (aviso legal comercial)"
+
+msgid "配送方法"
+msgstr "Método de envío"
+
+msgid "DHL(コーヒー豆送付プラン)"
+msgstr "DHL (plan de envío de café)"
+
+msgid "引渡し時期"
+msgstr "Plazo de entrega"
+
+msgid "その他の費用"
+msgstr "Otros cargos"
+
+msgid "返品・交換"
+msgstr "Devoluciones y cambios"
+
+msgid "お届けまでの流れ(トップページ)"
+msgstr "Proceso de entrega (página de inicio)"
+
+msgid "トップページの掲載内容"
+msgstr "Contenido de la página de inicio"
+
+msgid "%(n)s件"
+msgstr "%(n)s"
+
+msgid "公開 %(n)s件(うちトップ表示 %(top)s件)"
+msgstr "%(n)s publicadas (%(top)s en la página de inicio)"
+
+msgid "ブログ下書き"
+msgstr "Borradores del blog"
+
+msgid "クイックリンク"
+msgstr "Accesos rápidos"
+
+msgid "受注一覧"
+msgstr "Pedidos"
+
+msgid "商品・在庫"
+msgstr "Productos y stock"
+
+msgid "＋ 商品を追加"
+msgstr "＋ Añadir producto"
+
+msgid "＋ ブログを書く"
+msgstr "＋ Escribir en el blog"
+
+msgid "ブログ一覧"
+msgstr "Entradas del blog"
+
+msgid "下書き %(n)s"
+msgstr "%(n)s borradores"
+
+msgid "受注"
+msgstr "Pedido"
+
+msgid "注文履歴"
+msgstr "Historial de pedidos"
+
+msgid "注文番号"
+msgstr "N.º de pedido"
+
+msgid "注文日時"
+msgstr "Fecha del pedido"
+
+msgid "支払日時"
+msgstr "Fecha de pago"
+
+msgid "発送日時"
+msgstr "Fecha de envío"
+
+msgid "支払"
+msgstr "Pago"
+
+msgid "発送"
+msgstr "Envío"
+
+msgid "支払い待ち"
+msgstr "Pendiente de pago"
+
+msgid "支払い完了"
+msgstr "Pagado"
+
+msgid "発送準備中"
+msgstr "Preparando envío"
+
+msgid "決済失敗"
+msgstr "Pago fallido"
+
+msgid "発送済み"
+msgstr "Enviado"
+
+msgid "決済待ち"
+msgstr "Esperando el pago"
+
+msgid "要対応:発送準備へ"
+msgstr "Acción: preparar el envío"
+
+msgid "梱包・発送待ち"
+msgstr "Pendiente de empaque y envío"
+
+msgid "お客様・お届け先(編集不可)"
+msgstr "Cliente y dirección de entrega (no editable)"
+
+msgid "金額(編集不可)"
+msgstr "Importes (no editable)"
+
+msgid "決済・日時"
+msgstr "Pago y fechas"
+
+msgid "小計"
+msgstr "Subtotal"
+
+msgid "送料"
+msgstr "Gastos de envío"
+
+msgid "合計"
+msgstr "Total"
+
+msgid "単価"
+msgstr "Precio unitario"
+
+msgid "数量"
+msgstr "Cantidad"
+
+msgid "注文商品"
+msgstr "Productos del pedido"
+
+msgid "メールアドレス"
+msgstr "Correo electrónico"
+
+msgid "メール"
+msgstr "Correo"
+
+msgid "電話"
+msgstr "Teléfono"
+
+msgid "電話番号"
+msgstr "Teléfono"
+
+msgid "お名前"
+msgstr "Nombre"
+
+msgid "郵便番号"
+msgstr "Código postal"
+
+msgid "都道府県"
+msgstr "Prefectura"
+
+msgid "市区町村"
+msgstr "Ciudad"
+
+msgid "番地"
+msgstr "Dirección"
+
+msgid "建物名など"
+msgstr "Edificio / apartamento"
+
+msgid "住所"
+msgstr "Dirección"
+
+msgid "いつもの住所"
+msgstr "Dirección predeterminada"
+
+msgid "社内メモ"
+msgstr "Nota interna"
+
+msgid "お客様には表示されません"
+msgstr "No se muestra al cliente"
+
+msgid "追跡番号"
+msgstr "N.º de seguimiento"
+
+msgid "追跡番号(DHL)"
+msgstr "N.º de seguimiento (DHL)"
+
+msgid "DHLの送り状番号(Waybill No.)。入力するとお客様の注文ページに追跡リンクが表示されます"
+msgstr "Número de guía DHL (Waybill No.). Al introducirlo, el cliente verá el enlace de seguimiento en su pedido."
+
+msgid "DHL追跡"
+msgstr "Seguimiento DHL"
+
+msgid "DHL追跡番号"
+msgstr "N.º de seguimiento DHL"
+
+msgid "Stripe決済セッションID"
+msgstr "ID de sesión de pago de Stripe"
+
+msgid "Stripe支払いID"
+msgstr "ID de pago de Stripe"
+
+msgid "受注シート"
+msgstr "Hoja del pedido"
+
+msgid "受注シート #{pk}"
+msgstr "Hoja del pedido #{pk}"
+
+msgid "受注シート #%(pk)s"
+msgstr "Hoja del pedido #%(pk)s"
+
+msgid "› 受注シート"
+msgstr "› Hoja del pedido"
+
+msgid "シートを開く"
+msgstr "Abrir hoja"
+
+msgid "{n}件を「{label}」に変更しました。"
+msgstr "Se cambiaron {n} pedidos a «{label}»."
+
+msgid "{n}件は現在の状態では変更できないためスキップしました。"
+msgstr "Se omitieron {n} pedidos porque su estado actual no permite el cambio."
+
+msgid "選択した注文を「発送準備中」にする"
+msgstr "Marcar los pedidos seleccionados como «Preparando envío»"
+
+msgid "選択した注文を「発送済み」にする"
+msgstr "Marcar los pedidos seleccionados como «Enviado»"
+
+msgid "選択した注文を「キャンセル」にする"
+msgstr "Marcar los pedidos seleccionados como «Cancelado»"
+
+msgid "選択した注文をCSV(Excel用)でダウンロード"
+msgstr "Descargar los pedidos seleccionados en CSV (Excel)"
+
+msgid "🖨 印刷する"
+msgstr "🖨 Imprimir"
+
+msgid "✏️ この注文を編集"
+msgstr "✏️ Editar este pedido"
+
+msgid "お届け先"
+msgstr "Dirección de entrega"
+
+msgid "ご連絡先・会員情報"
+msgstr "Contacto y cuenta"
+
+msgid "(退会済み / なし)"
+msgstr "(cuenta eliminada / sin cuenta)"
+
+msgid "配送: DHL(コーヒー豆送付プラン)"
+msgstr "Envío: DHL (plan de envío de café)"
+
+msgid "重量"
+msgstr "Peso"
+
+msgid "作業チェック"
+msgstr "Lista de tareas"
+
+msgid "入金確認"
+msgstr "Confirmar el pago"
+
+msgid "商品ピッキング・計量"
+msgstr "Preparar y pesar los productos"
+
+msgid "梱包"
+msgstr "Empacar"
+
+msgid "DHL集荷依頼・送り状作成"
+msgstr "Solicitar recogida DHL y crear la guía"
+
+msgid "DHL追跡番号を登録"
+msgstr "Registrar el n.º de seguimiento DHL"
+
+msgid "ステータスを「発送済み」に変更"
+msgstr "Cambiar el estado a «Enviado»"
+
+msgid "購入回数"
+msgstr "N.º de compras"
+
+msgid "購入金額"
+msgstr "Importe total comprado"
+
+msgid "商品"
+msgstr "Producto"
+
+msgid "商品名"
+msgstr "Nombre del producto"
+
+msgid "紹介文"
+msgstr "Descripción"
+
+msgid "ご購入時の注意"
+msgstr "Avisos para la compra"
+
+msgid "送料・関税など購入前に知っておいてほしい注意書き。商品ページで紹介文とは別枠に表示されます"
+msgstr "Avisos sobre envío, aranceles, etc. Se muestran en un recuadro aparte en la página del producto."
+
+msgid "産地"
+msgstr "Origen"
+
+msgid "例: ニカラグア、エチオピアなど"
+msgstr "Ej.: Nicaragua, Etiopía"
+
+msgid "種類"
+msgstr "Tipo"
+
+msgid "コーヒー"
+msgstr "Café"
+
+msgid "カカオ"
+msgstr "Cacao"
+
+msgid "ロゴ"
+msgstr "Logo"
+
+msgid "トップ画像"
+msgstr "Imagen principal"
+
+msgid "地図画像"
+msgstr "Imagen del mapa"
+
+msgid "キャッチコピー"
+msgstr "Eslogan"
+
+msgid "焙煎度"
+msgstr "Grado de tueste"
+
+msgid "例: 生豆、ライトロースト"
+msgstr "Ej.: grano verde, tueste claro"
+
+msgid "緯度"
+msgstr "Latitud"
+
+msgid "経度"
+msgstr "Longitud"
+
+msgid "産地マップに表示する緯度(例: 12.865416)。Googleマップで場所を右クリック→座標をコピーして入力"
+msgstr "Latitud para el mapa de origen (ej.: 12.865416). En Google Maps, clic derecho en el lugar → copiar coordenadas."
+
+msgid "産地マップに表示する経度(例: -85.207229)"
+msgstr "Longitud para el mapa de origen (ej.: -85.207229)"
+
+msgid "産地マップ(座標)"
+msgstr "Mapa de origen (coordenadas)"
+
+msgid "重量(kg)"
+msgstr "Peso (kg)"
+
+msgid "例: 1, 5, 10, 30"
+msgstr "Ej.: 1, 5, 10, 30"
+
+msgid "価格(円)"
+msgstr "Precio (yenes)"
+
+msgid "この重量での販売価格(円)"
+msgstr "Precio de venta para este peso (yenes)"
+
+msgid "在庫"
+msgstr "Stock"
+
+msgid "最安値"
+msgstr "Precio mínimo"
+
+msgid "重量・価格"
+msgstr "Peso y precio"
+
+msgid "ギャラリー画像"
+msgstr "Imágenes de la galería"
+
+msgid "お問い合わせ"
+msgstr "Consultas"
+
+msgid "お見積り"
+msgstr "Presupuesto"
+
+msgid "未対応"
+msgstr "Sin atender"
+
+msgid "返信済み"
+msgstr "Respondida"
+
+msgid "予定数量"
+msgstr "Cantidad prevista"
+
+msgid "受付日時"
+msgstr "Fecha de recepción"
+
+msgid "対応状況"
+msgstr "Estado de atención"
+
+msgid "対応"
+msgstr "Atención"
+
+msgid "お客様からの内容(編集不可)"
+msgstr "Mensaje del cliente (no editable)"
+
+msgid "返信"
+msgstr "Respuesta"
+
+msgid "返信履歴"
+msgstr "Historial de respuestas"
+
+msgid "返信数"
+msgstr "Respuestas"
+
+msgid "› 返信"
+msgstr "› Responder"
+
+msgid "送信者"
+msgstr "Enviado por"
+
+msgid "送信日時"
+msgstr "Fecha de envío"
+
+msgid "件名"
+msgstr "Asunto"
+
+msgid "宛先"
+msgstr "Para"
+
+msgid "この内容で送信する"
+msgstr "Enviar este mensaje"
+
+msgid "%(email)s にメールを送信します。よろしいですか？"
+msgstr "Se enviará un correo a %(email)s. ¿Continuar?"
+
+msgid "送信済みの返信"
+msgstr "Respuestas enviadas"
+
+msgid "まだ返信していません"
+msgstr "Todavía no se ha respondido"
+
+msgid "送信に失敗しました: {error}"
+msgstr "No se pudo enviar: {error}"
+
+msgid "{email} に返信を送信しました。"
+msgstr "Respuesta enviada a {email}."
+
+msgid "{name} 様へ返信"
+msgstr "Responder a {name}"
+
+msgid "{name} 様にメールで返信する"
+msgstr "Responder a {name} por correo"
+
+msgid "会社概要"
+msgstr "Perfil de la empresa"
+
+msgid "会社名"
+msgstr "Nombre de la empresa"
+
+msgid "ファビコン(アイコン)"
+msgstr "Favicon (icono)"
+
+msgid "OGP画像(SNS共有用)"
+msgstr "Imagen OGP (para redes sociales)"
+
+msgid "OGPタイトル"
+msgstr "Título OGP"
+
+msgid "OGP説明文"
+msgstr "Descripción OGP"
+
+msgid "ロゴ文字画像"
+msgstr "Imagen del logotipo (texto)"
+
+msgid "産地マップ画像"
+msgstr "Imagen del mapa de origen"
+
+msgid "お届けまでの流れ"
+msgstr "Proceso de entrega"
+
+msgid "目安期間"
+msgstr "Plazo aproximado"
+
+msgid "例: 約3〜5営業日"
+msgstr "Ej.: aprox. 3–5 días hábiles"
+
+msgid "補足説明"
+msgstr "Información adicional"
+
+msgid "もう少し詳しい説明(任意、一覧には小さめに表示)"
+msgstr "Explicación más detallada (opcional, se muestra en letra pequeña)"
+
+msgid "選ばれる理由"
+msgstr "Por qué elegirnos"
+
+msgid "例: 現地農家との直接取引"
+msgstr "Ej.: comercio directo con los productores"
+
+msgid "ストーリー本文"
+msgstr "Historia"
+
+msgid "選ばれる理由をストーリー形式で記述"
+msgstr "Describa en forma de historia por qué nos eligen"
+
+msgid "プライバシーポリシー"
+msgstr "Política de privacidad"
+
+msgid "利用規約"
+msgstr "Términos de uso"
+
+msgid "アプリ規約"
+msgstr "Términos de la aplicación"
+
+msgid "特定商取引法に基づく表記"
+msgstr "Aviso legal comercial"
+
+msgid "販売業者"
+msgstr "Vendedor"
+
+msgid "運営責任者"
+msgstr "Responsable"
+
+msgid "所在地"
+msgstr "Domicilio"
+
+msgid "商品代金以外の必要料金"
+msgstr "Cargos adicionales al precio"
+
+msgid "引渡し時期について"
+msgstr "Plazo de entrega"
+
+msgid "送料について"
+msgstr "Gastos de envío"
+
+msgid "支払方法"
+msgstr "Formas de pago"
+
+msgid "返品・交換・キャンセルについて"
+msgstr "Devoluciones, cambios y cancelaciones"
+
+msgid "よくある質問"
+msgstr "Preguntas frecuentes"
+
+msgid "商品について"
+msgstr "Sobre los productos"
+
+msgid "ご注文・お支払い"
+msgstr "Pedidos y pagos"
+
+msgid "配送について"
+msgstr "Sobre el envío"
+
+msgid "カテゴリ"
+msgstr "Categoría"
+
+msgid "質問"
+msgstr "Pregunta"
+
+msgid "回答"
+msgstr "Respuesta"
+
+msgid "改行はそのまま反映されます"
+msgstr "Los saltos de línea se respetan"
+
+msgid "トップページに表示"
+msgstr "Mostrar en la página de inicio"
+
+msgid "トップページのFAQ欄に表示します(最大6件)"
+msgstr "Se muestra en la sección de preguntas de la página de inicio (máx. 6)"
+
+msgid "ブログ記事"
+msgstr "Entradas del blog"
+
+msgid "タグ"
+msgstr "Etiquetas"
+
+msgid "タグ名"
+msgstr "Nombre de la etiqueta"
+
+msgid "URL用の名前"
+msgstr "Nombre para la URL"
+
+msgid "タイトル"
+msgstr "Título"
+
+msgid "概要"
+msgstr "Resumen"
+
+msgid "一覧に表示する短い紹介文"
+msgstr "Texto breve que se muestra en la lista"
+
+msgid "本文(改行はそのまま反映されます)"
+msgstr "Texto (los saltos de línea se respetan)"
+
+msgid "サムネイル"
+msgstr "Miniatura"
+
+msgid "投稿者"
+msgstr "Autor"

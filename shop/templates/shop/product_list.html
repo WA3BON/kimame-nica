@@ -4,84 +4,69 @@
 {% block title %}!KiMame¡商品一覧{% endblock %}
 
 {% block content %}
-<section class="bg-black/90 py-20 px-6 text-[#9e7b3b] min-h-screen">
-  <div class="max-w-6xl mx-auto">
-    <div class="text-center mb-10">
-      <p class="text-xs tracking-[0.3em] uppercase font-bold mb-1 text-[#c9a876]">Products</p>
-      <div class="flex items-center justify-center gap-3">
-        <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70" alt="">
-        <h2 class="shimmer-title text-3xl font-bold">商品一覧</h2>
-        <img src="{% static 'core/images/leaf3.png' %}" class="h-5 opacity-70 -scale-x-100" alt="">
-      </div>
-    </div>
+<section class="km-page">
+ <div class="max-w-6xl mx-auto">
+ {% include 'core/partials/page_head.html' with eyebrow="Products" title="商品一覧" lead="ニカラグアの生産者から直接仕入れた、コーヒーとカカオの生豆です。" %}
 
-    <form method="get" class="flex flex-wrap gap-4 justify-center items-end mb-12">
-      <div>
-        <label for="id_product_type" class="block text-sm mb-1">豆の種類</label>
-        <select id="id_product_type" name="product_type"
-          class="bg-black border border-[#9e7b3b] rounded-lg px-3 py-2">
-          <option value="">すべて</option>
-          {% for value, label in product_types %}
-          <option value="{{ value }}" {% if value == selected_product_type %}selected{% endif %}>{{ label }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div>
-        <label for="id_origin" class="block text-sm mb-1">原産地</label>
-        <select id="id_origin" name="origin"
-          class="bg-black border border-[#9e7b3b] rounded-lg px-3 py-2">
-          <option value="">すべて</option>
-          {% for o in origins %}
-          <option value="{{ o }}" {% if o == selected_origin %}selected{% endif %}>{{ o }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <button type="submit"
-        class="px-6 py-2 bg-[#9e7b3b] text-black rounded-lg font-semibold border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
-        絞り込む
-      </button>
-      {% if selected_product_type or selected_origin %}
-      <a href="{% url 'shop:product_list' %}" class="px-6 py-2 underline">条件をクリア</a>
-      {% endif %}
-    </form>
+ <form method="get" class="km-card p-4 sm:p-5 mb-10 flex flex-col sm:flex-row gap-3 sm:items-end">
+ <div class="flex-1">
+ <label for="id_product_type" class="km-label">豆の種類</label>
+ <select id="id_product_type" name="product_type">
+ <option value="">すべて</option>
+ {% for value, label in product_types %}
+ <option value="{{ value }}" {% if value == selected_product_type %}selected{% endif %}>{{ label }}</option>
+ {% endfor %}
+ </select>
+ </div>
+ <div class="flex-1">
+ <label for="id_origin" class="km-label">原産地</label>
+ <select id="id_origin" name="origin">
+ <option value="">すべて</option>
+ {% for o in origins %}
+ <option value="{{ o }}" {% if o == selected_origin %}selected{% endif %}>{{ o }}</option>
+ {% endfor %}
+ </select>
+ </div>
+ <div class="flex gap-2">
+ <button type="submit" class="km-btn flex-1 sm:flex-none">絞り込む</button>
+ {% if selected_product_type or selected_origin %}
+ <a href="{% url 'shop:product_list' %}" class="km-btn-outline">クリア</a>
+ {% endif %}
+ </div>
+ </form>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-      {% for product in products %}
-      <div class="shine-card bg-black/80 border border-[#9e7b3b] rounded-lg overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300 relative">
-        <a href="{% url 'shop:product_detail' product.pk %}" class="block relative">
-          <div class="absolute top-2 left-2 bg-black rounded-full shadow">
-            <img src="{{ product.logo.url }}" alt="{{ product.name }}" class="h-10 m-2">
-          </div>
-          <div class="absolute top-2 right-2 bg-[#9e7b3b] text-black text-xs font-bold px-4 py-1 rounded-full shadow">
-            {{ product.origin }}
-          </div>
-          <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover">
-          <div class="p-4 flex flex-col">
-            {% if product.title %}
-            <p class="text-sm">{{ product.title }}</p>
-            {% endif %}
-            <p class="text-xl font-bold">{{ product.name }}</p>
-            <ul class="mt-2 text-sm space-y-0.5">
-              {% for variant in product.variants.all %}
-              <li class="flex justify-between gap-4">
-                <span>{{ variant.label }}</span>
-                <span class="font-bold">{{ variant.price }} 円</span>
-              </li>
-              {% endfor %}
-            </ul>
-          </div>
-        </a>
-        <div class="flex justify-center p-3 pt-0">
-          <a href="{% url 'shop:product_detail' product.pk %}"
-            class="inline-block text-center bg-[#9e7b3b] text-black font-semibold px-6 py-2 rounded-lg border-2 border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
-            購入する
-          </a>
-        </div>
-      </div>
-      {% empty %}
-      <p class="col-span-full text-center">該当する商品はありません。</p>
-      {% endfor %}
-    </div>
-  </div>
+ <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+ {% for product in products %}
+ <a href="{% url 'shop:product_detail' product.pk %}" class="km-card km-card-link group flex flex-col overflow-hidden">
+ <div class="relative aspect-[4/3] overflow-hidden">
+ {% if product.image %}
+ <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+ {% endif %}
+ <div class="absolute inset-0 bg-gradient-to-t from-[#17110b] via-transparent to-transparent"></div>
+ {% if product.logo %}
+ <span class="absolute top-3 left-3 w-11 h-11 rounded-full bg-black/80 ring-1 ring-[#9e7b3b]/60 p-1.5"><img src="{{ product.logo.url }}" alt="" class="w-full h-full object-contain"></span>
+ {% endif %}
+ <span class="absolute top-3 right-3 km-pill km-pill-gold">{{ product.get_product_type_display }}</span>
+ {% if not product.in_stock %}<span class="absolute bottom-3 right-3 km-pill bg-black/70 text-[#f3e6d0]">SOLD OUT</span>{% endif %}
+ </div>
+ <div class="p-5 flex flex-col flex-1">
+ <p class="text-[11px] tracking-[0.2em] uppercase text-[#c9a876] mb-1">{{ product.origin }}</p>
+ <h2 class="text-lg font-bold text-[#f3e6d0] group-hover:text-[#c9a876] transition">{{ product.name }}</h2>
+ {% if product.title %}<p class="text-sm text-[#f3e6d0]/60 mt-1">{{ product.title }}</p>{% endif %}
+ <ul class="mt-4 grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-[#f3e6d0]/80">
+ {% for variant in product.variants.all %}
+ <li class="flex justify-between gap-2 {% if variant.stock <= 0 %}opacity-40 line-through{% endif %}">
+ <span>{{ variant.label }}</span><span class="font-bold text-[#c9a876]">¥{{ variant.price|floatformat:"0g" }}</span>
+ </li>
+ {% endfor %}
+ </ul>
+ <span class="mt-auto pt-5 text-sm font-bold text-[#9e7b3b] inline-flex items-center gap-1">詳しく見る <span class="transition-transform group-hover:translate-x-1">→</span></span>
+ </div>
+ </a>
+ {% empty %}
+ <p class="col-span-full text-center km-lead py-10">該当する商品はありません。</p>
+ {% endfor %}
+ </div>
+ </div>
 </section>
 {% endblock %}

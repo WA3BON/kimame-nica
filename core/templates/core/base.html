@@ -26,8 +26,9 @@
   {% if company_info.ogp_image %}
     <meta property="og:image" content="{{ company_info.ogp_image.url }}">
   {% endif %}
+  {% block extra_head %}{% endblock %}
 </head>
-<body class="relative bg-black text-[#9e7b3b]">
+<body class="relative km-body">
 
 {# Loading screen: brown texture + logo like the hero curtain. No x-cloak so it shows from first paint. #}
 <div x-data="{ loading: true }"
@@ -48,104 +49,117 @@
 </div>
 
 <div x-data="consentBanner()" x-show="show" x-cloak
-     class="fixed inset-0 z-[70] bg-black/95 flex items-center justify-center p-6">
-  <div class="max-w-lg border border-[#9e7b3b] rounded-xl p-6 text-center bg-black">
-    <p class="mb-4">当サイトはプライバシーポリシーに基づき Cookie 等を利用します。詳しくは
-      <a href="{% url 'core:privacy_policy' %}" class="underline">プライバシーポリシー</a>をご確認ください。</p>
-    <button @click="accept()"
-      class="px-6 py-2 bg-[#9e7b3b] text-black rounded-xl font-semibold border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
-      同意する
-    </button>
+     class="fixed inset-x-0 bottom-0 z-[70] p-4 sm:p-6">
+  <div class="km-card max-w-2xl mx-auto p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-4 text-sm text-[#f3e6d0]/85">
+    <p class="flex-1 leading-relaxed">当サイトはプライバシーポリシーに基づき Cookie 等を利用します。詳しくは
+      <a href="{% url 'core:privacy_policy' %}" class="underline text-[#c9a876] hover:text-[#f3e6d0]">プライバシーポリシー</a>をご確認ください。</p>
+    <button @click="accept()" class="km-btn km-btn-sm flex-shrink-0">同意する</button>
   </div>
 </div>
 
 <header
-    x-data="{ scrolled: false, open: false }"
-    x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 50 })"
-    :class="(scrolled || open) ? 'opacity-100' : 'opacity-0 pointer-events-none'"
-    class="fixed top-0 left-0 w-full z-30 transition-opacity duration-500">
-  <div class="relative w-full bg-black/40 px-4 sm:px-8 py-3 flex justify-between sm:justify-end items-center transition-all duration-500">
-    <a href="{% url 'core:index' %}" class="flex items-center sm:absolute sm:left-1/2 sm:-translate-x-1/2">
-      <img src="{{ company_info.favicon.url }}" alt="{{ company_info.name }}" class="h-8 sm:h-10 w-auto">
-      <img  src="{{ company_info.title.url }}" alt="{{ company_info.name }}" class="h-8 sm:h-10 w-auto">
+    x-data="{ scrolled: false, open: false, home: {% if request.resolver_match.namespace == 'core' and request.resolver_match.url_name == 'index' %}true{% else %}false{% endif %} }"
+    x-init="scrolled = window.scrollY > 40; window.addEventListener('scroll', () => { scrolled = window.scrollY > 40 })"
+    :class="(scrolled || !home || open) ? 'km-header-solid' : 'bg-gradient-to-b from-black/50 to-transparent'"
+    class="fixed top-0 left-0 w-full z-30 transition-colors duration-500 km-header-solid">
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
+    <a href="{% url 'core:index' %}" class="flex items-center gap-1.5 lg:absolute lg:left-1/2 lg:-translate-x-1/2" aria-label="{{ company_info.name }} トップへ">
+      {% if company_info.favicon %}<img src="{{ company_info.favicon.url }}" alt="" class="h-8 w-auto">{% endif %}
+      {% if company_info.title %}<img src="{{ company_info.title.url }}" alt="{{ company_info.name }}" class="h-7 sm:h-8 w-auto">{% else %}<span class="font-bold tracking-[0.2em] text-[#9e7b3b]">KIMAME</span>{% endif %}
     </a>
 
-    <div class="flex items-center gap-2 sm:gap-3">
+    <nav class="hidden lg:flex items-center gap-7 text-sm font-semibold tracking-wide text-[#f3e6d0]/80">
+      <a href="{% url 'shop:product_list' %}" class="hover:text-[#c9a876] transition">商品</a>
+      <a href="{% url 'core:index' %}#origins" class="hover:text-[#c9a876] transition">産地</a>
+      <a href="{% url 'blog:post_list' %}" class="hover:text-[#c9a876] transition">ブログ</a>
+      <a href="{% url 'core:faq' %}" class="hover:text-[#c9a876] transition">FAQ</a>
+    </nav>
+
+    <div class="flex items-center gap-2 sm:gap-2.5">
       <a href="{% if user.is_authenticated %}{% url 'core:mypage' %}{% else %}{% url 'account_login' %}{% endif %}"
-        class="relative flex items-center justify-center w-10 h-10 rounded-full bg-[#9e7b3b] shadow-md" aria-label="マイページ">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
-          <circle cx="12" cy="8" r="4"></circle>
-          <path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"></path>
+         class="km-icon-btn" aria-label="マイページ">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+          <circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"></path>
         </svg>
       </a>
-
-      <a href="{% url 'shop:cart' %}" class="relative flex items-center justify-center w-10 h-10 rounded-full bg-[#9e7b3b] shadow-md" aria-label="カート">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
-          <circle cx="9" cy="21" r="1"></circle>
-          <circle cx="20" cy="21" r="1"></circle>
+      <a href="{% url 'shop:cart' %}" class="km-icon-btn" aria-label="カート{% if cart_item_count %}({{ cart_item_count }}点){% endif %}">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+          <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
           <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
         </svg>
-        {% if cart_item_count %}
-        <span class="absolute -top-1 -right-1 bg-black text-[#9e7b3b] text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center border border-[#9e7b3b]">{{ cart_item_count }}</span>
-        {% endif %}
+        {% if cart_item_count %}<span class="km-badge">{{ cart_item_count }}</span>{% endif %}
       </a>
-
-      <!-- Hamburger -->
-      <button @click="open = !open" class="relative z-[60] w-10 h-10 rounded-full bg-[#9e7b3b] shadow-md flex items-center justify-center" aria-label="Menu">
-        <span class="absolute w-5 h-0.5 bg-black transition-all duration-300" :class="open ? 'rotate-45' : '-translate-y-1.5'"></span>
-        <span class="absolute w-5 h-0.5 bg-black transition-all duration-300" :class="open ? 'opacity-0' : ''"></span>
-        <span class="absolute w-5 h-0.5 bg-black transition-all duration-300" :class="open ? '-rotate-45' : 'translate-y-1.5'"></span>
+      <button @click="open = !open" class="km-icon-btn relative z-[60]" :aria-expanded="open" aria-label="メニュー">
+        <span class="absolute w-4 h-px bg-current transition-all duration-300" :class="open ? 'rotate-45' : '-translate-y-1'"></span>
+        <span class="absolute w-4 h-px bg-current transition-all duration-300" :class="open ? '-rotate-45' : 'translate-y-1'"></span>
       </button>
     </div>
   </div>
 
-  <!-- Menu overlay -->
-  <div
-    x-show="open"
-    x-transition
-    class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center space-y-8 text-[#9e7b3b] text-xl"
-  >
-    <a @click="open = false" href="{% url 'core:index' %}" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">ホーム</a>
-    <a @click="open = false" href="{% url 'shop:product_list' %}" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">商品一覧</a>
-    <a @click="open = false" href="{% url 'core:index' %}#company" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">会社情報</a>
-    <a @click="open = false" href="{% url 'blog:post_list' %}" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">ブログ</a>
-    <a @click="open = false" href="{% url 'core:faq' %}" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">よくある質問</a>
-    {% if not user.is_authenticated %}
-    <a @click="open = false" href="{% url 'account_login' %}" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">ログイン</a>
-    {% endif %}
-    <a @click="open = false" href="{% url 'core:contact' %}" class="border border-transparent py-2 px-2 rounded-xl hover:border-[#9e7b3b] transition">お問い合わせ</a>
-    <a href="{% url 'core:estimate' %}" class="w-[40%] sm:w-[20%] bg-[#9e7b3b] text-black py-3 px-6 rounded-xl font-semibold text-center border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">お見積り</a>
+  <div x-show="open" x-cloak x-transition.opacity.duration.300ms @keydown.escape.window="open = false"
+       class="fixed inset-0 top-16 z-50 km-body overflow-y-auto">
+    <div class="max-w-md mx-auto px-8 pt-10 pb-12 flex flex-col">
+      <p class="km-eyebrow mb-4">Menu</p>
+      <nav class="flex flex-col text-lg font-semibold text-[#f3e6d0]">
+        <a @click="open = false" href="{% url 'core:index' %}" class="flex items-center justify-between py-4 border-b border-[#9e7b3b]/20 hover:text-[#c9a876] transition">ホーム <span class="text-[#9e7b3b]">→</span></a>
+        <a @click="open = false" href="{% url 'shop:product_list' %}" class="flex items-center justify-between py-4 border-b border-[#9e7b3b]/20 hover:text-[#c9a876] transition">商品一覧 <span class="text-[#9e7b3b]">→</span></a>
+        <a @click="open = false" href="{% url 'core:index' %}#origins" class="flex items-center justify-between py-4 border-b border-[#9e7b3b]/20 hover:text-[#c9a876] transition">産地について <span class="text-[#9e7b3b]">→</span></a>
+        <a @click="open = false" href="{% url 'blog:post_list' %}" class="flex items-center justify-between py-4 border-b border-[#9e7b3b]/20 hover:text-[#c9a876] transition">ブログ <span class="text-[#9e7b3b]">→</span></a>
+        <a @click="open = false" href="{% url 'core:faq' %}" class="flex items-center justify-between py-4 border-b border-[#9e7b3b]/20 hover:text-[#c9a876] transition">よくある質問 <span class="text-[#9e7b3b]">→</span></a>
+        <a @click="open = false" href="{% url 'core:index' %}#company" class="flex items-center justify-between py-4 border-b border-[#9e7b3b]/20 hover:text-[#c9a876] transition">会社情報 <span class="text-[#9e7b3b]">→</span></a>
+        <a @click="open = false" href="{% url 'core:contact' %}" class="flex items-center justify-between py-4 border-b border-[#9e7b3b]/20 hover:text-[#c9a876] transition">お問い合わせ <span class="text-[#9e7b3b]">→</span></a>
+      </nav>
+      <div class="mt-10 grid grid-cols-2 gap-3">
+        <a href="{% url 'core:estimate' %}" class="km-btn">お見積り</a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'core:mypage' %}" class="km-btn-outline">マイページ</a>
+        {% else %}
+        <a href="{% url 'account_login' %}" class="km-btn-outline">ログイン</a>
+        {% endif %}
+      </div>
+    </div>
   </div>
 </header>
 
 <main>
-  {% block content %}{% endblock %}
+  {% block main %}{% block content %}{% endblock %}{% endblock %}
 </main>
 
-<footer style="background-image: url('{% static "core/images/texture_Pbrown.jpg" %}');" class="w-full bg-center bg-repeat flex brightness-170">
-  <div class="max-w-6xl text-black mx-auto px-6 py-10">
-    <div class="flex flex-row items-center justify-center mb-6">
-      {% if company_info.logo %}
-      <img src="{{ company_info.favicon.url }}" alt="{{ company_info.name }}" class="w-[10%] md:w-[5%] h-auto">
-      {% endif %}
-      {% if company_info.title %}
-      <img src="{{ company_info.title.url }}" alt="{{ company_info.name }}" class="w-[50%] md:w-[25%] h-auto">
-      {% endif %}
+<footer class="relative border-t border-[#9e7b3b]/25 bg-[#0a0704] text-[#f3e6d0]/75">
+  <div class="max-w-6xl mx-auto px-6 pt-14 pb-8">
+    <div class="grid gap-10 md:grid-cols-[1.3fr_1fr_1fr]">
+      <div>
+        <a href="{% url 'core:index' %}" class="inline-flex items-center gap-2 mb-4">
+          {% if company_info.favicon %}<img src="{{ company_info.favicon.url }}" alt="" class="h-10 w-auto">{% endif %}
+          {% if company_info.title %}<img src="{{ company_info.title.url }}" alt="{{ company_info.name }}" class="h-9 w-auto">{% endif %}
+        </a>
+        <p class="text-sm leading-relaxed max-w-xs">ニカラグアの生産者から直接届く、コーヒーとカカオの生豆専門店。</p>
+        {% if company_info.email %}<p class="mt-4 text-sm"><a href="mailto:{{ company_info.email }}" class="text-[#c9a876] hover:text-[#f3e6d0] transition">{{ company_info.email }}</a></p>{% endif %}
+      </div>
+      <div>
+        <p class="km-eyebrow mb-4">Shop</p>
+        <ul class="space-y-2.5 text-sm">
+          <li><a href="{% url 'shop:product_list' %}" class="hover:text-[#c9a876] transition">商品一覧</a></li>
+          <li><a href="{% url 'core:estimate' %}" class="hover:text-[#c9a876] transition">お見積り</a></li>
+          <li><a href="{% url 'blog:post_list' %}" class="hover:text-[#c9a876] transition">ブログ</a></li>
+          <li><a href="{% url 'core:faq' %}" class="hover:text-[#c9a876] transition">よくある質問</a></li>
+          <li><a href="{% url 'core:contact' %}" class="hover:text-[#c9a876] transition">お問い合わせ</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="km-eyebrow mb-4">Information</p>
+        <ul class="space-y-2.5 text-sm">
+          <li><a href="{% url 'core:index' %}#company" class="hover:text-[#c9a876] transition">会社概要</a></li>
+          <li><a href="{% url 'core:order_policy' %}" class="hover:text-[#c9a876] transition">特定商取引法に基づく表記</a></li>
+          <li><a href="{% url 'core:privacy_policy' %}" class="hover:text-[#c9a876] transition">プライバシーポリシー</a></li>
+          <li><a href="{% url 'core:terms_of_service' %}" class="hover:text-[#c9a876] transition">利用規約</a></li>
+          <li><a href="{% url 'core:app_policy' %}" class="hover:text-[#c9a876] transition">アプリケーション規約</a></li>
+        </ul>
+      </div>
     </div>
-    <nav class="flex flex-col md:flex-row md:space-x-10 space-y-2 md:space-y-0 text-center justify-center text-sm font-bold text-black">
-      <a href="{% url 'core:index' %}#company" class="hover:underline">会社概要</a>
-      <a href="{% url 'core:order_policy' %}" class="hover:underline">特定商取引法に基づく表記</a>
-      <a href="{% url 'core:privacy_policy' %}" class="hover:underline">プライバシーポリシー</a>
-      <a href="{% url 'core:terms_of_service' %}" class="hover:underline">利用規約</a>
-      <a href="{% url 'core:app_policy' %}" class="hover:underline">アプリケーション規約</a>
-      <a href="{% url 'core:faq' %}" class="hover:underline">よくある質問</a>
-      <a href="{% url 'core:contact' %}" class="hover:underline">お問い合わせ</a>
-    </nav>
-
-    <div class="mt-6 border-t border-black/50 pt-4 text-sm font-bold text-center">
-      Copyright © KiMame All Rights Reserved.
+    <div class="mt-12 pt-6 border-t border-[#9e7b3b]/15 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#f3e6d0]/45">
+      <p class="tracking-[0.2em] uppercase">From Nicaragua to Japan</p>
+      <p>Copyright © KiMame All Rights Reserved.</p>
     </div>
   </div>
 </footer>
@@ -160,6 +174,7 @@
 </a>
 {% endif %}
 
+{% block extra_body %}{% endblock %}
 <script src="{% static 'core/js/common.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.3/dist/js/splide.min.js"></script>

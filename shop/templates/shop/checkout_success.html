@@ -3,12 +3,16 @@
 {% block title %}!KiMame¡ご注文ありがとうございます{% endblock %}
 
 {% block content %}
-<section class="bg-black/90 flex flex-col items-center justify-center py-32 px-6 text-[#9e7b3b] text-center min-h-[60vh]">
- <h2 class="text-3xl font-bold mb-6">ご注文ありがとうございます</h2>
- <p class="mb-10">決済が完了次第、確認メールをお送りします。</p>
- <a href="{% url 'shop:order_history' %}"
- class="px-6 py-2 bg-[#9e7b3b] text-black rounded-xl font-semibold border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
- 注文履歴を見る
- </a>
+<section class="km-page flex items-center justify-center">
+ <div class="km-card max-w-md w-full p-10 text-center">
+ <div class="w-16 h-16 mx-auto mb-5 rounded-full bg-[#9e7b3b] text-black text-3xl font-bold flex items-center justify-center">✓</div>
+ <p class="km-eyebrow mb-3">Thank you</p>
+ <h1 class="text-2xl font-bold text-[#f3e6d0] mb-4">ご注文ありがとうございます</h1>
+ <p class="km-lead mb-8">決済が完了し次第、確認メールをお送りします。<br>発送後は注文詳細ページでDHLの配送状況を確認できます。</p>
+ <div class="flex flex-col sm:flex-row gap-3 justify-center">
+ <a href="{% url 'shop:order_history' %}" class="km-btn">注文履歴を見る</a>
+ <a href="{% url 'core:index' %}" class="km-btn-outline">トップへ戻る</a>
+ </div>
+ </div>
 </section>
 {% endblock %}

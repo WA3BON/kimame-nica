@@ -6,7 +6,7 @@
 {% if attrs.name %}name="{{ attrs.name }}"{% endif %}
 {% if attrs.value %}value="{{ attrs.value }}"{% endif %}
 {% if attrs.type %}type="{{ attrs.type }}"{% endif %}
-class="block w-full text-center px-6 py-2 bg-[#9e7b3b] text-black rounded-xl font-semibold border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition"
+class="{% if "outline" in attrs.tags or "secondary" in attrs.tags %}km-btn-outline{% elif "danger" in attrs.tags %}km-btn-outline !border-red-400/60 !text-red-300{% else %}km-btn{% endif %} km-btn-block"
 >
 {% slot %}
 {% endslot %}

@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from django.utils.translation import gettext as _g, gettext_lazy as _
 from .models import Post, Tag
 
 
@@ -29,5 +30,5 @@ class PostAdmin(admin.ModelAdmin):
     def thumbnail_preview(self, obj):
         if obj.thumbnail:
             return format_html('<img src="{}" style="height:50px;border-radius:4px;">', obj.thumbnail.url)
-        return '(画像なし)'
-    thumbnail_preview.short_description = 'サムネイル'
+        return _g('(画像なし)')
+    thumbnail_preview.short_description = _('サムネイル')

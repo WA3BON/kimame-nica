@@ -1,0 +1,10 @@
+{% if messages %}
+<div class="space-y-2 mb-8">
+ {% for message in messages %}
+ <div class="km-alert {% if message.tags == 'error' %}km-alert-error{% endif %}" role="status">
+ <span class="flex-shrink-0 mt-0.5">{% if message.tags == 'error' %}⚠️{% else %}✓{% endif %}</span>
+ <span>{{ message }}</span>
+ </div>
+ {% endfor %}
+</div>
+{% endif %}

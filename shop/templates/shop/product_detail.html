@@ -4,29 +4,27 @@
 {% block title %}!KiMame¡{{ product.name }}{% endblock %}
 
 {% block content %}
-<section class="bg-black/90 py-20 px-6 text-[#9e7b3b] min-h-screen">
- <div class="max-w-4xl mx-auto">
- {% if messages %}
- <div class="mb-6">
- {% for message in messages %}
- <div class="bg-[#9e7b3b] text-black p-4 rounded-lg shadow mb-2">{{ message }}</div>
- {% endfor %}
+<section class="km-page">
+ <div class="max-w-6xl mx-auto">
+ {% include 'core/partials/messages.html' %}
+
+ <a href="{% url 'shop:product_list' %}" class="km-btn-ghost mb-6 -ml-2">← 商品一覧へ戻る</a>
+
+ <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14">
+ <div x-data="{ mainImage: '{% if product.image %}{{ product.image.url }}{% endif %}' }">
+ <div class="km-card overflow-hidden aspect-[4/3]">
+ <img :src="mainImage" alt="{{ product.name }}" class="w-full h-full object-cover">
  </div>
- {% endif %}
-
- <a href="{% url 'shop:product_list' %}" class="inline-block mb-6 hover:underline">&larr; 商品一覧へ戻る</a>
-
- <div class="grid grid-cols-1 md:grid-cols-2 gap-10 bg-black border-2 border-[#9e7b3b] rounded-2xl p-8">
- <div x-data="{ mainImage: '{{ product.image.url }}' }">
- <img :src="mainImage" alt="{{ product.name }}" class="w-full h-80 object-cover rounded-xl">
  {% if product.images.all %}
  <div class="flex gap-2 mt-3 flex-wrap">
- <button @click="mainImage = '{{ product.image.url }}'" class="w-16 h-16 rounded-lg overflow-hidden border-2 border-[#9e7b3b]">
- <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+ {% if product.image %}
+ <button type="button" @click="mainImage = '{{ product.image.url }}'" :class="mainImage === '{{ product.image.url }}' ? 'ring-2 ring-[#9e7b3b]' : 'opacity-70 hover:opacity-100'" class="w-16 h-16 rounded-xl overflow-hidden transition">
+ <img src="{{ product.image.url }}" alt="" class="w-full h-full object-cover">
  </button>
+ {% endif %}
  {% for img in product.images.all %}
- <button @click="mainImage = '{{ img.image.url }}'" class="w-16 h-16 rounded-lg overflow-hidden border-2 border-[#9e7b3b]">
- <img src="{{ img.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+ <button type="button" @click="mainImage = '{{ img.image.url }}'" :class="mainImage === '{{ img.image.url }}' ? 'ring-2 ring-[#9e7b3b]' : 'opacity-70 hover:opacity-100'" class="w-16 h-16 rounded-xl overflow-hidden transition">
+ <img src="{{ img.image.url }}" alt="" class="w-full h-full object-cover">
  </button>
  {% endfor %}
  </div>
@@ -34,48 +32,57 @@
  </div>
 
  <div>
- <div class="flex items-center gap-3 mb-4">
- <img src="{{ product.logo.url }}" alt="{{ product.name }}" class="h-10">
- <span class="bg-[#9e7b3b] text-black text-xs font-bold px-4 py-1 rounded-full">{{ product.origin }}</span>
+ <div class="flex flex-wrap items-center gap-2 mb-4">
+ {% if product.logo %}<span class="w-12 h-12 rounded-full bg-black ring-1 ring-[#9e7b3b]/60 p-1.5"><img src="{{ product.logo.url }}" alt="" class="w-full h-full object-contain"></span>{% endif %}
+ <span class="km-pill km-pill-gold">{{ product.get_product_type_display }}</span>
+ <span class="km-pill">{{ product.origin }}</span>
+ {% if product.roast_level %}<span class="km-pill">{{ product.roast_level }}</span>{% endif %}
  </div>
- <h2 class="text-3xl font-bold mb-2">{{ product.name }}</h2>
- {% if product.roast_level %}
- <p class="text-sm mb-4">焙煎度: {{ product.roast_level }}</p>
- {% endif %}
- <p class="whitespace-pre-line leading-relaxed mb-6">{{ product.description }}</p>
+ <h1 class="text-3xl md:text-4xl font-bold text-[#f3e6d0] mb-2">{{ product.name }}</h1>
+ {% if product.title %}<p class="text-[#c9a876] mb-6">{{ product.title }}</p>{% endif %}
+ {% if product.description %}<p class="km-prose whitespace-pre-line mb-6">{{ product.description }}</p>{% endif %}
 
- <div x-data='{
-        variants: {{ variants_json|safe }},
-        selected: {{ default_variant_id }},
-        get selectedVariant() { return this.variants.find(v => v.id === this.selected) || null }
-      }'>
- <p class="font-semibold mb-2">重量を選択</p>
- <div class="flex flex-wrap gap-2 mb-4">
+ <div class="km-card p-5 sm:p-6" x-data='{
+ variants: {{ variants_json|safe }},
+ selected: {{ default_variant_id }},
+ get selectedVariant() { return this.variants.find(v => v.id === this.selected) || null }
+ }'>
+ <p class="km-label">重量を選ぶ</p>
+ <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-5">
  <template x-for="v in variants" :key="v.id">
- <label class="cursor-pointer">
+ <label class="cursor-pointer" :class="v.stock <= 0 && 'cursor-not-allowed'">
  <input type="radio" :value="v.id" x-model.number="selected" class="sr-only peer" :disabled="v.stock <= 0">
- <span class="block px-4 py-2 border-2 border-[#9e7b3b] rounded-lg peer-checked:bg-[#9e7b3b] peer-checked:text-black transition"
- :class="v.stock <= 0 ? 'opacity-30 line-through' : ''"
- x-text="v.label + '／' + v.price + '円'"></span>
+ <span class="block text-center rounded-xl border border-[#9e7b3b]/40 px-3 py-2.5 transition peer-checked:bg-[#9e7b3b] peer-checked:border-[#9e7b3b] peer-checked:text-black hover:border-[#9e7b3b]"
+ :class="v.stock <= 0 ? 'opacity-30 line-through' : ''">
+ <span class="block font-bold" x-text="v.label"></span>
+ <span class="block text-xs opacity-80" x-text="'¥' + Number(v.price).toLocaleString()"></span>
+ </span>
  </label>
  </template>
  </div>
 
- <p class="text-2xl font-bold mb-6" x-show="selectedVariant" x-text="selectedVariant ? selectedVariant.price + ' 円' : ''"></p>
+ <div class="flex items-end justify-between gap-4 mb-5" x-show="selectedVariant">
+ <p class="text-3xl font-bold text-[#9e7b3b]" x-text="selectedVariant ? '¥' + Number(selectedVariant.price).toLocaleString() : ''"></p>
+ <p class="text-xs text-[#f3e6d0]/50" x-show="selectedVariant && selectedVariant.stock > 0" x-text="selectedVariant ? '在庫 ' + selectedVariant.stock : ''"></p>
+ </div>
 
- <form x-show="selectedVariant && selectedVariant.stock > 0" action="{% url 'shop:cart_add' product.pk %}" method="post" class="flex items-center gap-4">
+ <form x-show="selectedVariant && selectedVariant.stock > 0" action="{% url 'shop:cart_add' product.pk %}" method="post" class="flex items-center gap-3">
  {% csrf_token %}
  <input type="hidden" name="variant" :value="selected">
- <label for="quantity" class="font-semibold">数量</label>
- <input type="number" id="quantity" name="quantity" value="1" min="1" :max="selectedVariant ? selectedVariant.stock : 1"
- class="w-20 bg-black border border-[#9e7b3b] rounded-lg px-3 py-2">
- <button type="submit"
- class="px-6 py-2 bg-[#9e7b3b] text-black rounded-xl font-semibold border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
- カートに入れる
- </button>
+ <label for="quantity" class="sr-only">数量</label>
+ <input type="number" id="quantity" name="quantity" value="1" min="1" :max="selectedVariant ? selectedVariant.stock : 1" class="km-qty">
+ <button type="submit" class="km-btn flex-1">カートに入れる</button>
  </form>
- <p x-show="!selectedVariant || selectedVariant.stock <= 0" class="text-red-400 font-bold">現在在庫切れです</p>
+ <p x-show="!selectedVariant || selectedVariant.stock <= 0" class="km-alert km-alert-error">現在在庫切れです。入荷のご相談はお問い合わせください。</p>
  </div>
+ {% if product.notes %}
+ <div class="mt-5 rounded-xl border border-[#9e7b3b]/25 bg-black/25 p-5">
+ <p class="km-label mb-2">ご購入時の注意</p>
+ <p class="text-xs leading-relaxed text-[#f3e6d0]/70 whitespace-pre-line">{{ product.notes }}</p>
+ </div>
+ {% else %}
+ <p class="text-xs text-[#f3e6d0]/50 mt-4 leading-relaxed">※ 商品代金のほかに送料・関税・消費税・輸入手続き手数料がかかります。詳しくは<a href="{% url 'core:faq' %}" class="underline hover:text-[#c9a876]">よくある質問</a>をご覧ください。</p>
+ {% endif %}
  </div>
  </div>
  </div>

@@ -3,37 +3,36 @@
 {% block title %}!KiMame¡注文履歴{% endblock %}
 
 {% block content %}
-<section class="bg-black/90 py-20 px-6 text-[#9e7b3b] min-h-screen">
+<section class="km-page">
  <div class="max-w-3xl mx-auto">
- <h2 class="text-3xl font-bold text-center mb-10">注文履歴</h2>
+ <a href="{% url 'core:mypage' %}" class="km-btn-ghost mb-4 -ml-2">← マイページへ戻る</a>
+ {% include 'core/partials/page_head.html' with eyebrow="Orders" title="注文履歴" %}
 
  {% if orders %}
- <div class="space-y-4">
+ <ul class="space-y-3">
  {% for order in orders %}
- <div class="border-2 border-[#9e7b3b] rounded-xl p-6">
- <a href="{% url 'shop:order_detail' order.pk %}" class="block hover:opacity-90 transition">
- <div class="flex justify-between items-center">
+ <li class="km-card km-card-link p-5">
+ <a href="{% url 'shop:order_detail' order.pk %}" class="flex items-center justify-between gap-4">
  <div>
- <p class="font-semibold">注文 #{{ order.pk }}</p>
- <p class="text-sm">{{ order.created_at|date:"Y年n月j日 H:i" }}</p>
+ <p class="font-bold text-[#f3e6d0]">注文 #{{ order.pk }}</p>
+ <p class="text-xs text-[#f3e6d0]/55 mt-0.5">{{ order.created_at|date:"Y年n月j日 H:i" }}</p>
  </div>
  <div class="text-right">
- <p class="font-bold">{{ order.total }} 円</p>
- <p class="text-sm">{{ order.get_status_display }}</p>
- </div>
+ <p class="font-bold text-[#c9a876]">¥{{ order.total|floatformat:"0g" }}</p>
+ <span class="km-pill mt-1 {% if order.status == 'pending' %}km-pill-gold{% endif %}">{{ order.get_status_display }}</span>
  </div>
  </a>
  {% if order.status == 'pending' %}
- <a href="{% url 'shop:order_pay' order.pk %}"
- class="inline-block mt-4 px-6 py-2 bg-[#9e7b3b] text-black rounded-xl font-semibold border border-transparent hover:bg-black hover:text-[#9e7b3b] hover:border-[#9e7b3b] transition">
- 支払いへ進む
- </a>
+ <a href="{% url 'shop:order_pay' order.pk %}" class="km-btn km-btn-sm mt-4">支払いへ進む</a>
  {% endif %}
- </div>
+ </li>
  {% endfor %}
- </div>
+ </ul>
  {% else %}
- <p class="text-center">注文履歴はまだありません。</p>
+ <div class="km-card p-10 text-center">
+ <p class="km-lead mb-6">注文履歴はまだありません。</p>
+ <a href="{% url 'shop:product_list' %}" class="km-btn">商品一覧を見る</a>
+ </div>
  {% endif %}
  </div>
 </section>

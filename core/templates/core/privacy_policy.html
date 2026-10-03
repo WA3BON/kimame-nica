@@ -4,10 +4,9 @@
 {% block title %}!KiMame¡プライバシーポリシー{% endblock %}
 
 {% block content %}
-<section class="bg-black/90 text-[#9e7b3b] py-20 px-6">
-  <div class="max-w-4xl w-full mx-auto backdrop-blur-md rounded-3xl shadow-xl p-10"
-       style="background-image: url('{% static 'core/images/texture_Pblack.jpg' %}'); background-repeat: repeat; background-size: auto;">
-    <h1 class="text-3xl font-bold text-center mb-8">プライバシーポリシー</h1>
+<section class="km-page">
+  <div class="km-card km-prose max-w-4xl w-full mx-auto p-6 sm:p-10 md:p-12">
+    <h1 class="km-title text-center mb-10">プライバシーポリシー</h1>
 
     <p class="mb-4 whitespace-pre-line">
       {{ order_policy.company_name }}（（以下、「当社」といいます。）は、当社が提供する商品販売サービスにおいて取得するお客様の個人情報について、個人情報の保護に関する法律その他関係法令を遵守し、適切に取り扱い、保護するため、以下のとおりプライバシーポリシー（以下、「本ポリシー」といいます。）を定めます。
@@ -15,7 +14,7 @@
       <ol class="space-y-8">
       {% for policy in policies %}
         <li>
-          <p class="font-semibold mb-2">{{ policy.no }}. {{ policy.title }}</p>
+          <p class="font-bold text-[#c9a876] mb-2">{{ policy.no }}. {{ policy.title }}</p>
           <p class="mb-4 whitespace-pre-line">{{ policy.description }}</p>
         </li>
       {% empty %}
@@ -30,7 +29,7 @@
       <p>住所: {{ order_policy.address }}</p>
     {% endif %}
 
-    <div class="mt-10 border-t border-[#9e7b3b] pt-6 text-sm">
+    <div class="mt-10 border-t border-[#9e7b3b]/25 pt-6 text-xs text-[#f3e6d0]/50">
       {% if last_policy %}
       <p>最終更新日: {{ last_policy.updated_at|date:"Y年m月d日" }}</p>
       {% endif %}

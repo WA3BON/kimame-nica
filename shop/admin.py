@@ -10,22 +10,23 @@ from django.template.response import TemplateResponse
 from django.urls import path, reverse
 from django.utils import timezone
 from django.utils.html import format_html, format_html_join
+from django.utils.translation import gettext as _g, gettext_lazy as _
 
 from core.models import CompanyInfo
 from .models import Product, ProductVariant, ProductImage, Order, OrderItem, Address
 
 User = get_user_model()
 
-admin.site.site_header = "KiMame 管理画面"
-admin.site.site_title = "KiMame 管理"
-admin.site.index_title = "ダッシュボード"
+admin.site.site_header = _("KiMame 管理画面")
+admin.site.site_title = _("KiMame 管理")
+admin.site.index_title = _("ダッシュボード")
 
 # Status → (background colour, short hint shown under the badge in the order list)
 STATUS_STYLES = {
-    Order.Status.PENDING: ('#9ca3af', '決済待ち'),
-    Order.Status.PAID: ('#dc2626', '要対応:発送準備へ'),
-    Order.Status.PREPARING: ('#d97706', '梱包・発送待ち'),
-    Order.Status.FULFILLED: ('#16a34a', '完了'),
+    Order.Status.PENDING: ('#9ca3af', _('決済待ち')),
+    Order.Status.PAID: ('#dc2626', _('要対応:発送準備へ')),
+    Order.Status.PREPARING: ('#d97706', _('梱包・発送待ち')),
+    Order.Status.FULFILLED: ('#16a34a', _('完了')),
     Order.Status.FAILED: ('#6b7280', ''),
     Order.Status.CANCELED: ('#374151', ''),
 }
@@ -35,7 +36,7 @@ SOLD_STATUSES = [Order.Status.PAID, Order.Status.PREPARING, Order.Status.FULFILL
 
 
 def status_badge_html(order):
-    color, _ = STATUS_STYLES.get(order.status, ('#6b7280', ''))
+    color, _hint = STATUS_STYLES.get(order.status, ('#6b7280', ''))
     return format_html(
         '<span style="display:inline-block;padding:3px 10px;border-radius:999px;'
         'background:{};color:#fff;font-weight:bold;font-size:12px;white-space:nowrap;">{}</span>',
@@ -44,7 +45,7 @@ def status_badge_html(order):
 
 
 def yen(value):
-    return f"{value:,.0f}円" if value is not None else "-"
+    return f"¥{value:,.0f}" if value is not None else "-"
 
 
 class ProductImageInline(admin.TabularInline):
@@ -57,7 +58,7 @@ class ProductImageInline(admin.TabularInline):
         if obj.image:
             return format_html('<img src="{}" style="height:60px;border-radius:4px;">', obj.image.url)
         return ''
-    preview.short_description = 'プレビュー'
+    preview.short_description = _('プレビュー')
 
 
 class ProductVariantInline(admin.TabularInline):
@@ -68,17 +69,17 @@ class ProductVariantInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('thumbnail', 'no', 'name', 'product_type', 'origin', 'roast_level', 'starting_price', 'stock_summary', 'created_at')
+    list_display = ('thumbnail', 'no', 'name', 'product_type', 'origin', 'roast_level', 'starting_price_display', 'stock_summary', 'created_at')
     list_display_links = ('thumbnail', 'name')
     list_filter = ('product_type', 'origin', 'roast_level')
     search_fields = ('name', 'origin')
     readonly_fields = ('created_at', 'thumbnail')
     inlines = [ProductVariantInline, ProductImageInline]
     fieldsets = (
-        (None, {'fields': ('thumbnail', 'no', 'name', 'title', 'description', 'product_type', 'origin', 'roast_level')}),
-        ('画像', {'fields': ('logo', 'image', 'map')}),
-        ('産地マップ(座標)', {'fields': ('latitude', 'longitude')}),
-        ('その他', {'fields': ('created_at',)}),
+        (None, {'fields': ('thumbnail', 'no', 'name', 'title', 'description', 'notes', 'product_type', 'origin', 'roast_level')}),
+        (_('画像'), {'fields': ('logo', 'image', 'map')}),
+        (_('産地マップ(座標)'), {'fields': ('latitude', 'longitude')}),
+        (_('その他'), {'fields': ('created_at',)}),
     )
 
     def get_queryset(self, request):
@@ -86,9 +87,9 @@ class ProductAdmin(admin.ModelAdmin):
 
     def thumbnail(self, obj):
         if obj.image:
-            return format_html('<img src="{}" style="height:50px;border-radius:4px;" title="トップ画像(サムネイル)">', obj.image.url)
-        return '(画像なし)'
-    thumbnail.short_description = 'トップ画像'
+            return format_html('<img src="{}" style="height:50px;border-radius:4px;">', obj.image.url)
+        return _g('(画像なし)')
+    thumbnail.short_description = _('トップ画像')
 
     def stock_summary(self, obj):
         variants = list(obj.variants.all())
@@ -98,7 +99,11 @@ class ProductAdmin(admin.ModelAdmin):
             '<br>', '{}: <span style="color:{};font-weight:bold;">{}</span>',
             ((v.label, '#dc2626' if v.stock <= 3 else 'inherit', v.stock) for v in variants),
         )
-    stock_summary.short_description = '在庫'
+    stock_summary.short_description = _('在庫')
+
+    @admin.display(description=_('最安値'))
+    def starting_price_display(self, obj):
+        return yen(obj.starting_price)
 
 
 class OrderItemInline(admin.TabularInline):
@@ -113,7 +118,7 @@ class OrderItemInline(admin.TabularInline):
 
     def line_total_display(self, obj):
         return yen(obj.line_total)
-    line_total_display.short_description = '小計'
+    line_total_display.short_description = _('小計')
 
 
 @admin.register(Order)
@@ -141,13 +146,13 @@ class OrderAdmin(admin.ModelAdmin):
         'created_at', 'updated_at', 'paid_at',
     )
     fieldsets = (
-        ('ステータス', {'fields': (('status_badge', 'sheet_link'), 'status', ('tracking_number', 'tracking_link'), 'shipped_at', 'admin_note')}),
-        ('お客様・お届け先(編集不可)', {'fields': (
+        (_('ステータス'), {'fields': (('status_badge', 'sheet_link'), 'status', ('tracking_number', 'tracking_link'), 'shipped_at', 'admin_note')}),
+        (_('お客様・お届け先(編集不可)'), {'fields': (
             'user', 'contact_email', 'shipping_name', 'shipping_phone', 'shipping_postal_code',
             'shipping_prefecture', 'shipping_city', 'shipping_address_line1', 'shipping_address_line2',
         )}),
-        ('金額(編集不可)', {'fields': ('subtotal', 'shipping_fee', 'total')}),
-        ('決済・日時', {'classes': ('collapse',), 'fields': (
+        (_('金額(編集不可)'), {'fields': ('subtotal', 'shipping_fee', 'total')}),
+        (_('決済・日時'), {'classes': ('collapse',), 'fields': (
             'paid_at', 'created_at', 'updated_at', 'stripe_checkout_session_id', 'stripe_payment_intent_id',
         )}),
     )
@@ -168,7 +173,7 @@ class OrderAdmin(admin.ModelAdmin):
         order = get_object_or_404(Order.objects.prefetch_related('items'), pk=pk)
         context = {
             **self.admin_site.each_context(request),
-            'title': f'受注シート #{order.pk}',
+            'title': _g('受注シート #{pk}').format(pk=order.pk),
             'order': order,
             'items': order.items.all(),
             'company': CompanyInfo.objects.first(),
@@ -184,41 +189,41 @@ class OrderAdmin(admin.ModelAdmin):
 
     # --- list columns ---
 
-    @admin.display(description='注文番号', ordering='id')
+    @admin.display(description=_('注文番号'), ordering='id')
     def order_no(self, obj):
         return f"#{obj.pk}"
 
-    @admin.display(description='状態', ordering='status')
+    @admin.display(description=_('状態'), ordering='status')
     def status_badge(self, obj):
-        _, hint = STATUS_STYLES.get(obj.status, ('', ''))
+        _color, hint = STATUS_STYLES.get(obj.status, ('', ''))
         if hint:
             return format_html('{}<div style="font-size:11px;color:var(--body-quiet-color);margin-top:2px;">{}</div>',
                                status_badge_html(obj), hint)
         return status_badge_html(obj)
 
-    @admin.display(description='商品')
+    @admin.display(description=_('商品'))
     def items_summary(self, obj):
         return format_html_join(
             '<br>', '{} ({}kg) × {}',
             ((i.product_name, f"{float(i.weight_kg):g}", i.quantity) for i in obj.items.all()),
         )
 
-    @admin.display(description='合計', ordering='total')
+    @admin.display(description=_('合計'), ordering='total')
     def total_display(self, obj):
         return yen(obj.total)
 
-    @admin.display(description='DHL追跡', ordering='tracking_number')
+    @admin.display(description=_('DHL追跡'), ordering='tracking_number')
     def tracking_link(self, obj):
         if not obj.tracking_number:
             return '-'
         return format_html('<a href="{}" target="_blank" rel="noopener">{}</a>', obj.tracking_url, obj.tracking_number)
 
-    @admin.display(description='受注シート')
+    @admin.display(description=_('受注シート'))
     def sheet_link(self, obj):
         if not obj.pk:
             return '-'
         url = reverse('admin:shop_order_sheet', args=[obj.pk])
-        return format_html('<a href="{}" target="_blank">📄 シートを開く</a>', url)
+        return format_html('<a href="{}" target="_blank">📄 {}</a>', url, _g('シートを開く'))
 
     # --- bulk actions ---
 
@@ -227,39 +232,39 @@ class OrderAdmin(admin.ModelAdmin):
         updated = target.update(status=status, **extra)
         skipped = queryset.count() - updated
         label = Order.Status(status).label
-        self.message_user(request, f"{updated}件を「{label}」に変更しました。", messages.SUCCESS)
+        self.message_user(request, _g('{n}件を「{label}」に変更しました。').format(n=updated, label=label), messages.SUCCESS)
         if skipped:
-            self.message_user(request, f"{skipped}件は現在の状態では変更できないためスキップしました。", messages.WARNING)
+            self.message_user(request, _g('{n}件は現在の状態では変更できないためスキップしました。').format(n=skipped), messages.WARNING)
 
-    @admin.action(description='選択した注文を「発送準備中」にする')
+    @admin.action(description=_('選択した注文を「発送準備中」にする'))
     def mark_preparing(self, request, queryset):
         self._bulk_set_status(request, queryset, Order.Status.PREPARING, [Order.Status.PAID])
 
-    @admin.action(description='選択した注文を「発送済み」にする')
+    @admin.action(description=_('選択した注文を「発送済み」にする'))
     def mark_fulfilled(self, request, queryset):
         queryset.filter(status__in=[Order.Status.PAID, Order.Status.PREPARING], shipped_at__isnull=True).update(
             shipped_at=timezone.now()
         )
         self._bulk_set_status(request, queryset, Order.Status.FULFILLED, [Order.Status.PAID, Order.Status.PREPARING])
 
-    @admin.action(description='選択した注文を「キャンセル」にする')
+    @admin.action(description=_('選択した注文を「キャンセル」にする'))
     def mark_canceled(self, request, queryset):
         self._bulk_set_status(
             request, queryset, Order.Status.CANCELED,
             [Order.Status.PENDING, Order.Status.PAID, Order.Status.PREPARING, Order.Status.FAILED],
         )
 
-    @admin.action(description='選択した注文をCSV(Excel用)でダウンロード')
+    @admin.action(description=_('選択した注文をCSV(Excel用)でダウンロード'))
     def export_csv(self, request, queryset):
         response = HttpResponse(content_type='text/csv; charset=utf-8')
         filename = f"orders_{timezone.localtime():%Y%m%d_%H%M}.csv"
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         response.write('﻿')  # BOM so Excel opens UTF-8 Japanese correctly
         writer = csv.writer(response)
-        writer.writerow([
+        writer.writerow([_g(h) for h in (
             '注文番号', '状態', '注文日時', '支払日時', '発送日時', 'DHL追跡番号', 'お名前', 'メール', '電話',
             '郵便番号', '住所', '商品', '小計', '送料', '合計', '社内メモ',
-        ])
+        )])
         fmt = lambda dt: timezone.localtime(dt).strftime('%Y-%m-%d %H:%M') if dt else ''
         for o in queryset.prefetch_related('items'):
             items = ' / '.join(f"{i.product_name}({float(i.weight_kg):g}kg)×{i.quantity}" for i in o.items.all())
@@ -293,7 +298,7 @@ class UserOrderInline(admin.TabularInline):
     readonly_fields = fields
     show_change_link = True
     can_delete = False
-    verbose_name_plural = '注文履歴'
+    verbose_name_plural = _('注文履歴')
 
     def has_add_permission(self, request, obj=None):
         return False
@@ -320,10 +325,10 @@ class KiMameUserAdmin(UserAdmin):
         # The "add user" form has no user yet, so the related inlines make no sense there.
         return self.inlines if obj else []
 
-    @admin.display(description='購入回数', ordering='_order_count')
+    @admin.display(description=_('購入回数'), ordering='_order_count')
     def order_count(self, obj):
         return obj._order_count
 
-    @admin.display(description='購入金額', ordering='_total_spent')
+    @admin.display(description=_('購入金額'), ordering='_total_spent')
     def total_spent(self, obj):
         return yen(obj._total_spent) if obj._total_spent else '-'

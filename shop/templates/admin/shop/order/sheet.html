@@ -1,4 +1,5 @@
 {% extends "admin/base_site.html" %}
+{% load i18n %}
 
 {% block extrastyle %}{{ block.super }}
 <style>
@@ -30,26 +31,26 @@
 
 {% block breadcrumbs %}
 <div class="breadcrumbs">
-  <a href="{% url 'admin:index' %}">ホーム</a> ›
-  <a href="{% url 'admin:shop_order_changelist' %}">受注</a> ›
-  <a href="{% url 'admin:shop_order_change' order.pk %}">#{{ order.pk }}</a> › 受注シート
+  <a href="{% url 'admin:index' %}">{% translate "ホーム" %}</a> ›
+  <a href="{% url 'admin:shop_order_changelist' %}">{% translate "受注" %}</a> ›
+  <a href="{% url 'admin:shop_order_change' order.pk %}">#{{ order.pk }}</a> {% translate "› 受注シート" %}
 </div>
 {% endblock %}
 
 {% block content %}
 <div class="sheet">
   <div class="sheet-actions">
-    <button type="button" class="button default" onclick="window.print()">🖨 印刷する</button>
-    <a class="button" href="{% url 'admin:shop_order_change' order.pk %}">✏️ この注文を編集</a>
+    <button type="button" class="button default" onclick="window.print()">{% translate "🖨 印刷する" %}</button>
+    <a class="button" href="{% url 'admin:shop_order_change' order.pk %}">{% translate "✏️ この注文を編集" %}</a>
   </div>
 
   <div class="sheet-head">
     <div>
-      <h1>受注シート #{{ order.pk }}</h1>
+      <h1>{% blocktranslate with pk=order.pk %}受注シート #{{ pk }}{% endblocktranslate %}</h1>
       <div class="sheet-meta">
-        注文日時: {{ order.created_at|date:"Y年n月j日 H:i" }}
-        {% if order.paid_at %} / 支払: {{ order.paid_at|date:"Y年n月j日 H:i" }}{% endif %}
-        {% if order.shipped_at %} / 発送: {{ order.shipped_at|date:"Y年n月j日 H:i" }}{% endif %}
+        {% translate "注文日時" %}: {{ order.created_at|date:"Y-m-d H:i" }}
+        {% if order.paid_at %} / {% translate "支払" %}: {{ order.paid_at|date:"Y-m-d H:i" }}{% endif %}
+        {% if order.shipped_at %} / {% translate "発送" %}: {{ order.shipped_at|date:"Y-m-d H:i" }}{% endif %}
       </div>
     </div>
     <div>{{ status_badge }}</div>
@@ -57,59 +58,59 @@
 
   <div class="sheet-grid">
     <div class="sheet-box">
-      <h2>お届け先</h2>
-      <p><strong>{{ order.shipping_name }} 様</strong></p>
+      <h2>{% translate "お届け先" %}</h2>
+      <p><strong>{{ order.shipping_name }}</strong></p>
       <p>〒{{ order.shipping_postal_code }}</p>
       <p>{{ order.shipping_prefecture }}{{ order.shipping_city }}{{ order.shipping_address_line1 }}</p>
       {% if order.shipping_address_line2 %}<p>{{ order.shipping_address_line2 }}</p>{% endif %}
       <p>TEL: {{ order.shipping_phone }}</p>
     </div>
     <div class="sheet-box">
-      <h2>ご連絡先・会員情報</h2>
-      <p>メール: {{ order.contact_email }}</p>
-      <p>会員: {% if order.user %}{{ order.user.email }}{% else %}(退会済み / なし){% endif %}</p>
-      <p>配送: DHL(コーヒー豆送付プラン)</p>
-      <p>追跡番号: {% if order.tracking_number %}<a href="{{ order.tracking_url }}" target="_blank" rel="noopener">{{ order.tracking_number }}</a>{% else %}未登録{% endif %}</p>
+      <h2>{% translate "ご連絡先・会員情報" %}</h2>
+      <p>{% translate "メール" %}: {{ order.contact_email }}</p>
+      <p>{% translate "会員" %}: {% if order.user %}{{ order.user.email }}{% else %}{% translate "(退会済み / なし)" %}{% endif %}</p>
+      <p>{% translate "配送: DHL(コーヒー豆送付プラン)" %}</p>
+      <p>{% translate "追跡番号" %}: {% if order.tracking_number %}<a href="{{ order.tracking_url }}" target="_blank" rel="noopener">{{ order.tracking_number }}</a>{% else %}{% translate "未登録" %}{% endif %}</p>
     </div>
   </div>
 
   <table>
     <thead>
-      <tr><th>商品</th><th class="num">重量</th><th class="num">単価</th><th class="num">数量</th><th class="num">小計</th></tr>
+      <tr><th>{% translate "商品" %}</th><th class="num">{% translate "重量" %}</th><th class="num">{% translate "単価" %}</th><th class="num">{% translate "数量" %}</th><th class="num">{% translate "小計" %}</th></tr>
     </thead>
     <tbody>
       {% for item in items %}
       <tr>
         <td>{{ item.product_name }}</td>
         <td class="num">{{ item.weight_kg|floatformat:"-2" }}kg</td>
-        <td class="num">{{ item.unit_price|floatformat:"0g" }}円</td>
+        <td class="num">¥{{ item.unit_price|floatformat:"0g" }}</td>
         <td class="num">{{ item.quantity }}</td>
-        <td class="num">{{ item.line_total|floatformat:"0g" }}円</td>
+        <td class="num">¥{{ item.line_total|floatformat:"0g" }}</td>
       </tr>
       {% endfor %}
     </tbody>
     <tfoot>
-      <tr><td colspan="4" class="num">小計</td><td class="num">{{ order.subtotal|floatformat:"0g" }}円</td></tr>
-      <tr><td colspan="4" class="num">送料</td><td class="num">{{ order.shipping_fee|floatformat:"0g" }}円</td></tr>
-      <tr><td colspan="4" class="num">合計</td><td class="num">{{ order.total|floatformat:"0g" }}円</td></tr>
+      <tr><td colspan="4" class="num">{% translate "小計" %}</td><td class="num">¥{{ order.subtotal|floatformat:"0g" }}</td></tr>
+      <tr><td colspan="4" class="num">{% translate "送料" %}</td><td class="num">¥{{ order.shipping_fee|floatformat:"0g" }}</td></tr>
+      <tr><td colspan="4" class="num">{% translate "合計" %}</td><td class="num">¥{{ order.total|floatformat:"0g" }}</td></tr>
     </tfoot>
   </table>
 
   <div class="sheet-grid">
     <div class="sheet-box">
-      <h2>作業チェック</h2>
+      <h2>{% translate "作業チェック" %}</h2>
       <ul class="checklist">
-        <li>入金確認</li>
-        <li>商品ピッキング・計量</li>
-        <li>梱包</li>
-        <li>DHL集荷依頼・送り状作成</li>
-        <li>DHL追跡番号を登録</li>
-        <li>ステータスを「発送済み」に変更</li>
+        <li>{% translate "入金確認" %}</li>
+        <li>{% translate "商品ピッキング・計量" %}</li>
+        <li>{% translate "梱包" %}</li>
+        <li>{% translate "DHL集荷依頼・送り状作成" %}</li>
+        <li>{% translate "DHL追跡番号を登録" %}</li>
+        <li>{% translate "ステータスを「発送済み」に変更" %}</li>
       </ul>
     </div>
     <div class="sheet-box">
-      <h2>社内メモ</h2>
-      <p class="note">{{ order.admin_note|default:"(なし)" }}</p>
+      <h2>{% translate "社内メモ" %}</h2>
+      <p class="note">{% if order.admin_note %}{{ order.admin_note }}{% else %}{% translate "(なし)" %}{% endif %}</p>
     </div>
   </div>
 
